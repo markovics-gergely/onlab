@@ -10,3 +10,7 @@
 	6. Még jó lenne pár megkülönböztethető csoport
 - Tulajdonképpen reklámfigyelő helyett kamerában megjelenő emberek csoportokba osztása
 - Eddigi adatok alapján az intervallum kezdése előtt megtippeli a következőt (mint egy időjárásjelentő)
+
+Linkek:
+[Face api](https://github.com/justadudewhohacks/face-api.js)
+[OpenCV](https://www.youtube.com/watch?v=oXlwWbU8l2o)
