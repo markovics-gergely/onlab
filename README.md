@@ -1,4 +1,5 @@
 # Onlab
+## Specifikáció
 > Pláza kamerafigyelő alkalmazás => emberek életkora(kbra)/neme felismerés
 - Idő intervallumokra osztása (pl 2-3 órákra)
 - Intervallumokat felismert emberek alapján csoportokba rendezése (ez az alapja a reklámoknak):
@@ -11,7 +12,7 @@
 - Tulajdonképpen reklámfigyelő helyett kamerában megjelenő emberek csoportokba osztása
 - Eddigi adatok alapján az intervallum kezdése előtt megtippeli a következőt (mint egy időjárásjelentő)
 
-Linkek:
+## Linkek:
 - [Face api](https://github.com/justadudewhohacks/face-api.js)
 - [OpenCV](https://www.youtube.com/watch?v=oXlwWbU8l2o)
 - [Amazon](https://docs.aws.amazon.com/rekognition/latest/dg/faces.html)
