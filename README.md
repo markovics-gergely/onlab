@@ -8,7 +8,8 @@
 	3. Női: nagyrészt nők
 	4. Párok: kb ugyanannyi férfi és nő
 	5. Fiatalok: nagyrészt fiatalok
-	6. Még jó lenne pár megkülönböztethető csoport
+	6. Idősek: nagyrészt idősek
+	7. Még jó lenne pár megkülönböztethető csoport
 - Tulajdonképpen reklámfigyelő helyett kamerában megjelenő emberek csoportokba osztása
 - Eddigi adatok alapján az intervallum kezdése előtt megtippeli a következőt (mint egy időjárásjelentő)
 
