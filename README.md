@@ -11,7 +11,7 @@
 	6. Idősek: nagyrészt idősek
 	7. Még jó lenne pár megkülönböztethető csoport
 - Tulajdonképpen reklámfigyelő helyett kamerában megjelenő emberek csoportokba osztása
-- Eddigi adatok alapján az intervallum kezdése előtt megtippeli a következőt (mint egy időjárásjelentő)
+- Eddigi adatok alapján az intervallum kezdése előtt megtippeli a következőt (Idősávok alapján is nézi)
 
 ## Linkek:
 - [Face api](https://github.com/justadudewhohacks/face-api.js)
