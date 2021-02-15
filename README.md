@@ -1,4 +1,4 @@
-# Onlab
+# Önlab
 ## Specifikáció
 > Pláza kamerafigyelő alkalmazás => emberek életkora(kbra)/neme felismerés
 - Idő intervallumokra osztása (pl 2-3 órákra)
