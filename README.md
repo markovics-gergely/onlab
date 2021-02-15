@@ -1,4 +1,4 @@
-# onlab
+# Onlab
 > Pláza kamerafigyelő alkalmazás => emberek életkora(kbra)/neme felismerés
 - Idő intervallumokra osztása (pl 2-3 órákra)
 - Intervallumokat felismert emberek alapján csoportokba rendezése (ez az alapja a reklámoknak):
@@ -14,3 +14,4 @@
 Linkek:
 - [Face api](https://github.com/justadudewhohacks/face-api.js)
 - [OpenCV](https://www.youtube.com/watch?v=oXlwWbU8l2o)
+- [Amazon](https://docs.aws.amazon.com/rekognition/latest/dg/faces.html)
