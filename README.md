@@ -1,5 +1,5 @@
 # onlab
-- Pláza kamerafigyelő alkalmazás => emberek életkora(kbra)/neme felismerés
+> Pláza kamerafigyelő alkalmazás => emberek életkora(kbra)/neme felismerés
 - Idő intervallumokra osztása (pl 2-3 órákra)
 - Intervallumokat felismert emberek alapján csoportokba rendezése (ez az alapja a reklámoknak):
 	1. Családok: Kb ugyanannyi felnőtt és gyerek
