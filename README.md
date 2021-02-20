@@ -20,7 +20,7 @@
 
 - [Prophet](https://facebook.github.io/prophet/)
 
-## Felhsználói felület
+## Felhasználói felület
 - Felhasználó bead ip-címet/címeket amiket figyel
 - Le lehessen állítani a kamerák figyelését
 - Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoport lesz jelen az idősávban amibe esik
