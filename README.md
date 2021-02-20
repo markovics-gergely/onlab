@@ -12,7 +12,6 @@
 	7. Még jó lenne pár megkülönböztethető csoport
 - Tulajdonképpen reklámfigyelő helyett kamerában megjelenő emberek csoportokba osztása
 - Eddigi adatok alapján az intervallum kezdése előtt megtippeli a következőt (Idősávok alapján is nézi)
-
 ## Linkek:
 - [Face api](https://github.com/justadudewhohacks/face-api.js)
 - [OpenCV](https://www.youtube.com/watch?v=oXlwWbU8l2o)
@@ -20,3 +19,8 @@
 - [Tensorflow](https://www.codeproject.com/Articles/5276827/AI-Age-Estimation-in-the-Browser-using-face-api-an)
 
 - [Prophet](https://facebook.github.io/prophet/)
+
+## Felhsználói felület
+- Felhasználó bead ip-címet/címeket amiket figyel
+- Le lehessen állítani a kamerák figyelését
+- Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoport lesz jelen az idősávban amibe esik
