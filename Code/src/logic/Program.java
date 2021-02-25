@@ -4,10 +4,17 @@ import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.videoio.VideoCapture;
+
+import javafx.fxml.FXML;
 
 public class Program {
     public Program(){
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
+
+    public void connectCamera(){
+        VideoCapture camera = new VideoCapture("http://192.168.0.176:8080");
     }
 
     public void start(){
@@ -25,5 +32,6 @@ public class Program {
             Imgproc.rectangle(src, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y+ rect.height), new Scalar(0,0,255), 3);
 
         Imgcodecs.imwrite("images/FacePhoto1out.PNG", src);
+        System.exit(0);
     }
 }
