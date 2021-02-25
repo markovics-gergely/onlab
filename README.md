@@ -24,7 +24,7 @@
 - Le lehessen állítani a kamerák figyelését
 - Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoport lesz jelen az idősávban amibe esik
 
-##Dokumentáció
+## Dokumentáció
 - Osztályok és metódusaik:
 	1. Main
 		1. main
