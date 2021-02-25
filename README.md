@@ -17,10 +17,16 @@
 - [OpenCV](https://www.youtube.com/watch?v=oXlwWbU8l2o)
 - [Amazon](https://docs.aws.amazon.com/rekognition/latest/dg/faces.html) *Favorite*
 - [Tensorflow](https://www.codeproject.com/Articles/5276827/AI-Age-Estimation-in-the-Browser-using-face-api-an)
-
 - [Prophet](https://facebook.github.io/prophet/)
 
 ## Felhasználói felület
 - Felhasználó bead ip-címet/címeket amiket figyel
 - Le lehessen állítani a kamerák figyelését
 - Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoport lesz jelen az idősávban amibe esik
+
+## Dokumentáció
+- Osztályok és metódusaik:
+	1. Main
+		1. main
+	2. Program
+		1. connectCamera - Csatlakoztatja a kamerát a programhoz IP-n keresztül
