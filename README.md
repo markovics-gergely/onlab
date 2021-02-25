@@ -25,8 +25,8 @@
 - Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoport lesz jelen az idősávban amibe esik
 
 ##Dokumentáció
-- Osztályok:
+- Osztályok és metódusaik:
 	1. Main
 		1. main
 	2. Program
-		1. connectCamera
+		1. connectCamera - Csatlakoztatja a kamerát a programhoz IP-n keresztül
