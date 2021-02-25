@@ -1,9 +1,9 @@
 module Code {
     requires javafx.fxml;
     requires javafx.controls;
-    requires opencv;
     requires org.bytedeco.javacv;
-    requires org.bytedeco.javacpp;
+    //requires opencv;
 
     opens logic;
+    opens userinterface;
 }

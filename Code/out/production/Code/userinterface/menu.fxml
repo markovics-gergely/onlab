@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane fx:id="menu" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userinterface.Menu">
+   <children>
+      <Button layoutX="101.0" layoutY="401.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" text="Connect Camera" />
+      <Button layoutX="280.0" layoutY="401.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" text="Disconnect Camera" />
+   </children>
+</AnchorPane>
