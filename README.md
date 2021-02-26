@@ -26,6 +26,13 @@
 
 ## Dokumentáció
 
-
+## Felhasznált cuccok
+-Python 3.6.8
+-Python libek:
+	-numpy
+	-opencv-python
+	-urllib3
+	-face_recognition (kell hozzá cmake és dlib)
+	
 ## Felhasznált segítségek
 -[Webcam Face Recognition](https://www.youtube.com/watch?v=lC_y8wD7F3Y)
