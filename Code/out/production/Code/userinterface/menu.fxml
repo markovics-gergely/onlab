@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane fx:id="menu" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="userinterface.Menu">
    <children>
-      <Button layoutX="101.0" layoutY="401.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" text="Connect Camera" />
-      <Button layoutX="280.0" layoutY="401.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" text="Disconnect Camera" />
+      <Button fx:id="connectButton" layoutX="101.0" layoutY="401.0" mnemonicParsing="false" onAction="#connectCamera" prefHeight="39.0" prefWidth="125.0" text="Connect Camera" />
+      <Button fx:id="disconnectButton" layoutX="280.0" layoutY="401.0" mnemonicParsing="false" onAction="#disconnectCamera" prefHeight="39.0" prefWidth="125.0" text="Disconnect Camera" />
+      <Pane fx:id="webcamPlace" layoutX="1.0" prefHeight="366.0" prefWidth="500.0" />
    </children>
 </AnchorPane>

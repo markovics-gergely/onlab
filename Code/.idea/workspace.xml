@@ -27,7 +27,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="F:/Programing/ProgamingPath/Java/JavaCV/javacv-platform-1.5.4-bin/videoinput.jar" />
-    <property name="project.structure.last.edited" value="Global Libraries" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
@@ -36,10 +36,13 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Dolgok\Egyetem\6.felev\Onlab\onlab\Code\src\userinterface" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="userinterface" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.Main (1)">
-    <configuration name="Main (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="userinterface.Main" />
+    <configuration name="JavaFxPlayVideoAndAudio" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="userinterface.JavaFxPlayVideoAndAudio" />
       <module name="Code" />
       <extension name="coverage">
         <pattern>
@@ -58,9 +61,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="userinterface.Main" />
+      <module name="Code" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="userinterface.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main (1)" />
+        <item itemvalue="Application.JavaFxPlayVideoAndAudio" />
       </list>
     </recent_temporary>
   </component>
