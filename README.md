@@ -25,8 +25,7 @@
 - Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoport lesz jelen az idősávban amibe esik
 
 ## Dokumentáció
-- Osztályok és metódusaik:
-	1. Main
-		1. main
-	2. Program
-		1. connectCamera - Csatlakoztatja a kamerát a programhoz IP-n keresztül
+
+
+## Felhasznált segítségek
+-[Webcam Face Recognition](https://www.youtube.com/watch?v=lC_y8wD7F3Y)
