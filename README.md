@@ -24,8 +24,6 @@
 - Le lehessen állítani a kamerák figyelését
 - Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoport lesz jelen az idősávban amibe esik
 
-## Dokumentáció
-
 ## Felhasznált cuccok
 - Python 3.6.8
 - Python libek:
@@ -36,3 +34,11 @@
 	
 ## Felhasznált segítségek
 -[Webcam Face Recognition](https://www.youtube.com/watch?v=lC_y8wD7F3Y)
+-[IPcam Face Detection](https://www.youtube.com/watch?v=0hT2cGSqPfk)
+
+## Dokumentáció
+- Függvények:
+	- webcam(): Egyszerűen beveszi a webkamera videó képét és kivetíti.
+	- ipcam(): Az IP kamera képét framenként veszi be és kívetíti.
+	- webcamFaceDetect(): Ez fel is ismeri, hogy ki van a képen egy előre megadott kép alapján és a webcamera képét adja vissza egy kerettel és névvel.
+	- ipcamFaceDetect(): Ez nem ismeri fel ki van rajta, csak az arcot, azonban itt nem framenként veszi, hanem a tényleges videót rakja ki.
