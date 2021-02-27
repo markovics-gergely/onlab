@@ -29,7 +29,7 @@
 	- opencv-python
 	- urllib3
 	- face_recognition (kell hozzá cmake és dlib)
-	- (Később kelleni fog egy age és gender detection, sok féle van)
+	- (Később kelleni fog egy age és gender detection, sokféle van)
 	
 ## Felhasznált segítségek
 - [Webcam Face Recognition](https://www.youtube.com/watch?v=lC_y8wD7F3Y)
