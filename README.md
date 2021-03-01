@@ -1,4 +1,12 @@
 # Önlab
+## Ütemterv
+- OpenCV: Perzisztencia, Intervallum szerinti lementés
+- OpenCV: Szálkezelés, Indítás/Leállítás
+- Prophet: Váz elkészítése, Adatok olvasása
+- Prophet: Befejezés, Bemenet/Kimenet kész
+- Web: Kezdetleges váz elkészítése
+- Web: Szerver/Kliens kommunikáció a vázzal
+- Web: Felhasználói felület kialakítása
 ## Specifikáció
 > Pláza kamerafigyelő alkalmazás => emberek életkora(kbra)/neme felismerés
 - Idő intervallumokra osztása (pl 2-3 órákra)
