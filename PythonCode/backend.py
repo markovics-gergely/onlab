@@ -17,7 +17,6 @@ def ipcam():
             break
 
     cv2.destroyAllWindows()
-
 def webcam():
     video = cv2.VideoCapture(0)
 
@@ -34,22 +33,13 @@ def webcam():
 
     video.release()
     cv2.destroyAllWindows()
-
 def webcamFaceDetect():
     video_capture = cv2.VideoCapture(0)
 
     viktor_image = fr.load_image_file("images/image1.png")
-    palvin_image = fr.load_image_file("images/image2.jpg")
-    #bruno_face_encoding = {
-    #    fr.face_encodings(viktor_image),
-    #    fr.face_encodings(palvin_image)
-    #}
-
     viktor_face_encoding = fr.face_encodings(viktor_image)[0]
-    palvin_face_encoding = fr.face_encodings(palvin_image)[0]
-
     known_face_encondings = [viktor_face_encoding, palvin_face_encoding]
-    known_face_names = ["Viktor", "Palvin"]
+    known_face_names = ["Viktor"]
 
     while True: 
         ret, frame = video_capture.read()
@@ -84,9 +74,6 @@ def webcamFaceDetect():
     video_capture.release()
     cv2.destroyAllWindows()
 
-age_model = cv2.dnn.readNetFromCaffe("age.prototxt", "dex_chalearn_iccv2015.caffemodel")
-gender_model = cv2.dnn.readNetFromCaffe("gender.prototxt", "gender.caffemodel")
-haar_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 ageList=[[0, 2], [4, 6], [8, 12], [15, 20], [25, 32], [38, 43], [48, 53], [60, 100]]
@@ -98,17 +85,22 @@ def find_interval(num):
          return (intervals[0], intervals[-1])
          
 def ipcamFaceDetect():
-    face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+    age_model = cv2.dnn.readNetFromCaffe("age.prototxt", "dex_chalearn_iccv2015.caffemodel")
+    gender_model = cv2.dnn.readNetFromCaffe("gender.prototxt", "gender.caffemodel")
+    haar_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
-    video = cv2.VideoCapture(0)
-    address = 'http://192.168.1.100:8080/video'
-    video.open(address)
+    url = 'http://192.168.0.176:8080/shot.jpg'
+    #video = cv2.VideoCapture(0)
+    #video.open(url)
    
     while True:
-        check, frame = video.read()
+        imgResp = urllib.urlopen(url)
+        imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
+        frame = cv2.imdecode(imgNp, -1)
+
         if frame is not None:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5)
+            faces = haar_detector.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5)
             for face in faces:
                   x, y, w, h = face
                   timedelay = time.time()
@@ -133,8 +125,7 @@ def ipcamFaceDetect():
         if key == ord('q'):
             break
     
-    video.release()
+    #video.release()
     cv2.destroyAllWindows()
 
-#ipcam()
 ipcamFaceDetect()
