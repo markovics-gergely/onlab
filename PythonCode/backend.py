@@ -84,20 +84,38 @@ def webcamFaceDetect():
     video_capture.release()
     cv2.destroyAllWindows()
 
+age_model = cv2.dnn.readNetFromCaffe("age.prototxt", "dex_imdb_wiki.caffemodel")
+gender_model = cv2.dnn.readNetFromCaffe("gender.prototxt", "gender.caffemodel")
+haar_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+output_indexes = np.array([i for i in range(0, 101)])
 def ipcamFaceDetect():
     face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
     video = cv2.VideoCapture(0)
-    address = 'http://192.168.0.176:8080/video'
+    address = 'http://192.168.1.100:8080/video'
     video.open(address)
 
     while True:
         check, frame = video.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        face = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5)
-        for x, y, w, h in face:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5)
+        for face in faces:
+            x, y, w, h = face
+            detected_face = frame[int(y):int(y+h), int(x):int(x+w)]
+            detected_face = cv2.resize(detected_face, (224, 224))
+            img_blob = cv2.dnn.blobFromImage(detected_face) #caffe model expects (1, 3, 224, 224) shape input
 
+            age_model.setInput(img_blob)
+            age_dist = age_model.forward()[0]
+            apparent_predictions = round(np.sum(age_dist * output_indexes), 2)
+            gender_model.setInput(img_blob)
+            gender_class = gender_model.forward()[0]
+            gender = 'Woman ' if np.argmax(gender_class) == 0 else 'Man'
+
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            cv2.putText(frame, str(apparent_predictions), (x+int(3*w/4), y - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 111, 255), 2)
+            cv2.putText(frame, gender, (x+int(w/4), y - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 111, 255), 2)
+        
         cv2.imshow("IP Cam Facedetection", frame)
 
         key = cv2.waitKey(1)
