@@ -76,13 +76,13 @@ def webcamFaceDetect():
 
 
 MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
-ageList=[[0, 2], [4, 6], [8, 12], [15, 20], [25, 32], [38, 43], [48, 53], [60, 100]]
+ageList=[[0, 5], [6, 10], [10, 14], [15, 21], [22, 29], [30, 45], [46, 59], [60, 100]]
 genderList = ['Female', 'Male']
 
 def find_interval(num):
     for intervals in ageList:
       if intervals[0] <= num <= intervals[-1]:
-         return (intervals[0], intervals[-1])
+         return str(intervals[0]) + "-" + str(intervals[-1])
          
 def ipcamFaceDetect():
     age_model = cv2.dnn.readNetFromCaffe("age.prototxt", "dex_chalearn_iccv2015.caffemodel")
@@ -109,7 +109,7 @@ def ipcamFaceDetect():
                   
                   age_model.setInput(img_blob)
                   age_pred = age_model.forward()
-                  age = str(find_interval(age_pred[0].argmax()))
+                  age = find_interval(age_pred[0].argmax())
 
                   gender_model.setInput(img_blob)
                   gender_class = gender_model.forward()[0]
