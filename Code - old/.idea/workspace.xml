@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bcdd8f74-bf89-4ff3-8521-81f67d415237" name="Default Changelist" comment="" />
+    <list default="true" id="bcdd8f74-bf89-4ff3-8521-81f67d415237" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../PythonCode/backend.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PythonCode/backend.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,6 +28,8 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="F:/Programing/ProgamingPath/Java/JavaCV/javacv-platform-1.5.4-bin/videoinput.jar" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -40,7 +44,7 @@
       <recent name="userinterface" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main (1)">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="JavaFxPlayVideoAndAudio" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="userinterface.JavaFxPlayVideoAndAudio" />
       <module name="Code" />
@@ -76,7 +80,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main (1)" />
         <item itemvalue="Application.JavaFxPlayVideoAndAudio" />
       </list>
     </recent_temporary>
@@ -89,6 +92,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1613397541046</updated>
+      <workItem from="1614689858363" duration="7000" />
     </task>
     <servers />
   </component>
