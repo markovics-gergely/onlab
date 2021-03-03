@@ -24,6 +24,7 @@
 - [Face api](https://github.com/justadudewhohacks/face-api.js)
 - [OpenCV](https://www.youtube.com/watch?v=oXlwWbU8l2o)
 - [Prophet](https://facebook.github.io/prophet/)
+- [Python threading tutorial](https://realpython.com/intro-to-python-threading/)
 
 ## Felhasználói felület
 - Felhasználó bead ip-címet/címeket amiket figyel
