@@ -1,2 +1,4 @@
 *.caffemodel
 Code/BackEnd/.vscode/settings.json
+Code/.vscode/settings.json
+Code/.vscode
