@@ -23,11 +23,11 @@ def find_interval_id(num):
             return i
 
 def ipcamFaceDetect(urladdress):
-    age_model = cv2.dnn.readNetFromCaffe("age.prototxt", "dex_chalearn_iccv2015.caffemodel")
-    gender_model = cv2.dnn.readNetFromCaffe("gender.prototxt", "gender.caffemodel")
-    haar_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+    age_model = cv2.dnn.readNetFromCaffe("BackEnd/age.prototxt", "BackEnd/age.caffemodel")
+    gender_model = cv2.dnn.readNetFromCaffe("BackEnd/gender.prototxt", "BackEnd/gender.caffemodel")
+    haar_detector = cv2.CascadeClassifier("BackEnd/haarcascade_frontalface_default.xml")
 
-    url = urladdress
+    url = urladdress + "/shot.jpg"
    
     while True:
         imgResp = urllib.urlopen(url)
@@ -66,4 +66,5 @@ def ipcamFaceDetect(urladdress):
     #video.release()
     cv2.destroyAllWindows()
 
-ipcamFaceDetect('http://192.168.1.100:8080/shot.jpg')
+#ipcamFaceDetect('http://192.168.1.100:8080')
+ipcamFaceDetect('http://192.168.0.176:8080')
