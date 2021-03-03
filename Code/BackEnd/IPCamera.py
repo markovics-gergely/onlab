@@ -3,15 +3,25 @@ import cv2, time
 import urllib.request as urllib
 import face_recognition as fr
 
+intervals=[[0, 2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18], [18, 20], [20, 22], [22, 24]]
+intervalSavedToday=[False, False, False, False, False, False, False, False, False, False, False, False]
+ageBucket=[0, 0, 0, 0, 0, 0, 0, 0]
+
 MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
-ageList=[[0, 2], [4, 6], [8, 12], [15, 20], [25, 32], [38, 43], [48, 53], [60, 100]]
+ageList=[[0, 6], [6, 12], [12, 18], [18, 26], [26, 36], [36, 48], [48, 60], [60, 100]]
 genderList = ['Female', 'Male']
 
-def find_interval(num):
+def str_interval(num):
     for intervals in ageList:
       if intervals[0] <= num <= intervals[-1]:
-         return (intervals[0] + str(" - ") + intervals[-1])
-         
+         return str(intervals[0]) + "-" + str(intervals[-1])
+
+def find_interval_id(num):
+    i = 0
+    for i in range(len(ageList)) :
+        if ageList[i][0] <= num <= ageList[i][-1]:
+         return i
+
 def ipcamFaceDetect(urladdress):
     age_model = cv2.dnn.readNetFromCaffe("age.prototxt", "dex_chalearn_iccv2015.caffemodel")
     gender_model = cv2.dnn.readNetFromCaffe("gender.prototxt", "gender.caffemodel")
@@ -35,7 +45,9 @@ def ipcamFaceDetect(urladdress):
                   
                   age_model.setInput(img_blob)
                   age_pred = age_model.forward()
-                  age = str(find_interval(age_pred[0].argmax()))
+                  agenum = age_pred[0].argmax()
+                  age = str_interval(agenum)
+                  ageBucket[find_interval_id(agenum)] += 1
 
                   gender_model.setInput(img_blob)
                   gender_class = gender_model.forward()[0]
