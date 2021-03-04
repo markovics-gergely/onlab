@@ -41,6 +41,7 @@
 	- (Később kelleni fog egy age és gender detection, sokféle van)
 		- https://www.youtube.com/watch?v=bAOdXTDuha8
 		- https://www.youtube.com/watch?v=q_JF0GSRPXA
+	- django (web framework)
 	
 ## Felhasznált segítségek
 - [Webcam Face Recognition](https://www.youtube.com/watch?v=lC_y8wD7F3Y)
@@ -48,7 +49,4 @@
 
 ## Dokumentáció
 - Függvények:
-	- **webcam()**: Egyszerűen beveszi a webkamera videó képét és kivetíti.
-	- **ipcam()**: Az IP kamera képét framenként veszi be és kívetíti.
-	- **webcamFaceDetect()**: Ez fel is ismeri, hogy ki van a képen egy előre megadott kép alapján és a webcamera képét adja vissza egy kerettel és névvel.
 	- **ipcamFaceDetect()**: Ez nem ismeri fel ki van rajta, csak az arcot, azonban itt nem framenként veszi, hanem a tényleges videót rakja ki.
