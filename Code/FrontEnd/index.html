@@ -15,7 +15,7 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 
-	<body>
+	<body>	
 		<header>
 			<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 				<a class="navbar-brand" href="index.html">
@@ -52,74 +52,25 @@
                 <div class="row">
 					<div class="cardbox col-sm-12 col-md-8 col-lg-8">
 						<div class="card">
-                            <div class="card-header text-center">
-                                IP Manager
+                            <div class="card-header">
+								<div class="header-items">
+									<h4 class="ip-addr ml-3">IP Manager</h4>
+									<div class="icons ml-auto mr-3">
+										<input type="image" src="assets/add_ip.png" id="addIP" onclick="addIP()"/>
+									</div>
+								</div>	
                             </div>
 							<div class="card-body">
-								<div class="card-content">
-									<div class="camera-list-item">
+								<div class="card-content">			
+									<!--
+									<div class="camera-list-item" id="ipElement1" onclick="clickOnIP(id)" onmouseover="overOnIP(id)">
 										<h4 class="ip-addr ml-3">192.168.0.0</h4>
 										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/start.png" alt="start-pause">
+											<input type="image" src="assets/start.png" id="ipPauseOrStart1" onclick="changeImage(id)" alt="start-pause"/>
 											<input type="image" src="assets/delete.png" alt="delete">
 										</div>
 									</div>
-									<div class="camera-list-item">
-										<h4 class="ip-addr ml-3">192.168.0.1</h4>
-										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/start.png" alt="start-pause">
-											<input type="image" src="assets/delete.png" alt="delete">
-										</div>
-									</div>
-									<div class="camera-list-item">
-										<h4 class="ip-addr ml-3">192.168.0.2</h4>
-										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/pause.png" alt="start-pause">
-											<input type="image" src="assets/delete.png" alt="delete">
-										</div>
-									</div>
-									<div class="camera-list-item">
-										<h4 class="ip-addr ml-3">192.168.0.3</h4>
-										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/pause.png" alt="start-pause">
-											<input type="image" src="assets/delete.png" alt="delete">
-										</div>
-									</div>
-									<div class="camera-list-item">
-										<h4 class="ip-addr ml-3">192.168.0.4</h4>
-										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/start.png" alt="start-pause">
-											<input type="image" src="assets/delete.png" alt="delete">
-										</div>
-									</div>
-									<div class="camera-list-item">
-										<h4 class="ip-addr ml-3">192.168.0.5</h4>
-										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/start.png" alt="start-pause">
-											<input type="image" src="assets/delete.png" alt="delete">
-										</div>
-									</div>
-									<div class="camera-list-item">
-										<h4 class="ip-addr ml-3">192.168.0.6</h4>
-										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/start.png" alt="start-pause">
-											<input type="image" src="assets/delete.png" alt="delete">
-										</div>
-									</div>
-									<div class="camera-list-item">
-										<h4 class="ip-addr ml-3">192.168.0.7</h4>
-										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/start.png" alt="start-pause">
-											<input type="image" src="assets/delete.png" alt="delete">
-										</div>
-									</div>
-									<div class="camera-list-item">
-										<h4 class="ip-addr ml-3">192.168.0.8</h4>
-										<div class="icons ml-auto mr-3">
-											<input type="image" src="assets/start.png" alt="start-pause">
-											<input type="image" src="assets/delete.png" alt="delete">
-										</div>
-									</div>
+									-->
 								</div>
 							</div>
                         </div>
