@@ -67,8 +67,8 @@ class IPCamera:
     MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 
     def getNameFromUrl(self, url):
-        newUrl = url.replace(".", ",") 
-        newUrl = newUrl.replace(":", ",")  
+        newUrl = url.replace(".", "-") 
+        newUrl = newUrl.replace(":", "-")  
         return newUrl
 
     def writeCSV(self):
