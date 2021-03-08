@@ -122,11 +122,13 @@ class IPCamera:
                     gendernum = np.argmax(gender_pred)
                     self.personBucket.increaseGenderBucket(gendernum)
 
-                    #age = self.str_interval(agenum)
-                    #gender = self.genderList[gendernum]
-                    #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
-                    #cv2.putText(frame, age, (x+int(3*w/4), y - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
-                    #cv2.putText(frame, gender, (x+int(w/4), y - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+                    '''
+                    age = self.str_interval(agenum)
+                    gender = self.genderList[gendernum]
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
+                    cv2.putText(frame, age, (x+int(3*w/4), y - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+                    cv2.putText(frame, gender, (x+int(w/4), y - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+                    '''
 
                     if(self.intervalHandler.isDataSaveable()) :
                         thread = myThread(1, self)
@@ -139,7 +141,6 @@ class IPCamera:
                 break
         
         cv2.destroyAllWindows()
-
 
 #ipm = IPCamera('192.168.1.100:8080')
 ipm = IPCamera('192.168.0.176:8080')
