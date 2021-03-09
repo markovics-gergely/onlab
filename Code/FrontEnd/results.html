@@ -29,14 +29,14 @@
 
 				<div class="collapse navbar-collapse" id="navbar-toggler">
 					<ul class="navbar-nav ml-auto">
-						<li class="nav-item active">
-							<a class="nav-link" href="index.html">Camera Manager <span class="sr-only">(current)</span></a>
+						<li class="nav-item">
+							<a class="nav-link" href="index.html">Camera Manager</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="prediction.html">Prediction</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="results.html">Results</a>
+						<li class="nav-item active">
+							<a class="nav-link" href="results.html">Results <span class="sr-only">(current)</span></a>
 						</li>
 					</ul>
 				</div>
@@ -50,39 +50,14 @@
 					<h4>Age and Gender Prediction</h4>
 				</div>
 				<div class="title-border">
-					<h2 class="title">Connected Cameras</h2>
+					<h2 class="title">Camera Results</h2>
 				</div>
-                <div class="row">
-					<div class="cardbox col-sm-12 col-md-8 col-lg-8">
-						<div class="card">
-                            <div class="card-header">
-								<div class="header-items">
-									<h4 class="ip-addr ml-3">IP Manager</h4>
-									<div class="icons ml-auto mr-3">
-										<input type="image" src="assets/add_ip.png" id="addIP" onclick="addIP()"/>
-									</div>
-								</div>	
-                            </div>
-							<div class="card-body">
-								<div id="managerpanel" class="card-content">			
-									<!-- IP-k listája-->
-								</div>
-							</div>
-                        </div>
-					</div>
-					<div class="cardbox col-sm-12 col-md-4 col-lg-4">
-						<div class="card">
-                            <div class="card-header text-center">
-                                Camera Information
-                            </div>
-							<div class="card-body">
-								<div id="caminfo" class="card-content">
-									<!-- Információ listája-->
-								</div>
-							</div>
-                        </div>
-					</div>
-				</div>
+				<h3>
+					Ha megnyomod a predictet az előző lapon ide navigál.
+					Azt kéne, hogy kamerákra osztva vissza lehessen nézni az összes eddig predictet, ne csak egy random sorban írjon ki annyit, hogy nők 
+					hanem mondjuk több iformációt adjon meg, pl 40% ban fiatalok 50% ban nők és ilyesmi pontosabb infókat lehessen visszanézni.
+					Kamerákra osztva kiadja az összes eddigi predictet amit lehívtunk rá.
+				</h3>
             </div>
         </section>
 

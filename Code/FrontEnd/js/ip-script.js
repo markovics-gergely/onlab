@@ -15,6 +15,13 @@ $(document).on("click", ".ipPauseOrStart", function() {
     $(this).attr("src", $(this).attr("src").match(start) ? pause : start);
 })
 
+$(document).on("click", ".ipDelete", function() {
+    var id = $(".ipDelete").index($(this));
+    cameras.splice(id, 1)
+
+    //Tüntesse el a divjét
+})
+
 $(document).on("click", ".camera-list-item", function() {
     $(".camera-list-item").css('background-color', 'white');
 
@@ -78,6 +85,7 @@ function renderCameras() {
         var deleteImage = document.createElement('input');
         deleteImage.type = "image";
         deleteImage.src = "assets/delete.png";
+        deleteImage.className = "ipDelete";
 
         var outerdiv = document.createElement('div');
         outerdiv.className = "camera-list-item";
