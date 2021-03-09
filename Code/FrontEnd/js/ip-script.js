@@ -19,7 +19,7 @@ $(document).on("click", ".ipDelete", function() {
     var id = $(".ipDelete").index($(this));
     cameras.splice(id, 1)
 
-    //Tüntesse el a divjét
+    renderCameras();
 })
 
 $(document).on("click", ".camera-list-item", function() {
@@ -44,34 +44,11 @@ addbutton.onclick = function() {
     uniqueIpID++;
     cameras.push(newCamera);
 
-    var ip = document.createElement('h4');
-    ip.textContent = newCamera.name;
-    ip.className = "ip-addr ml-3";
-
-    var startImage = document.createElement('input');
-    startImage.type = "image";
-    startImage.src = "assets/start.png";
-    startImage.className = "ipPauseOrStart";
-
-    var deleteImage = document.createElement('input');
-    deleteImage.type = "image";
-    deleteImage.src = "assets/delete.png";
-
-    var outerdiv = document.createElement('div');
-    outerdiv.className = "camera-list-item";
-
-    var innerdiv = document.createElement('div');
-    innerdiv.className = "icons ml-auto mr-3"
-
-    innerdiv.appendChild(startImage);
-    innerdiv.appendChild(deleteImage);
-    outerdiv.appendChild(ip);
-    outerdiv.appendChild(innerdiv);
-
-    managerpanel.appendChild(outerdiv);
+    renderCameras();
 }
 
 function renderCameras() {
+    managerpanel.innerHTML = "";
     cameras.forEach(function(camera, id){
         var ip = document.createElement('h4');
         ip.textContent = camera.name;
