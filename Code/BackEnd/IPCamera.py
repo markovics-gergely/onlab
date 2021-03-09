@@ -72,7 +72,7 @@ class IPCamera:
         return newUrl
 
     def writeCSV(self):
-        path='DB/cameras' + self.name + '.csv'
+        path='DB/cameras/' + self.name + '.csv'
         time = datetime(datetime.today().year, datetime.today().month, datetime.today().day, self.intervalHandler.intervalHourNow)
 
         notExist = True
