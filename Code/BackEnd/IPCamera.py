@@ -74,6 +74,7 @@ class IPCamera:
         self.intervalHandler = IntervalHandler()
         self.url = "http://" + url
         self.name = self.getNameFromUrl(url)
+        self.stopped = False
 
     MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 
@@ -104,6 +105,9 @@ class IPCamera:
             if intervals[0] <= num <= intervals[-1]:
                 return str(intervals[0]) + "-" + str(intervals[-1])
     '''
+
+    def stopCamera():
+        stopped = True
 
     def ipcamFaceDetect(self):
         age_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/age.prototxt", "BackEnd/Models/age.caffemodel")
@@ -149,8 +153,10 @@ class IPCamera:
             
             cv2.imshow("IP Cam Facedetection", frame)
 
-            key = cv2.waitKey(1)
-            if key == ord('q'):
+            #key = cv2.waitKey(1)
+            #if key == ord('q'):
+            #    break
+            if(stopped) : 
                 break
         
         cv2.destroyAllWindows()
