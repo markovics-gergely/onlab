@@ -69,12 +69,13 @@ class IntervalHandler:
             self.dateToday = datetime.today().strftime('%Y-%m-%d')
 
 class IPCamera:
-    def __init__(self, url):
+    def __init__(self, url, name):
         self.personBucket = PersonBucket()
         self.intervalHandler = IntervalHandler()
         self.url = "http://" + url
-        self.name = self.getNameFromUrl(url)
+        self.filename = self.getNameFromUrl(url)
         self.stopped = False
+        self.name = name
 
     MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 
@@ -84,7 +85,7 @@ class IPCamera:
         return newUrl
 
     def writeCSV(self):
-        path='DB/cameras/' + self.name + '.csv'
+        path='DB/cameras/' + self.filename + '.csv'
         time = datetime(datetime.today().year, datetime.today().month, datetime.today().day, self.intervalHandler.intervalHourNow)
 
         notExist = True
@@ -161,6 +162,6 @@ class IPCamera:
         
         cv2.destroyAllWindows()
 
-ipm = IPCamera('192.168.1.100:8080')
-#ipm = IPCamera('192.168.0.176:8080')
+ipm = IPCamera('192.168.1.100:8080', 'ipcamera')
+#ipm = IPCamera('192.168.0.176:8080', 'ipcamera')
 ipm.ipcamFaceDetect()

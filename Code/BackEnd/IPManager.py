@@ -7,6 +7,7 @@ import threading
 import json
 import pandas as pd
 import os.path
+import IPCamera
 
 class IPManager:
     def __init__(self):
@@ -21,5 +22,16 @@ class IPManager:
     def stopCamera(self, ipaddr):
    
     def parseCameras():
+        cameraList = []
 
-    
+    def persistCamera(self, ipaddr, name):
+        path='DB/cameraList.csv'
+
+        notExist = True
+        if(os.path.isfile(path)): 
+            notExist=False
+        
+        self.cameraList.push(new IPCamera(ipaddr, name))
+        
+        interval = pd.DataFrame([[ipaddr, name]], columns=['ipaddress', 'name'])
+        interval.to_csv(path, mode='a', index=False, header=notExist)
