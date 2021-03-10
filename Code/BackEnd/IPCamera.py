@@ -4,9 +4,13 @@ import urllib.request as urllib
 import face_recognition as fr
 from datetime import datetime
 import threading
-import json
 import pandas as pd
 import os.path
+from enum import Enum
+
+class CameraStatus(Enum):
+    Paused = 0
+    Started = 1
 
 class PersonBucket:
     def __init__(self):
@@ -69,18 +73,19 @@ class IntervalHandler:
             self.dateToday = datetime.today().strftime('%Y-%m-%d')
 
 class IPCamera:
-    def __init__(self, url, name):
+    def __init__(self, url, name, status):
         self.personBucket = PersonBucket()
         self.intervalHandler = IntervalHandler()
-        self.url = "http://" + url
-        self.filename = self.getNameFromUrl(url)
+        self.url = url
+        self.filename = self.getNameFromUrl()
         self.stopped = False
         self.name = name
+        self.status = status
 
     MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 
-    def getNameFromUrl(self, url):
-        newUrl = url.replace(".", "-") 
+    def getNameFromUrl(self):
+        newUrl = self.url.replace(".", "-") 
         newUrl = newUrl.replace(":", "-")  
         return newUrl
 
@@ -99,24 +104,16 @@ class IPCamera:
 
         interval.to_csv(path, mode='a', index=False, header=notExist)
         
-
-    '''
-    def str_interval(self, num):
-        for intervals in self.personBucket.ageList:
-            if intervals[0] <= num <= intervals[-1]:
-                return str(intervals[0]) + "-" + str(intervals[-1])
-    '''
-
-    def stopCamera():
-        stopped = True
+    def stopCamera(self):
+        self.stopped = True
 
     def ipcamFaceDetect(self):
         age_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/age.prototxt", "BackEnd/Models/age.caffemodel")
         gender_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/gender.prototxt", "BackEnd/Models/gender.caffemodel")
         haar_detector = cv2.CascadeClassifier("BackEnd/Models/haarcascade_frontalface_default.xml")
 
-        urlshot = self.url + "/shot.jpg"
-    
+        urlshot = "http://" + self.url + "/shot.jpg"
+        print(self.name)
         while True:
             imgResp = urllib.urlopen(urlshot)
             imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
@@ -140,28 +137,24 @@ class IPCamera:
                     gendernum = np.argmax(gender_pred)
                     self.personBucket.increaseGenderBucket(gendernum)
 
-                    '''
-                    age = self.str_interval(agenum)
-                    gender = self.genderList[gendernum]
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
-                    cv2.putText(frame, age, (x+int(3*w/4), y - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
-                    cv2.putText(frame, gender, (x+int(w/4), y - 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
-                    '''
 
                     if(self.intervalHandler.isDataSaveable()) :
                         thread = threading.Thread(target=self.writeCSV, args=())
                         thread.start()
             
-            cv2.imshow("IP Cam Facedetection", frame)
+
+            #cv2.imshow("IP Cam Facedetection", frame)
 
             #key = cv2.waitKey(1)
             #if key == ord('q'):
             #    break
-            if(stopped) : 
+
+            if(self.stopped) : 
                 break
-        
+
+        print("kiért")       
         cv2.destroyAllWindows()
 
-ipm = IPCamera('192.168.1.100:8080', 'ipcamera')
-#ipm = IPCamera('192.168.0.176:8080', 'ipcamera')
-ipm.ipcamFaceDetect()
+#ipm = IPCamera('192.168.1.100:8080', 'ipcamera')
+#ipm = IPCamera('192.168.0.176:8080', 'ipcamera', CameraStatus.Started)
+#ipm.ipcamFaceDetect()
