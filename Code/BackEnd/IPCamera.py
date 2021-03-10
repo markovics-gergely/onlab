@@ -30,32 +30,43 @@ class PersonBucket:
     def findIntervalIdx(self, num):
         i = 0
         for i in range(len(self.ageList)) :
-            if self.ageList[i][0] <= num <= self.ageList[i][-1]:
+            if self.ageList[i][0] <= num < self.ageList[i][-1]:
                 return i 
 
 class IntervalHandler:
     def __init__(self):
         self.intervals=[[0, 2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18], [18, 20], [20, 22], [22, 24]]
         self.intervalSavedToday=[False, False, False, False, False, False, False, False, False, False, False, False]
-        self.intervalHourNow = 0
+        self.intervalHourNow = self.intervals[self.getIntervalID(datetime.now().hour)][0]
+        self.dateToday = datetime.today().strftime('%Y-%m-%d')
 
+    def getIntervalID(self, hour):
+        for i in range(len(self.intervals)) :
+            if self.intervals[i][0] <= hour < self.intervals[i][-1]:
+                return i
+    
     def isDataSaveable(self):
-        #TODO
-        if(datetime.now().second % 10 == 0):
-            self.intervalHourNow = datetime.now().hour - datetime.now().hour % 2
+        intervalID = self.getIntervalID(datetime.now().hour)
+        intervalstartnow = self.intervals[intervalID][0]
+        if(datetime.today().strftime('%Y-%m-%d') != self.dateToday) :
             return True
+        if(not self.intervalSavedToday[intervalID] and intervalstartnow != self.intervalHourNow) :
+            return True
+        #if(datetime.now().second % 10 == 0):
+        #    self.intervalHourNow = datetime.now().hour - datetime.now().hour % 2
+        #    return True
         return False
 
-class myThread (threading.Thread):
-    def __init__(self, threadID, ipcamera):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.ipcamera = ipcamera
-    def stop(self):
-        self.__stop = True
-    def run(self):
-        self.ipcamera.writeCSV()
-        myThread.stop(self)
+    def refreshIntervalHour(self) :
+        oldIntervalID = self.getIntervalID(self.intervalHourNow)
+        self.intervalSavedToday[oldIntervalID] = True
+        
+        newIntervalID = self.getIntervalID(datetime.now().hour)
+        self.intervalHourNow = self.intervals[newIntervalID][0]
+
+        if(datetime.today().strftime('%Y-%m-%d') != self.dateToday) :
+            self.intervalSavedToday=[False, False, False, False, False, False, False, False, False, False, False, False]
+            self.dateToday = datetime.today().strftime('%Y-%m-%d')
 
 class IPCamera:
     def __init__(self, url):
@@ -80,10 +91,12 @@ class IPCamera:
             notExist=False
         
         interval = pd.DataFrame([[str(time), self.personBucket.ageBucket, self.personBucket.genderBucket]], columns=['time', 'age', 'gender'])
-        interval.to_csv(path, mode='a', index=False, header=notExist)
-
         self.personBucket.clearAgeBucket()
         self.personBucket.clearGenderBucket()
+        self.intervalHandler.refreshIntervalHour()
+
+        interval.to_csv(path, mode='a', index=False, header=notExist)
+        
 
     '''
     def str_interval(self, num):
@@ -131,7 +144,7 @@ class IPCamera:
                     '''
 
                     if(self.intervalHandler.isDataSaveable()) :
-                        thread = myThread(1, self)
+                        thread = threading.Thread(target=self.writeCSV, args=())
                         thread.start()
             
             cv2.imshow("IP Cam Facedetection", frame)
@@ -142,6 +155,6 @@ class IPCamera:
         
         cv2.destroyAllWindows()
 
-#ipm = IPCamera('192.168.1.100:8080')
-ipm = IPCamera('192.168.0.176:8080')
+ipm = IPCamera('192.168.1.100:8080')
+#ipm = IPCamera('192.168.0.176:8080')
 ipm.ipcamFaceDetect()
