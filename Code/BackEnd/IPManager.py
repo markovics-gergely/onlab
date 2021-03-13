@@ -109,6 +109,10 @@ time.sleep(15)
 print(ipm.cameraList[0].status)
 ipm.pauseCamera(0)
 print(ipm.cameraList[0].status)
+
+for thread in threading.enumerate(): 
+    print(thread.name)
+
 #ipm.persistCamera("198", "a", ic.CameraStatus.Paused)
 #ipm.deleteCameraFromDB(1)
 #ipm.parseCameras()
