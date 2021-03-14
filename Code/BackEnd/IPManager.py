@@ -1,12 +1,11 @@
 import numpy as np
-import cv2, time
+from cv2 import cv2
+import time
 import urllib.request as urllib
-import face_recognition as fr
 from datetime import datetime
 import threading
-import json
 import pandas as pd
-import os
+import os.path
 import IPCamera as ic
 from enum import Enum
 
@@ -17,9 +16,8 @@ class IPManager:
     def addCamera(self, ipaddr, name, status):
         self.persistCamera(ipaddr, name, status)
         
-        ipcamera = IPCamera(ipaddr, name, status)
+        ipcamera = ic.IPCamera(ipaddr, name, status)
         self.cameraList.append(ipcamera)
-
 
     def deleteCamera(self, id):
         self.pauseCamera(id)
@@ -83,12 +81,14 @@ class IPManager:
 
 
 ipm = IPManager()
+
 ipm.startCamera(0)
 print(ipm.cameraList[0].status)
+
 time.sleep(10)
-print(ipm.cameraList[0].status)
+
 ipm.pauseCamera(0)
 print(ipm.cameraList[0].status)
 
-for thread in threading.enumerate(): 
-    print(thread.name)
+os._exit(0)
+
