@@ -13,12 +13,6 @@ from enum import Enum
 class IPManager:
     def __init__(self):
         self.cameraList = self.parseCameras()
-        self.cameraThreadList = []
-        self.createThreads()
-
-    def __del__(self):
-        for camera in self.cameraList :
-            camera.stopCamera()
 
     def addCamera(self, ipaddr, name, status):
         self.persistCamera(ipaddr, name, status)
@@ -27,23 +21,16 @@ class IPManager:
         self.cameraList.append(ipcamera)
 
 
-    def deleteCamera(self, ipaddr):
-        i = 0
-        for i in range(len(self.cameraList)) :
-            if(self.cameraList[i].url == ipaddr):
-                self.cameraList[i].stopCamera()
-                self.cameraThreadList.pop(i)
-                self.cameraList.pop(i)
-                self.deleteCameraFromDB(i)
-                
+    def deleteCamera(self, id):
+        self.pauseCamera(id)
+        self.cameraList.pop(id)
+        self.deleteCameraFromDB(id)        
 
     def startCamera(self, id):
-        self.cameraList[id].status = ic.CameraStatus.Started
-        self.cameraThreadList[id].start()
+        self.cameraList[id].startCameraThread()
 
     def pauseCamera(self, id):
-        self.cameraList[id].status = ic.CameraStatus.Paused
-        self.cameraList[id].stopCamera()
+        self.cameraList[id].pauseCameraThread()
 
     def parseCameras(self):
         clist = []
@@ -60,13 +47,6 @@ class IPManager:
             clist.append(ipcamera)
 
         return clist
-
-    def createThreads(self) :
-        i = 0
-        for i in range(len(self.cameraList)) :
-            self.cameraThreadList.append(threading.Thread(target=self.cameraList[i].ipcamFaceDetect, args=()))
-            if(self.cameraList[i].status == ic.CameraStatus.Started) :
-               self.cameraThreadList[i].start()
 
     def persistCamera(self, ipaddr, name, status):
         path='DB/cameraList.csv'
@@ -105,14 +85,10 @@ class IPManager:
 ipm = IPManager()
 ipm.startCamera(0)
 print(ipm.cameraList[0].status)
-time.sleep(15)
+time.sleep(10)
 print(ipm.cameraList[0].status)
 ipm.pauseCamera(0)
 print(ipm.cameraList[0].status)
 
 for thread in threading.enumerate(): 
     print(thread.name)
-
-#ipm.persistCamera("198", "a", ic.CameraStatus.Paused)
-#ipm.deleteCameraFromDB(1)
-#ipm.parseCameras()
