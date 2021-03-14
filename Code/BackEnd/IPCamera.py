@@ -123,7 +123,7 @@ class IPCamera:
         if(os.path.isfile(self.path)): 
             notExist=False
         
-        interval = pd.DataFrame([[self.intervalHandler.lastInterval, self.personBucket.ageBucket, self.personBucket.genderBucket]], columns=['time', 'age', 'gender'])
+        interval = pd.DataFrame([[self.intervalHandler.getIntervalDateNow(), self.personBucket.ageBucket, self.personBucket.genderBucket]], columns=['time', 'age', 'gender'])
         self.personBucket.clearAgeBucket()
         self.personBucket.clearGenderBucket()
         self.intervalHandler.refreshIntervalHour()
@@ -187,7 +187,7 @@ class IPCamera:
                 break
 
         self.writeCSV()
-        print(self.name + " kiért")       
+        print(self.name + " kiért")
         cv2.destroyAllWindows()
 
 #ipc = IPCamera('192.168.1.100:8080', 'ipcamera', CameraStatus.Started)
