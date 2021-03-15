@@ -188,7 +188,7 @@ class IPCamera:
 
         self.writeCSV()
         print(self.name + " kiért")
-        cv2.destroyAllWindows()
+        #cv2.destroyAllWindows()
 
 #ipc = IPCamera('192.168.1.100:8080', 'ipcamera', CameraStatus.Started)
 #time.sleep(5)
