@@ -37,7 +37,7 @@
 	- numpy
 	- opencv-python
 	- urllib3
-	- face_recognition (kell hozzá cmake és dlib)
+	- pandas
 	- (Később kelleni fog egy age és gender detection, sokféle van)
 		- https://www.youtube.com/watch?v=bAOdXTDuha8
 		- https://www.youtube.com/watch?v=q_JF0GSRPXA

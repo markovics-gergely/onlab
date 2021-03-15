@@ -1,11 +1,11 @@
 import numpy as np
-import cv2, time
+from cv2 import cv2
+import time
 import urllib.request as urllib
-import face_recognition as fr
 from datetime import datetime
 import threading
 import pandas as pd
-import os.path
+import os
 from enum import Enum
 
 class CameraStatus(Enum):
@@ -149,7 +149,6 @@ class IPCamera:
         haar_detector = cv2.CascadeClassifier("BackEnd/Models/haarcascade_frontalface_default.xml")
 
         urlshot = "http://" + self.url + "/shot.jpg"
-        print(self.name)
 
         while True:
             imgResp = urllib.urlopen(urlshot)
@@ -178,11 +177,10 @@ class IPCamera:
                     if(self.intervalHandler.isDataSaveable()) :
                         thread = threading.Thread(target=self.writeCSV, args=())
                         thread.start()
-            #cv2.imshow("IP Cam Facedetection", frame)
 
-            #key = cv2.waitKey(1)
-            #if key == ord('q'):
-            #    break
+            for thread in threading.enumerate(): 
+                print(thread.name)
+
             if(self.stopped) : 
                 break
 
@@ -190,6 +188,10 @@ class IPCamera:
         print(self.name + " kiért")
         #cv2.destroyAllWindows()
 
-#ipc = IPCamera('192.168.1.100:8080', 'ipcamera', CameraStatus.Started)
-#time.sleep(5)
+#ipc = IPCamera('192.168.0.176:8080', 'ipcamera', CameraStatus.Paused)
+#ipc.startCameraThread()
+#time.sleep(10)
 #ipc.pauseCameraThread()
+
+#os._exit(0)
+
