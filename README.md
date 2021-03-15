@@ -35,7 +35,7 @@
 - Python 3.6.8
 - Python libek:
 	- numpy
-	- opencv-python
+	- opencv-python (opencv-python==4.4.0.46 -> előfordulhat hogy a legújabb nem jó)
 	- urllib3
 	- pandas
 	- (Később kelleni fog egy age és gender detection, sokféle van)
