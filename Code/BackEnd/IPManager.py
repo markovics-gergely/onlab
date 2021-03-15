@@ -82,13 +82,11 @@ class IPManager:
 
 ipm = IPManager()
 
-ipm.startCamera(0)
-print(ipm.cameraList[0].status)
+ipm.startCamera(1)
+print(ipm.cameraList[1].status)
 
 time.sleep(10)
 
-ipm.pauseCamera(0)
-print(ipm.cameraList[0].status)
-
-os._exit(0)
+ipm.pauseCamera(1)
+print(ipm.cameraList[1].status)
 

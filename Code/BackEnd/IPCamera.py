@@ -58,7 +58,7 @@ class IntervalHandler:
         dateNow = self.getIntervalDateNow()
         if(self.lastInterval == self.defaultDate):
             self.lastInterval = str(dateNow)
-        if(self.lastInterval != str(dateNow)):
+        if(str(self.lastInterval) != str(dateNow)):
             return True
         return False
 
@@ -76,6 +76,12 @@ class IPCamera:
         self.name = name
         self.status = status
         self.cameraThread = threading.Thread(target=self.ipcamFaceDetect, args=())
+        self.writeThread = threading.Thread(target=self.writeCSV, args=())
+
+        self.age_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/age.prototxt", "BackEnd/Models/age.caffemodel")
+        self.gender_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/gender.prototxt", "BackEnd/Models/gender.caffemodel")
+        self.haar_detector = cv2.CascadeClassifier("BackEnd/Models/haarcascade_frontalface_default.xml")
+
         if(status == CameraStatus.Started):
             self.status = CameraStatus.Paused
             self.startCameraThread()
@@ -131,9 +137,11 @@ class IPCamera:
         interval.to_csv(self.path, mode='a', index=False, header=notExist)
         
     def startCameraThread(self):
-        if(self.status == CameraStatus.Paused) :
+        if(self.status == CameraStatus.Paused and not self.cameraThread.isAlive()) :
             if(self.intervalHandler.lastInterval == str(self.intervalHandler.getIntervalDateNow())) :
                 self.reloadIntervalData()
+
+            self.intervalHandler.refreshIntervalHour()
 
             self.status = CameraStatus.Started
             self.cameraThread.start()
@@ -144,10 +152,6 @@ class IPCamera:
             self.stopped = True
 
     def ipcamFaceDetect(self):
-        age_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/age.prototxt", "BackEnd/Models/age.caffemodel")
-        gender_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/gender.prototxt", "BackEnd/Models/gender.caffemodel")
-        haar_detector = cv2.CascadeClassifier("BackEnd/Models/haarcascade_frontalface_default.xml")
-
         urlshot = "http://" + self.url + "/shot.jpg"
 
         while True:
@@ -157,34 +161,30 @@ class IPCamera:
 
             if frame is not None:
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                faces = haar_detector.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5)
+                faces = self.haar_detector.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5)
                 for face in faces:
                     x, y, w, h = face
                     detected_face = frame[int(y):int(y+h), int(x):int(x+w)].copy()
                     img_blob = cv2.dnn.blobFromImage(detected_face, 1, (224, 224), self.MODEL_MEAN_VALUES, swapRB=False)
                     
-                    age_model.setInput(img_blob)
-                    age_pred = age_model.forward()
+                    self.age_model.setInput(img_blob)
+                    age_pred = self.age_model.forward()
                     agenum = age_pred[0].argmax()                 
                     self.personBucket.increaseAgeBucket(self.personBucket.findIntervalIdx(agenum))
 
-                    gender_model.setInput(img_blob)
-                    gender_pred = gender_model.forward()[0]
+                    self.gender_model.setInput(img_blob)
+                    gender_pred = self.gender_model.forward()[0]
                     gendernum = np.argmax(gender_pred)
                     self.personBucket.increaseGenderBucket(gendernum)
 
-
-                    if(self.intervalHandler.isDataSaveable()) :
-                        thread = threading.Thread(target=self.writeCSV, args=())
-                        thread.start()
-
-            for thread in threading.enumerate(): 
-                print(thread.name)
+            if(self.intervalHandler.isDataSaveable() and not self.writeThread.isAlive()) :
+                self.writeThread.start()
 
             if(self.stopped) : 
                 break
-
-        self.writeCSV()
+        
+        if(not self.writeThread.isAlive()) :
+            self.writeThread.start()
         print(self.name + " kiért")
         #cv2.destroyAllWindows()
 
