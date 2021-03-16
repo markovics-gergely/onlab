@@ -56,3 +56,4 @@
 	- A 127.0.0.1:8000/index/ en lehet elérni
 	- Létre van hozva /prediction és a /results része is, azonban az oldalon lévő html gombbal nem lehet navigálni, csak linbe beírva ezeket
 	- Képekre nem sikerült még megoldani a betöltést, azonban a css és js staticokra igen
+	- A /admin felületen "Marko" és "admin" felhasználó-pw kombóval tudsz belépni
