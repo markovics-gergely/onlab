@@ -5,6 +5,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>IP Camera Recognition</title>
 
+		{% load static %}
+
 		<!-- Bootstrap linkelése CDN-ről -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 		<!-- Font awesome 5 CDN-ről (solid, regular és brand is) -->
@@ -12,7 +14,7 @@
 		<!-- Google font (Muli) letöltése -->
 		<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
 		<!-- Saját CSS -->
-		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="{% static 'css/style.css' %}">
 	</head>
 
 	<body>
@@ -145,7 +147,7 @@
         <!-- Bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 		<!-- Saját js -->
-		<script src="js/pred-script.js"></script>
+		<script src="{% static 'js/pred-script.js' %}"></script>
 	</body>
 
 </html>
