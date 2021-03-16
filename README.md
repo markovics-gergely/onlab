@@ -38,15 +38,8 @@
 	- opencv-python (opencv-python==4.4.0.46 -> előfordulhat hogy a legújabb nem jó)
 	- urllib3
 	- pandas
-	- (Később kelleni fog egy age és gender detection, sokféle van)
-		- https://www.youtube.com/watch?v=bAOdXTDuha8
-		- https://www.youtube.com/watch?v=q_JF0GSRPXA
 	- django (web framework)
-	
-## Felhasznált segítségek
-- [Webcam Face Recognition](https://www.youtube.com/watch?v=lC_y8wD7F3Y)
-- [IPcam Face Detection](https://www.youtube.com/watch?v=0hT2cGSqPfk)
-
+	- 
 ## Dokumentáció
 - Függvények:
 	- **ipcamFaceDetect()**: Ez nem ismeri fel ki van rajta, csak az arcot, azonban itt nem framenként veszi, hanem a tényleges videót rakja ki.
