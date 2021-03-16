@@ -1,13 +1,7 @@
-import numpy as np
-from cv2 import cv2
 import time
-import urllib.request as urllib
-from datetime import datetime
-import threading
 import pandas as pd
 import os.path
 import IPCamera as ic
-from enum import Enum
 
 class IPManager:
     def __init__(self):
@@ -82,11 +76,10 @@ class IPManager:
 
 ipm = IPManager()
 
-ipm.startCamera(1)
-print(ipm.cameraList[1].status)
+ipm.startCamera(0)
+print(ipm.cameraList[0].status)
 
 time.sleep(10)
 
-ipm.pauseCamera(1)
-print(ipm.cameraList[1].status)
-
+ipm.pauseCamera(0)
+print(ipm.cameraList[0].status)

@@ -1,6 +1,5 @@
 import numpy as np
 from cv2 import cv2
-import time
 import urllib.request as urllib
 from datetime import datetime
 import threading
@@ -23,7 +22,7 @@ class PersonBucket:
         self.ageBucket = [0, 0, 0, 0, 0, 0, 0, 0]
 
     def clearGenderBucket(self):
-        self.genderBucket = [0, 0] 
+        self.genderBucket = [0, 0]
 
     def increaseAgeBucket(self, idx):
         self.ageBucket[idx] += 1
@@ -33,37 +32,40 @@ class PersonBucket:
 
     def findIntervalIdx(self, num):
         i = 0
-        for i in range(len(self.ageList)) :
+        for i in range(len(self.ageList)):
             if self.ageList[i][0] <= num < self.ageList[i][-1]:
-                return i 
+                return i
+
 
 class IntervalHandler:
     def __init__(self, lastInterval):
-        self.intervals=[[0, 2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18], [18, 20], [20, 22], [22, 24]]
+        self.intervals = [[0, 2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18], [18, 20], [20, 22], [22, 24]]
         self.lastInterval = lastInterval
+
         self.defaultDate = "1970-01-01 00:00:00"
-        if(lastInterval == 0):
+        if (lastInterval == 0):
             self.lastInterval = self.defaultDate
 
     def getIntervalID(self, hour):
-        for i in range(len(self.intervals)) :
+        for i in range(len(self.intervals)):
             if self.intervals[i][0] <= hour < self.intervals[i][-1]:
                 return i
-    
-    def getIntervalDateNow(self) :
+
+    def getIntervalDateNow(self):
         hour = self.intervals[self.getIntervalID(datetime.now().hour)][0]
         return datetime(datetime.today().year, datetime.today().month, datetime.today().day, hour)
 
     def isDataSaveable(self):
         dateNow = self.getIntervalDateNow()
-        if(self.lastInterval == self.defaultDate):
+        if (self.lastInterval == self.defaultDate):
             self.lastInterval = str(dateNow)
-        if(str(self.lastInterval) != str(dateNow)):
+        if (str(self.lastInterval) != str(dateNow)):
             return True
         return False
 
-    def refreshIntervalHour(self) :
+    def refreshIntervalHour(self):
         self.lastInterval = self.getIntervalDateNow()
+
 
 class IPCamera:
     def __init__(self, url, name, status):
@@ -79,40 +81,41 @@ class IPCamera:
         self.writeThread = threading.Thread(target=self.writeCSV, args=())
 
         self.age_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/age.prototxt", "BackEnd/Models/age.caffemodel")
-        self.gender_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/gender.prototxt", "BackEnd/Models/gender.caffemodel")
+        self.gender_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/gender.prototxt",
+                                                     "BackEnd/Models/gender.caffemodel")
         self.haar_detector = cv2.CascadeClassifier("BackEnd/Models/haarcascade_frontalface_default.xml")
 
-        if(status == CameraStatus.Started):
+        if (status == CameraStatus.Started):
             self.status = CameraStatus.Paused
             self.startCameraThread()
 
     MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 
     def loadLastSaved(self):
-        if(os.path.isfile(self.path)): 
+        if (os.path.isfile(self.path)):
             df = pd.read_csv(self.path)
             return df["time"].tail(1).tolist()[0]
-        else :
+        else:
             return 0
 
     def reloadIntervalData(self):
-        if(os.path.isfile(self.path)): 
+        if (os.path.isfile(self.path)):
             df = pd.read_csv(self.path)
 
             lastAgeBucket = df["age"].tail(1).tolist()[0]
             lastAgeBucket = lastAgeBucket.replace('[', '')
             lastAgeBucket = lastAgeBucket.replace(']', '')
             lastAgeBucket = lastAgeBucket.split(', ')
-            for i in range(0, len(lastAgeBucket)): 
-                lastAgeBucket[i] = int(lastAgeBucket[i]) 
-            
+            for i in range(0, len(lastAgeBucket)):
+                lastAgeBucket[i] = int(lastAgeBucket[i])
+
             lastGenderBucket = df["gender"].tail(1).tolist()[0]
             lastGenderBucket = lastGenderBucket.replace('[', '')
             lastGenderBucket = lastGenderBucket.replace(']', '')
             lastGenderBucket = lastGenderBucket.split(',')
-            for i in range(0, len(lastGenderBucket)): 
-                lastGenderBucket[i] = int(lastGenderBucket[i]) 
-            
+            for i in range(0, len(lastGenderBucket)):
+                lastGenderBucket[i] = int(lastGenderBucket[i])
+
             self.personBucket.ageBucket = lastAgeBucket
             self.personBucket.genderBucket = lastGenderBucket
 
@@ -120,25 +123,27 @@ class IPCamera:
             df.to_csv(self.path, index=False)
 
     def getFileNameFromUrl(self):
-        newUrl = self.url.replace(".", "-") 
-        newUrl = newUrl.replace(":", "-")  
+        newUrl = self.url.replace(".", "-")
+        newUrl = newUrl.replace(":", "-")
         return newUrl
 
     def writeCSV(self):
         notExist = True
-        if(os.path.isfile(self.path)): 
-            notExist=False
-        
-        interval = pd.DataFrame([[self.intervalHandler.getIntervalDateNow(), self.personBucket.ageBucket, self.personBucket.genderBucket]], columns=['time', 'age', 'gender'])
+        if (os.path.isfile(self.path)):
+            notExist = False
+
+        interval = pd.DataFrame(
+            [[self.intervalHandler.getIntervalDateNow(), self.personBucket.ageBucket, self.personBucket.genderBucket]],
+            columns=['time', 'age', 'gender'])
         self.personBucket.clearAgeBucket()
         self.personBucket.clearGenderBucket()
         self.intervalHandler.refreshIntervalHour()
 
         interval.to_csv(self.path, mode='a', index=False, header=notExist)
-        
+
     def startCameraThread(self):
-        if(self.status == CameraStatus.Paused and not self.cameraThread.isAlive()) :
-            if(self.intervalHandler.lastInterval == str(self.intervalHandler.getIntervalDateNow())) :
+        if (self.status == CameraStatus.Paused and not self.cameraThread.isAlive()):
+            if (self.intervalHandler.lastInterval == str(self.intervalHandler.getIntervalDateNow())):
                 self.reloadIntervalData()
 
             self.intervalHandler.refreshIntervalHour()
@@ -147,7 +152,7 @@ class IPCamera:
             self.cameraThread.start()
 
     def pauseCameraThread(self):
-        if(self.status == CameraStatus.Started) :
+        if (self.status == CameraStatus.Started):
             self.status = CameraStatus.Paused
             self.stopped = True
 
@@ -161,15 +166,16 @@ class IPCamera:
 
             if frame is not None:
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                faces = self.haar_detector.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5)
+                faces = self.haar_detector.detectMultiScale(gray, 1.2, 5)
+
                 for face in faces:
                     x, y, w, h = face
-                    detected_face = frame[int(y):int(y+h), int(x):int(x+w)].copy()
+                    detected_face = frame[int(y):int(y + h), int(x):int(x + w)].copy()
                     img_blob = cv2.dnn.blobFromImage(detected_face, 1, (224, 224), self.MODEL_MEAN_VALUES, swapRB=False)
-                    
+
                     self.age_model.setInput(img_blob)
                     age_pred = self.age_model.forward()
-                    agenum = age_pred[0].argmax()                 
+                    agenum = age_pred[0].argmax()
                     self.personBucket.increaseAgeBucket(self.personBucket.findIntervalIdx(agenum))
 
                     self.gender_model.setInput(img_blob)
@@ -177,21 +183,11 @@ class IPCamera:
                     gendernum = np.argmax(gender_pred)
                     self.personBucket.increaseGenderBucket(gendernum)
 
-            if(self.intervalHandler.isDataSaveable() and not self.writeThread.isAlive()) :
+            if (self.intervalHandler.isDataSaveable() and not self.writeThread.isAlive()):
                 self.writeThread.start()
 
-            if(self.stopped) : 
+            if (self.stopped):
                 break
-        
-        if(not self.writeThread.isAlive()) :
+
+        if (not self.writeThread.isAlive()):
             self.writeThread.start()
-        print(self.name + " kiért")
-        #cv2.destroyAllWindows()
-
-#ipc = IPCamera('192.168.0.176:8080', 'ipcamera', CameraStatus.Paused)
-#ipc.startCameraThread()
-#time.sleep(10)
-#ipc.pauseCameraThread()
-
-#os._exit(0)
-
