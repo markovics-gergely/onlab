@@ -50,3 +50,9 @@
 ## Dokumentáció
 - Függvények:
 	- **ipcamFaceDetect()**: Ez nem ismeri fel ki van rajta, csak az arcot, azonban itt nem framenként veszi, hanem a tényleges videót rakja ki.
+
+- Django:
+	- A servert a "python WebServer.py runserver" kóddal lehet elindítani
+	- A 127.0.0.1:8000/index/ en lehet elérni
+	- Létre van hozva /prediction és a /results része is, azonban az oldalon lévő html gombbal nem lehet navigálni, csak linbe beírva ezeket
+	- Képekre nem sikerült még megoldani a betöltést, azonban a css és js staticokra igen
