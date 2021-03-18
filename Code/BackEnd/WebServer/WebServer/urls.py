@@ -19,7 +19,7 @@ from Server import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', views.index),
+    path('', views.index),
     path('prediction/', views.prediction),
     path('results/', views.results)
 ]

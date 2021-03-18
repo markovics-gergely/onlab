@@ -142,6 +142,19 @@ input:placeholder-shown {
     align-items: center;
 }
 
+.camera-info-item {
+    border-radius: 30px;
+    background-color: white;
+    border: 1px solid gray;
+    vertical-align: middle;
+    margin: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .header-items {
     vertical-align: middle;
     display: flex;
@@ -218,3 +231,13 @@ div::-webkit-scrollbar-thumb:hover {
     margin-bottom: 15px;
 }
 
+.modal-header {
+    background-color:rgb(0, 119, 255);
+}
+.modal-content {
+   overflow:hidden;
+}
+
+input[type=date].invalid+label:after, input[type=date]:focus.invalid+label:after, input[type=datetime-local].invalid+label:after, input[type=datetime-local]:focus.invalid+label:after, input[type=email].invalid+label:after, input[type=email]:focus.invalid+label:after, input[type=number].invalid+label:after, input[type=number]:focus.invalid+label:after, input[type=password].invalid+label:after, input[type=password]:focus.invalid+label:after, input[type=search-md].invalid+label:after, input[type=search-md]:focus.invalid+label:after, input[type=search].invalid+label:after, input[type=search]:focus.invalid+label:after, input[type=tel].invalid+label:after, input[type=tel]:focus.invalid+label:after, input[type=text].invalid+label:after, input[type=text]:focus.invalid+label:after, input[type=time].invalid+label:after, input[type=time]:focus.invalid+label:after, input[type=url].invalid+label:after, input[type=url]:focus.invalid+label:after, textarea.md-textarea.invalid+label:after, textarea.md-textarea:focus.invalid+label:after {
+    white-space: nowrap;
+}

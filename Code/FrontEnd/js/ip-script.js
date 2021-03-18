@@ -41,7 +41,7 @@ $(document).on("click", ".camera-list-item", function() {
     $(this).css('background-color', '#f0f0f0');
 
     var ipFrame = document.createElement('div');
-    ipFrame.className = "camera-list-item";
+    ipFrame.className = "camera-info-item";
 
     var ip = document.createElement('h4');
     ip.textContent = camera.ip;
@@ -52,16 +52,6 @@ $(document).on("click", ".camera-list-item", function() {
     caminfo.innerHTML = "";
     caminfo.appendChild(ipFrame);
 })
-
-var addbutton = document.getElementById("addIP");
-var uniqueIpID = 0;
-addbutton.onclick = function() {
-    var newCamera = new Camera("asd", "192.168.0." + uniqueIpID.toString(), CameraStatus.Started);
-    uniqueIpID++;
-    cameras.push(newCamera);
-
-    renderCameras();
-}
 
 function renderCameras() {
     managerpanel.innerHTML = "";
@@ -105,3 +95,72 @@ function parseCameras() {
 
     renderCameras();
 }
+
+$.validator.addMethod('ValidateIPaddress', function (value) {
+        if(value == "") return false;
+        var ipregex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        cameras.forEach(function(c){
+            if(c.ip == value){
+                return false;
+            }
+        })
+        if (value.match(ipregex)){
+            $("#addipaddr").removeClass('is-invalid')
+            return true;
+        }
+        return false;
+    },
+    function(value){
+    }
+)
+$.validator.addMethod('ValidateName', function (value) {
+        if(value == "") return false;
+        cameras.forEach(function(c){
+            if(c.name == value){
+                return false;
+            }
+        })
+        $("#addname").removeClass('is-invalid')
+        return true;
+    },
+    function(value){
+    }
+)
+
+$("#addForm").validate({
+    rules: {
+        addname: {
+            ValidateName:true
+        },
+        addipaddr : {
+            ValidateIPaddress:true
+        }
+    },
+    errors: {
+        addname: $("#addname").addClass('is-invalid'),
+        addipaddr : $("#addipaddr").addClass('is-invalid')
+    }
+})
+$(function(){
+    $('#addForm').on('submit', function (e) {
+        e.preventDefault();
+
+        console.log(e);
+        var name = $("#addname").val();
+        var ip = $("#addipaddr").val();
+    
+        $("#addname").val('');
+        $("#addipaddr").val('');
+    
+        var newCamera = new Camera(name, ip, CameraStatus.Started);
+    
+        cameras.push(newCamera);
+        $('#addIPModal').modal('toggle');
+    
+        renderCameras();
+
+        return false;
+    })
+})
+
+

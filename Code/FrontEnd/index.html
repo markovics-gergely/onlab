@@ -4,8 +4,9 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>IP Camera Recognition</title>
-
+		
 		{% load static %}
+		<link rel="icon" type="image/png" href="{% static 'assets/camera_icon.png' %}">
 
 		<!-- Bootstrap linkelése CDN-ről -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -15,13 +16,15 @@
 		<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
 		<!-- Saját CSS -->
 		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+		<link href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.19.2/css/mdb.min.css" rel="stylesheet"/>
 	</head>
 
 	<body>	
 		<header>
 			<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-				<a class="navbar-brand" href="index.html">
-					<img src="assets/logo-bme-aut.png" alt="BME AUT">
+				<a class="navbar-brand" href="/">
+					<img src="{% static 'assets/logo-bme-aut.png' %}" alt="BME AUT">
 				</a>
 				<p class="headertext my-auto mr-auto py-3 pl-3">Önálló Laboratórium</p>
 
@@ -32,13 +35,13 @@
 				<div class="collapse navbar-collapse" id="navbar-toggler">
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item active">
-							<a class="nav-link" href="index.html">Camera Manager <span class="sr-only">(current)</span></a>
+							<a class="nav-link" href="/">Camera Manager <span class="sr-only">(current)</span></a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="prediction.html">Prediction</a>
+							<a class="nav-link" href="/prediction/">Prediction</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="results.html">Results</a>
+							<a class="nav-link" href="/results/">Results</a>
 						</li>
 					</ul>
 				</div>
@@ -61,7 +64,7 @@
 								<div class="header-items">
 									<h4 class="ip-addr ml-3">IP Manager</h4>
 									<div class="icons ml-auto mr-3">
-										<input type="image" src="{% static 'assets/add_ip.png' %}" id="addIP"/>
+										<input type="image" src="{% static 'assets/add_ip.png' %}" id="addIPButton" data-toggle="modal" data-target="#addIPModal"/>
 									</div>
 								</div>	
                             </div>
@@ -94,13 +97,53 @@
                 <p class="my-auto ml-auto py-3 pr-5">Nagy Viktor<br>Markovics Gergely</p>
             </div>
         </footer>
+		
+		<!-- Modal -->
+		<div class="modal fade" id="addIPModal" tabindex="-1" role="dialog" aria-labelledby="AddIPCamera" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<!--Content-->
+				<div class="modal-content">
+					<!--Header-->
+					<div class="modal-header text-center">
+						<h4 class="modal-title white-text w-100 font-weight-bold py-2">Add IP Camera</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="white-text">&times;</span>
+						</button>
+					</div>
+					<form role="form" id="addForm" name="addForm" action="">
+						<!--Body-->
+						<div class="form-group modal-body">
+							<div class="md-form mb-5">
+								<i class="fas fa-user prefix grey-text"></i>
+								<input type="text" id="addname" name="addname" class="form-control">
+								<label id="addnamelabel" class="control-label" data-required-error="It is Required" data-error="Unavailable" data-success="Available" for="addname">New Camera Name</label>
+							</div>
+					
+							<div class="md-form">
+								<i class="fas fa-camera prefix grey-text"></i>
+								<input type="text" id="addipaddr" name="addipaddr" class="form-control">
+								<label id="addipaddrlabel" data-required-error="It is Required" data-error="Invalid Address" data-success="Valid Address" for="addipaddr">New IP Address</label>
+							</div>
+						</div>
+				
+						<!--Footer-->
+						<div class="form-group modal-footer justify-content-center">
+							<button type="submit" id="addIPCamera" class="btn btn-outline-primary waves-effect">Add <i class="fas fa-paper-plane ml-1"></i></button>
+						</div>
+					</form>
+					
+				</div>
+				<!--/.Content-->
+			</div>
+		</div>
 
 		<!-- jQuery, hogy a Bootstrap-es hamburger menü működjön -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
         <!-- Bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 		<!-- Saját js -->
 		<script src="{% static 'js/ip-script.js' %}"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.19.2/js/mdb.min.js"></script>
 	</body>
-
 </html>
