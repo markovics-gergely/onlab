@@ -39,7 +39,6 @@
 	- urllib3
 	- pandas
 	- django (web framework)
-	- 
 ## Dokumentáció
 - Függvények:
 	- **ipcamFaceDetect()**: Ez nem ismeri fel ki van rajta, csak az arcot, azonban itt nem framenként veszi, hanem a tényleges videót rakja ki.
