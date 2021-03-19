@@ -72,14 +72,3 @@ class IPManager:
         path = "DB/cameras/" + url + ".csv"
         if(os.path.isfile(path)): 
             os.remove(path)
-
-
-ipm = IPManager()
-
-ipm.startCamera(0)
-print(ipm.cameraList[0].status)
-
-time.sleep(10)
-
-ipm.pauseCamera(0)
-print(ipm.cameraList[0].status)
