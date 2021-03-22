@@ -37,22 +37,12 @@ h1 {
 
 h2 { font-size: 24px; }
 
-h4 { font-size: 18px;}
+h4 { 
+    font-size: 18px;
+}
 
 .bt-dashed {
     border-top: 1px dashed #ccc;
-}
-
-a .dark-link {
-    color: #666;
-}
-
-a .dark-link:hover {
-    color: #9c3;
-}
-
-.card-link.smaller {
-    font-size: 12px;
 }
 
 .cardbox {
@@ -73,11 +63,6 @@ a .dark-link:hover {
     width:100%;
 }
 
-.labels {
-    padding-top: 10px;
-    display: block
-}
-
 .container {
     background-color: white;
     border-color: #343a40;
@@ -91,14 +76,14 @@ input:placeholder-shown {
 
 .submit {
      color: white;
-     background-color: rgb(0, 119, 255);
+     background-color: #337ab7;
      border-radius: 3px;
      border: 1px;
 }
 
 .card-header {
     color: white;
-    background-color: rgb(0, 119, 255);
+    background-color: #337ab7;
 }
 
 .title {
@@ -109,7 +94,7 @@ input:placeholder-shown {
 }
 
 .title-border {
-    background-color: rgb(0, 119, 255);
+    background-color: #337ab7;
     border-radius: 15px;
     text-align: center;
     margin-top: 15px;
@@ -126,7 +111,7 @@ input:placeholder-shown {
     overflow-y: auto;
     background-color: #ddd;
     padding-top: 0;
-    scrollbar-color: rgb(0, 119, 255);
+    scrollbar-color: #337ab7;
 }
 
 .camera-list-item {
@@ -172,15 +157,15 @@ div::-webkit-scrollbar-track {
 }
 div::-webkit-scrollbar {
     width: 12px;
-    background-color: rgb(0, 119, 255);
+    background-color: #337ab7;
 }
 div::-webkit-scrollbar-thumb {
     width: 12px;
-    background-color: rgb(0, 119, 255);
+    background-color: #337ab7;
     border: 1px solid lightgrey;
 }
 div::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(0, 47, 255);
+    background-color: #337ab7;
 }
 
 .banner {
@@ -199,7 +184,7 @@ div::-webkit-scrollbar-thumb:hover {
 
 .predict-button {
     width: 60%;
-    background-color: rgb(0, 119, 255);
+    background-color: #337ab7;
     color: white;
     border-radius: 15px;
     padding: 5px;
@@ -226,18 +211,23 @@ div::-webkit-scrollbar-thumb:hover {
     color: white;
     padding-top: 5px;
     padding-bottom: 5px;
-    background-color: rgb(0, 119, 255);
+    background-color: #337ab7;
     border-radius: 15px;
     margin-bottom: 15px;
 }
 
-.modal-header {
-    background-color:rgb(0, 119, 255);
+.modal-header.primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #337ab7;
 }
 .modal-content {
    overflow:hidden;
+   color: black;
 }
-
-input[type=date].invalid+label:after, input[type=date]:focus.invalid+label:after, input[type=datetime-local].invalid+label:after, input[type=datetime-local]:focus.invalid+label:after, input[type=email].invalid+label:after, input[type=email]:focus.invalid+label:after, input[type=number].invalid+label:after, input[type=number]:focus.invalid+label:after, input[type=password].invalid+label:after, input[type=password]:focus.invalid+label:after, input[type=search-md].invalid+label:after, input[type=search-md]:focus.invalid+label:after, input[type=search].invalid+label:after, input[type=search]:focus.invalid+label:after, input[type=tel].invalid+label:after, input[type=tel]:focus.invalid+label:after, input[type=text].invalid+label:after, input[type=text]:focus.invalid+label:after, input[type=time].invalid+label:after, input[type=time]:focus.invalid+label:after, input[type=url].invalid+label:after, input[type=url]:focus.invalid+label:after, textarea.md-textarea.invalid+label:after, textarea.md-textarea:focus.invalid+label:after {
-    white-space: nowrap;
+.submit-color {
+    background-color: #337ab7;
+}
+.submit-color:hover {
+    background-color: #2b5e8b;
 }

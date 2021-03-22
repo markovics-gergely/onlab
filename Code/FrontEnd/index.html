@@ -16,7 +16,6 @@
 		<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
 		<!-- Saját CSS -->
 		<link rel="stylesheet" href="{% static 'css/style.css' %}">
-		<link href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.19.2/css/mdb.min.css" rel="stylesheet"/>
 	</head>
 
 	<body>	
@@ -97,52 +96,50 @@
             </div>
         </footer>
 		
-		<!-- Modal -->
-		<div class="modal fade" id="addIPModal" tabindex="-1" role="dialog" aria-labelledby="AddIPCamera" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<!--Content-->
+		<div id="addIPModal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-dialog-centered">
+		  
 				<div class="modal-content">
-					<!--Header-->
-					<div class="modal-header text-center">
-						<h4 class="modal-title white-text w-100 font-weight-bold py-2">Add IP Camera</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true" class="white-text">&times;</span>
+					<div class="modal-header primary text-center">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true" class="white-text">&times;</span>
 						</button>
+					<h4 class="modal-title w-100 font-weight-bold py-2">Add IP Camera</h4>
 					</div>
-					<form role="form" id="addForm" name="addForm" action="">
-						<!--Body-->
-						<div class="form-group modal-body">
-							<div class="md-form mb-5">
-								<i class="fas fa-user prefix grey-text"></i>
-								<input type="text" id="addname" name="addname" class="form-control">
-								<label id="addnamelabel" class="control-label" data-required-error="It is Required" data-error="Unavailable" data-success="Available" for="addname">New Camera Name</label>
+					<form class="addForm">
+						<div class="modal-body">
+							<div class="form-group">
+								<label for="CameraNameInput">New Camera Name</label>
+								<input id="addname" type="text" class="form-control" id="CameraNameInput" oninput="checkname(this)" aria-describedby="CameraNameInput" placeholder="Enter a name" required>
+								<small id="NameHelp" class="form-text text-muted">Must be unique</small>
 							</div>
-					
-							<div class="md-form">
-								<i class="fas fa-camera prefix grey-text"></i>
-								<input type="text" id="addipaddr" name="addipaddr" class="form-control">
-								<label id="addipaddrlabel" data-required-error="It is Required" data-error="Invalid Address" data-success="Valid Address" for="addipaddr">New IP Address</label>
+							<div class="form-group">
+								<label for="IPInput">IP Address</label>
+								<input id="addipaddr" type="text" class="form-control" id="IPInput" oninput="checkip(this)" aria-describedby="IPInput" placeholder="Enter an IP" required>
+								<small id="IPHelp" class="form-text text-muted">Must be a unique IP format</small>
+							</div>
+							<div class="form-group">
+								<label for="StatusSelect">Select Camera Status</label>
+								<select class="form-control" id="StatusSelect" aria-describedby="StatusSelect">
+								<option>Paused</option>
+								<option>Started</option>
+								</select>
 							</div>
 						</div>
-				
-						<!--Footer-->
-						<div class="form-group modal-footer justify-content-center">
-							<button type="submit" id="addIPCamera" class="btn btn-outline-primary waves-effect">Add <i class="fas fa-paper-plane ml-1"></i></button>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary submit-color">Submit</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 					</form>
-					
 				</div>
-				<!--/.Content-->
 			</div>
 		</div>
 
 		<!-- jQuery, hogy a Bootstrap-es hamburger menü működjön -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
         <!-- Bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 		<!-- Saját js -->
 		<script src="{% static 'js/ip-script.js' %}"></script>
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.19.2/js/mdb.min.js"></script>
 	</body>
 </html>

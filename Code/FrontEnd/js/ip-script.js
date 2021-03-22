@@ -17,6 +17,9 @@ parseCameras();
 
 $(document).on("click", ".ipPauseOrStart", function(e) {
     e.stopPropagation();
+
+    //TODO indítás/leállítás szerverről
+
     var id = $(".ipPauseOrStart").index($(this));
     if(cameras[id].status == CameraStatus.Paused) cameras[id].status = CameraStatus.Started;
     else if(cameras[id].status == CameraStatus.Started) cameras[id].status = CameraStatus.Paused; 
@@ -26,6 +29,9 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
 
 $(document).on("click", ".ipDelete", function(e) {
     e.stopPropagation();
+
+    //TODO törlés szerverről
+
     var id = $(".ipDelete").index($(this));
     cameras.splice(id, 1)
 
@@ -87,80 +93,48 @@ function renderCameras() {
 }
 
 function parseCameras() {
-    //TODO kamerák listája fájlból cameras tömbbe
-    cameras.push(new Camera("First", "192.168.0.0", CameraStatus.Started))
-    cameras.push(new Camera("Second", "192.168.0.1", CameraStatus.Paused))
-    cameras.push(new Camera("Third", "192.168.0.2", CameraStatus.Paused))
-    cameras.push(new Camera("Fourth", "192.168.0.4", CameraStatus.Started))
+    //TODO kamerák szerverről
+
+    //példa adat
+    cameras.push(new Camera("First", "192.168.0.0:8080", CameraStatus.Started))
+    cameras.push(new Camera("Second", "192.168.0.1:8080", CameraStatus.Paused))
+    cameras.push(new Camera("Third", "192.168.0.2:8080", CameraStatus.Paused))
+    cameras.push(new Camera("Fourth", "192.168.0.4:8080", CameraStatus.Started))
 
     renderCameras();
 }
 
-$.validator.addMethod('ValidateIPaddress', function (value) {
-        if(value == "") return false;
-        var ipregex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-        cameras.forEach(function(c){
-            if(c.ip == value){
-                return false;
-            }
-        })
-        if (value.match(ipregex)){
-            $("#addipaddr").removeClass('is-invalid')
-            return true;
+function checkname(input){
+    var unique = true;
+    cameras.forEach(function(c){
+        if(c.name == input.value){
+            unique = false;
         }
-        return false;
-    },
-    function(value){
-    }
-)
-$.validator.addMethod('ValidateName', function (value) {
-        if(value == "") return false;
-        cameras.forEach(function(c){
-            if(c.name == value){
-                return false;
-            }
-        })
-        $("#addname").removeClass('is-invalid')
-        return true;
-    },
-    function(value){
-    }
-)
-
-$("#addForm").validate({
-    rules: {
-        addname: {
-            ValidateName:true
-        },
-        addipaddr : {
-            ValidateIPaddress:true
-        }
-    },
-    errors: {
-        addname: $("#addname").addClass('is-invalid'),
-        addipaddr : $("#addipaddr").addClass('is-invalid')
-    }
-})
-$(function(){
-    $('#addForm').on('submit', function (e) {
-        e.preventDefault();
-
-        console.log(e);
-        var name = $("#addname").val();
-        var ip = $("#addipaddr").val();
-    
-        $("#addname").val('');
-        $("#addipaddr").val('');
-    
-        var newCamera = new Camera(name, ip, CameraStatus.Started);
-    
-        cameras.push(newCamera);
-        $('#addIPModal').modal('toggle');
-    
-        renderCameras();
-
-        return false;
     })
-})
+    if(unique) input.setCustomValidity('');
+    else input.setCustomValidity('Camera Name must be unique');
+}
+function checkip(input){
+    var ipregex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]+$/;
+    var unique = true;
+    cameras.forEach(function(c){
+        if(c.ip == input.value){
+            unique = false;
+        }
+    })
+    if(!unique) input.setCustomValidity('IP address must be unique');
+    else if(!input.value.match(ipregex)) input.setCustomValidity('IP address must be valid');
+    else input.setCustomValidity('');
+}
 
+$(".addForm").on('submit',function(e){
+    e.preventDefault();
+    var name = $('#addname').val();
+    var ip = $('#addipaddr').val();
+    var selector = document.getElementById("StatusSelect");
 
+    cameras.push(new Camera(name, ip, selector.selectedIndex));
+
+    renderCameras();
+    $("#addIPModal").modal('toggle');
+});
