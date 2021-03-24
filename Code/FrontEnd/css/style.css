@@ -231,3 +231,20 @@ div::-webkit-scrollbar-thumb:hover {
 .submit-color:hover {
     background-color: #2b5e8b;
 }
+
+.btn-predict {
+    width: 60%;
+    background-color: #337ab7;
+    color: white;
+    margin:auto;
+    margin-top: 10px;
+    display:block;
+}
+.btn-predict:hover {
+    background-color: #2b5e8b;
+    color: white;
+}
+
+#result {
+    display: none;
+}
