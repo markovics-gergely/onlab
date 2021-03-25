@@ -1,6 +1,8 @@
 from django.shortcuts import render
 
+
 def index(request):
+
     return render(request, 'index.html')
 
 def prediction(request):
@@ -8,3 +10,5 @@ def prediction(request):
 
 def results(request):
     return render(request, 'results.html')
+
+

@@ -97,10 +97,7 @@ function parseCameras() {
     //TODO kamerák szerverről
 
     //példa adat
-    cameras.push(new Camera("First", "192.168.0.0:8080", CameraStatus.Started))
-    cameras.push(new Camera("Second", "192.168.0.1:8080", CameraStatus.Paused))
-    cameras.push(new Camera("Third", "192.168.0.2:8080", CameraStatus.Paused))
-    cameras.push(new Camera("Fourth", "192.168.0.4:8080", CameraStatus.Started))
+    cameras.push(new Camera("Kamera", "192.168.0.176:8080", CameraStatus.Paused))
 
     renderCameras();
 }

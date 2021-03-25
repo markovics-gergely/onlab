@@ -18,8 +18,8 @@ from django.urls import path
 from Server import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.index),
     path('prediction/', views.prediction),
-    path('results/', views.results)
+    path('results/', views.results),
+    path('admin/', admin.site.urls)
 ]
