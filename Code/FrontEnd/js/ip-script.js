@@ -115,6 +115,7 @@ function checkname(input){
     if(unique) input.setCustomValidity('');
     else input.setCustomValidity('Camera Name must be unique');
 }
+
 function checkip(input){
     var ipregex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]{1,5}$/;
     var unique = true;
@@ -143,7 +144,7 @@ $(".addForm").on('submit',function(e){
 function saveCamerasToLocal(){
     localStorage.setItem('cameras', JSON.stringify(cameras));
 }
-console.log(cameras);
+
 $('.pred-link').on('click', function(){
     
     saveCamerasToLocal();
