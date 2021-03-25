@@ -4,8 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>IP Camera Recognition</title>
-		
-		{% load static %}
+
 		<link rel="icon" type="image/png" href="{% static 'assets/camera_icon.png' %}">
 
 		<!-- Bootstrap linkelése CDN-ről -->
@@ -15,14 +14,14 @@
 		<!-- Google font (Muli) letöltése -->
 		<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
 		<!-- Saját CSS -->
-		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<link rel="stylesheet" href='../FrontEnd/css/style.css'>
 	</head>
 
 	<body>	
 		<header>
 			<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 				<a class="navbar-brand" href="/">
-					<img src="{% static 'assets/logo-bme-aut.png' %}" alt="BME AUT">
+					<img src='../FrontEnd/assets/logo-bme-aut.png' alt="BME AUT">
 				</a>
 				<p class="headertext my-auto mr-auto py-3 pl-3">Önálló Laboratórium</p>
 
@@ -36,10 +35,10 @@
 							<a class="nav-link" href="/">Camera Manager <span class="sr-only">(current)</span></a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link pred-link" href="/prediction/">Prediction</a>
+							<a class="nav-link pred-link" href="/prediction">Prediction</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/results/">Results</a>
+							<a class="nav-link" href="/results">Results</a>
 						</li>
 					</ul>
 				</div>
@@ -62,7 +61,7 @@
 								<div class="header-items">
 									<h4 class="ip-addr ml-3">IP Manager</h4>
 									<div class="icons ml-auto mr-3">
-										<input type="image" src="{% static 'assets/add_ip.png' %}" id="addIPButton" data-toggle="modal" data-target="#addIPModal"/>
+										<input type="image" src='../FrontEnd/assets/add_ip.png' id="addIPButton" data-toggle="modal" data-target="#addIPModal"/>
 									</div>
 								</div>	
                             </div>
@@ -140,6 +139,6 @@
         <!-- Bootstrap js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 		<!-- Saját js -->
-		<script src="{% static 'js/ip-script.js' %}"></script>
+		<script src='../FrontEnd/js/ip-script.js'></script>
 	</body>
 </html>

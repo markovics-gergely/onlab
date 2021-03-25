@@ -68,13 +68,14 @@ function renderCameras() {
 
         var startImage = document.createElement('input');
         startImage.type = "image";
-        if(camera.status == CameraStatus.Paused) startImage.src = "/static/assets/pause.png"; /*startImage.setAttribute("src", "/static/assets/pause.png");*/
-        if(camera.status == CameraStatus.Started) startImage.src = "/static/assets/start.png"; /*startImage.setAttribute("src", "/static/assets/start.png");*/
+        if(camera.status == CameraStatus.Paused) /*startImage.src = "../FrontEnd/assets/pause.png"; */
+            startImage.setAttribute("src", "../FrontEnd/assets/pause.png");
+        if(camera.status == CameraStatus.Started) startImage.src = "../FrontEnd/assets/start.png";
         startImage.className = "ipPauseOrStart";
 
         var deleteImage = document.createElement('input');
         deleteImage.type = "image";
-        deleteImage.src = "/static/assets/delete.png";
+        deleteImage.src = "../FrontEnd/assets/delete.png";
         deleteImage.className = "ipDelete";
 
         var outerdiv = document.createElement('div');

@@ -33,7 +33,6 @@ class IPManager:
         namelist = df["name"].tolist()
         statuslist = df["status"].tolist()
 
-        i = 0
         for i in range(len(iplist)) :
             ipcamera = ic.IPCamera(iplist[i], namelist[i], ic.CameraStatus(statuslist[i]))
             clist.append(ipcamera)
@@ -73,7 +72,7 @@ class IPManager:
         if(os.path.isfile(path)): 
             os.remove(path)
 
-
+'''
 ip = IPManager()
 ip.startCamera(0)
 print(ip.cameraList[0].status)
@@ -81,3 +80,4 @@ time.sleep(20)
 
 ip.pauseCamera(0)
 print(ip.cameraList[0].status)
+'''
