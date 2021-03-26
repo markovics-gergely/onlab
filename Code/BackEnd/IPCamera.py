@@ -149,6 +149,9 @@ class IPCamera:
             self.status = CameraStatus.Started
             self.cameraThread.start()
 
+            return True
+        return False
+
     def pauseCameraThread(self):
         if (self.status == CameraStatus.Started):
             self.status = CameraStatus.Paused

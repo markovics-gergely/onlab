@@ -1,5 +1,3 @@
-var cams = JSON.parse(localStorage.getItem('cameras'));
-
 const CameraStatus = {
     Paused: 0,
     Started: 1
@@ -22,10 +20,31 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
 
     var id = $(".ipPauseOrStart").index($(this));
     if(cameras[id].status == CameraStatus.Paused){
-        cameras[id].status = CameraStatus.Started;
+        
+        $.ajax({
+            url: window.location.href + "/s:" + id,
+            data: {},
+            complete: function(xhr, statusText){
+                console.log(xhr.status); 
+                cameras[id].status = CameraStatus.Started;
+            },
+            error: function(xhr, statusText, err){
+                console.log("Error:" + xhr.status); 
+            }
+        });
     }
     else if(cameras[id].status == CameraStatus.Started){
-        cameras[id].status = CameraStatus.Paused;
+        $.ajax({
+            url: window.location.href + "/p:" + id,
+            data: {},
+            complete: function(xhr, statusText){
+                console.log(xhr.status); 
+                cameras[id].status = CameraStatus.Paused;
+            },
+            error: function(xhr, statusText, err){
+                console.log("Error:" + xhr.status); 
+            }
+        });
     }
 
     renderCameras();
@@ -68,20 +87,13 @@ function renderCameras() {
         ip.textContent = camera.name;
         ip.className = "ip-addr ml-3";
 
-        var startA = document.createElement('a');
-        if(camera.status == CameraStatus.Paused) startA.setAttribute("href", "../p:" + id);
-        if(camera.status == CameraStatus.Started) startA.setAttribute("href", "../s:" + id);
-
-        var startImage = document.createElement('img');
+        var startImage = document.createElement('input');
         startImage.type = "image";
-        if(camera.status == CameraStatus.Paused) startImage.src = "../image/pause.png";
-        if(camera.status == CameraStatus.Started) startImage.src = "../image/start.png";
+        if(camera.status == CameraStatus.Paused) startImage.src = "../image/pause.png"; /*startImage.setAttribute("src", "/static/assets/pause.png");*/
+        if(camera.status == CameraStatus.Started) startImage.src = "../image/start.png"; /*startImage.setAttribute("src", "/static/assets/start.png");*/
         startImage.className = "ipPauseOrStart";
 
-        var deleteA = document.createElement('a');
-        deleteA.setAttribute("href", "../d:" + id);
-
-        var deleteImage = document.createElement('img');
+        var deleteImage = document.createElement('input');
         deleteImage.type = "image";
         deleteImage.src = "../image/delete.png";
         deleteImage.className = "ipDelete";
@@ -92,10 +104,8 @@ function renderCameras() {
         var innerdiv = document.createElement('div');
         innerdiv.className = "icons ml-auto mr-3"
 
-        deleteA.appendChild(deleteImage);
-        startA.appendChild(startImage)
-        innerdiv.appendChild(startA);
-        innerdiv.appendChild(deleteA);
+        innerdiv.appendChild(startImage);
+        innerdiv.appendChild(deleteImage);
         outerdiv.appendChild(ip);
         outerdiv.appendChild(innerdiv);
 

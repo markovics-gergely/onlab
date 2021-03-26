@@ -18,7 +18,8 @@ class IPManager:
         self.deleteCameraFromDB(id)        
 
     def startCamera(self, id):
-        self.cameraList[id].startCameraThread()
+        success = self.cameraList[id].startCameraThread()
+        return success
 
     def pauseCamera(self, id):
         self.cameraList[id].pauseCameraThread()

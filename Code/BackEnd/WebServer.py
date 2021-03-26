@@ -28,10 +28,13 @@ def pauseCamera(id):
 
 @app.route("/s:<id>")
 def startCamera(id):
-    #ipm.startCamera(ip)
+    response = ipm.startCamera(int(id))
 
     print("Start ID: " + id)
-    return render_template("index.html")
+    if(response) :
+        return "OK", 200
+    else :
+        return "Camera not found", 404
 
 
 if(__name__ == "__main__"):
