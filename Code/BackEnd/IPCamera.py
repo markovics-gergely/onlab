@@ -36,7 +36,6 @@ class PersonBucket:
             if self.ageList[i][0] <= num < self.ageList[i][-1]:
                 return i
 
-
 class IntervalHandler:
     def __init__(self, lastInterval):
         self.intervals = [[0, 2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18], [18, 20], [20, 22], [22, 24]]
@@ -65,7 +64,6 @@ class IntervalHandler:
 
     def refreshIntervalHour(self):
         self.lastInterval = self.getIntervalDateNow()
-
 
 class IPCamera:
     def __init__(self, url, name, status):

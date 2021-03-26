@@ -2,7 +2,6 @@ import pandas as pd
 import os.path
 import IPCamera as ic
 
-
 class IPManager:
     def __init__(self):
         self.cameraList = self.parseCameras()
@@ -66,7 +65,7 @@ class IPManager:
         df.drop(id, axis=0, inplace=True)
         df.to_csv(path, index=False)
 
-        url = self.cameraList[id].getNameFromUrl()
+        url = self.cameraList[id].getFileNameFromUrl()
 
         path = "DB/cameras/" + url + ".csv"
         if(os.path.isfile(path)): 

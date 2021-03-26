@@ -1,3 +1,5 @@
+var cams = JSON.parse(localStorage.getItem('cameras'));
+
 const CameraStatus = {
     Paused: 0,
     Started: 1
@@ -18,19 +20,19 @@ parseCameras();
 $(document).on("click", ".ipPauseOrStart", function(e) {
     e.stopPropagation();
 
-    //TODO indítás/leállítás szerverről
-
     var id = $(".ipPauseOrStart").index($(this));
-    if(cameras[id].status == CameraStatus.Paused) cameras[id].status = CameraStatus.Started;
-    else if(cameras[id].status == CameraStatus.Started) cameras[id].status = CameraStatus.Paused; 
+    if(cameras[id].status == CameraStatus.Paused){
+        cameras[id].status = CameraStatus.Started;
+    }
+    else if(cameras[id].status == CameraStatus.Started){
+        cameras[id].status = CameraStatus.Paused;
+    }
 
     renderCameras();
 })
 
 $(document).on("click", ".ipDelete", function(e) {
     e.stopPropagation();
-
-    //TODO törlés szerverről
 
     var id = $(".ipDelete").index($(this));
     cameras.splice(id, 1)
@@ -66,16 +68,22 @@ function renderCameras() {
         ip.textContent = camera.name;
         ip.className = "ip-addr ml-3";
 
-        var startImage = document.createElement('input');
+        var startA = document.createElement('a');
+        if(camera.status == CameraStatus.Paused) startA.setAttribute("href", "../p:" + id);
+        if(camera.status == CameraStatus.Started) startA.setAttribute("href", "../s:" + id);
+
+        var startImage = document.createElement('img');
         startImage.type = "image";
-        if(camera.status == CameraStatus.Paused) /*startImage.src = "../FrontEnd/assets/pause.png"; */
-            startImage.setAttribute("src", "../FrontEnd/assets/pause.png");
-        if(camera.status == CameraStatus.Started) startImage.src = "../FrontEnd/assets/start.png";
+        if(camera.status == CameraStatus.Paused) startImage.src = "../image/pause.png";
+        if(camera.status == CameraStatus.Started) startImage.src = "../image/start.png";
         startImage.className = "ipPauseOrStart";
 
-        var deleteImage = document.createElement('input');
+        var deleteA = document.createElement('a');
+        deleteA.setAttribute("href", "../d:" + id);
+
+        var deleteImage = document.createElement('img');
         deleteImage.type = "image";
-        deleteImage.src = "../FrontEnd/assets/delete.png";
+        deleteImage.src = "../image/delete.png";
         deleteImage.className = "ipDelete";
 
         var outerdiv = document.createElement('div');
@@ -84,8 +92,10 @@ function renderCameras() {
         var innerdiv = document.createElement('div');
         innerdiv.className = "icons ml-auto mr-3"
 
-        innerdiv.appendChild(startImage);
-        innerdiv.appendChild(deleteImage);
+        deleteA.appendChild(deleteImage);
+        startA.appendChild(startImage)
+        innerdiv.appendChild(startA);
+        innerdiv.appendChild(deleteA);
         outerdiv.appendChild(ip);
         outerdiv.appendChild(innerdiv);
 
@@ -96,8 +106,12 @@ function renderCameras() {
 function parseCameras() {
     //TODO kamerák szerverről
 
+    /*for()
+        cameras.push(new Camera())*/
     //példa adat
-    cameras.push(new Camera("Kamera", "192.168.0.176:8080", CameraStatus.Paused))
+    cameras.push(new Camera("Kamera1", "192.168.0.176:8080", CameraStatus.Paused))
+    cameras.push(new Camera("Kamera2", "192.168.1.176:8080", CameraStatus.Started))
+    cameras.push(new Camera("Kamera3", "192.168.2.176:8080", CameraStatus.Paused))
 
     renderCameras();
 }
@@ -143,6 +157,5 @@ function saveCamerasToLocal(){
 }
 
 $('.pred-link').on('click', function(){
-    
     saveCamerasToLocal();
 })
