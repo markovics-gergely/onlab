@@ -22,7 +22,7 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
     if(cameras[id].status == CameraStatus.Paused){
         
         $.ajax({
-            url: window.location.href + "/s:" + id,
+            url: window.location.href + "s:" + id,
             data: {},
             complete: function(xhr, statusText){
                 console.log(xhr.status); 
@@ -35,7 +35,7 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
     }
     else if(cameras[id].status == CameraStatus.Started){
         $.ajax({
-            url: window.location.href + "/p:" + id,
+            url: window.location.href + "p:" + id,
             data: {},
             complete: function(xhr, statusText){
                 console.log(xhr.status); 
