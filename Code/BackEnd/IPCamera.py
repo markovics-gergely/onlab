@@ -5,6 +5,7 @@ from datetime import datetime
 import threading
 import pandas as pd
 import os
+import requests
 from enum import Enum
 
 class CameraStatus(Enum):
@@ -153,14 +154,29 @@ class IPCamera:
         return False
 
     def pauseCameraThread(self):
+        if(not self.cameraAlive()):
+            return False
         if (self.status == CameraStatus.Started):
             self.status = CameraStatus.Paused
             self.stopped = True
+            return True
+        return False
+
+    def cameraAlive(self):
+        try:
+            response = requests.get("http://" + self.url + "/shot.jpg")
+            return True
+        except:
+            return False
 
     def ipcamFaceDetect(self):
         urlshot = "http://" + self.url + "/shot.jpg"
 
         while True:
+            try:
+                response = requests.get(urlshot)
+            except:
+                break
             imgResp = urllib.urlopen(urlshot)
             imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
             frame = cv2.imdecode(imgNp, -1)

@@ -1,7 +1,7 @@
 import pandas as pd
 import os.path
 import IPCamera as ic
-
+import time
 class IPManager:
     def __init__(self):
         self.cameraList = self.parseCameras()
@@ -13,16 +13,24 @@ class IPManager:
         self.cameraList.append(ipcamera)
 
     def deleteCamera(self, id):
-        self.pauseCamera(id)
-        self.cameraList.pop(id)
-        self.deleteCameraFromDB(id)        
+        if(self.cameraList.count <= id):
+            return False
+        success = self.pauseCamera(id)
+        if(success):
+            self.cameraList.pop(id)
+            self.deleteCameraFromDB(id)
+        return success
 
     def startCamera(self, id):
+        if(self.cameraList.count <= id):
+            return False
         success = self.cameraList[id].startCameraThread()
         return success
 
     def pauseCamera(self, id):
-        self.cameraList[id].pauseCameraThread()
+        if(self.cameraList.count <= id):
+            return False
+        return self.cameraList[id].pauseCameraThread()
 
     def parseCameras(self):
         clist = []
