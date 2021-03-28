@@ -20,7 +20,6 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
 
     var id = $(".ipPauseOrStart").index($(this));
     if(cameras[id].status == CameraStatus.Paused){
-        
         $.ajax({
             url: window.location.href + "s:" + id,
             data: {},
@@ -54,8 +53,17 @@ $(document).on("click", ".ipDelete", function(e) {
     e.stopPropagation();
 
     var id = $(".ipDelete").index($(this));
+    $.ajax({
+        url: window.location.href + "d:" + id,
+        data: {},
+        complete: function(xhr, statusText){
+            console.log(xhr.status);
+        },
+        error: function(xhr, statusText, err){
+            console.log("Error:" + xhr.status);
+        }
+    });
     cameras.splice(id, 1)
-
     renderCameras();
 })
 
@@ -89,20 +97,20 @@ function renderCameras() {
 
         var startImage = document.createElement('input');
         startImage.type = "image";
-        if(camera.status == CameraStatus.Paused) startImage.src = "../image/pause.png"; /*startImage.setAttribute("src", "/static/assets/pause.png");*/
-        if(camera.status == CameraStatus.Started) startImage.src = "../image/start.png"; /*startImage.setAttribute("src", "/static/assets/start.png");*/
+        if(camera.status == CameraStatus.Paused) startImage.src = "FrontEnd/static/image/pause.png";
+        else if(camera.status == CameraStatus.Started) startImage.src = "FrontEnd/static/image/start.png";
         startImage.className = "ipPauseOrStart";
 
         var deleteImage = document.createElement('input');
         deleteImage.type = "image";
-        deleteImage.src = "../image/delete.png";
+        deleteImage.src = "FrontEnd/static/image/delete.png";
         deleteImage.className = "ipDelete";
 
-        var outerdiv = document.createElement('div');
+        var outerdiv = document.createElement('form');
         outerdiv.className = "camera-list-item";
 
         var innerdiv = document.createElement('div');
-        innerdiv.className = "icons ml-auto mr-3"
+        innerdiv.className = "icons ml-auto mr-3";
 
         innerdiv.appendChild(startImage);
         innerdiv.appendChild(deleteImage);
@@ -114,14 +122,30 @@ function renderCameras() {
 }
 
 function parseCameras() {
-    //TODO kamerák szerverről
+     $.ajax({
+        type: "GET",
+        url: "DB/cameraList.csv",
+        dataType: "text",
+        success: function(data) {loadCams(data);}
+     });
+}
 
-    /*for()
-        cameras.push(new Camera())*/
-    //példa adat
-    cameras.push(new Camera("Kamera1", "192.168.0.176:8080", CameraStatus.Paused))
-    cameras.push(new Camera("Kamera2", "192.168.1.176:8080", CameraStatus.Started))
-    cameras.push(new Camera("Kamera3", "192.168.2.176:8080", CameraStatus.Paused))
+function loadCams(d){
+    cameras = [];
+    var allTextLines = d.split(/\r\n|\n/);
+    var headers = allTextLines[0].split(',');
+
+    for (var i=1; i<allTextLines.length; i++) {
+        var data = allTextLines[i].split(',');
+        if (data.length == headers.length) {
+            var row = [];
+            for (var j = 0; j < data.length; j++) {
+                row.push(data[j]);
+            }
+            if(row[2] == "0") cameras.push(new Camera(row[1], row[0], CameraStatus.Paused));
+            if(row[2] == "1") cameras.push(new Camera(row[1], row[0], CameraStatus.Started));
+        }
+    }
 
     renderCameras();
 }
@@ -155,6 +179,17 @@ $(".addForm").on('submit',function(e){
     var name = $('#addname').val();
     var ip = $('#addipaddr').val();
     var selector = document.getElementById("StatusSelect");
+
+    $.ajax({
+        url: window.location.href + "a:" + ip + ":" + name + ":" + selector.selectedIndex,
+        data: {},
+        complete: function(xhr, statusText){
+            console.log(xhr.status);
+        },
+        error: function(xhr, statusText, err){
+            console.log("Error:" + xhr.status);
+        }
+    });
 
     cameras.push(new Camera(name, ip, selector.selectedIndex));
 

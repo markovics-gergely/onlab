@@ -88,6 +88,8 @@ class IPCamera:
             self.status = CameraStatus.Paused
             self.startCameraThread()
 
+        self.createCSV()
+
     MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 
     def loadLastSaved(self):
@@ -125,6 +127,15 @@ class IPCamera:
         newUrl = self.url.replace(".", "-")
         newUrl = newUrl.replace(":", "-")
         return newUrl
+
+    def createCSV(self):
+        if (os.path.isfile(self.path)):
+            return
+
+        interval = pd.DataFrame(
+            [[self.intervalHandler.getIntervalDateNow(), self.personBucket.ageBucket, self.personBucket.genderBucket]],
+            columns=['time', 'age', 'gender'])
+        interval.to_csv(self.path, mode='a', index=False, header=True)
 
     def writeCSV(self):
         notExist = True

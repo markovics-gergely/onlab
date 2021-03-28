@@ -2,33 +2,40 @@ import pandas as pd
 import os.path
 import IPCamera as ic
 import time
+
 class IPManager:
     def __init__(self):
         self.cameraList = self.parseCameras()
 
     def addCamera(self, ipaddr, name, status):
         self.persistCamera(ipaddr, name, status)
-        
+
         ipcamera = ic.IPCamera(ipaddr, name, status)
         self.cameraList.append(ipcamera)
 
+        return True
+
     def deleteCamera(self, id):
-        if(self.cameraList.count <= id):
-            return False
-        success = self.pauseCamera(id)
-        if(success):
-            self.cameraList.pop(id)
-            self.deleteCameraFromDB(id)
-        return success
+        #if(len(self.cameraList) <= id):
+        #    return False
+
+        #success = self.pauseCamera(id)
+        #if(success):
+        self.deleteCameraFromDB(id)
+        self.cameraList.pop(id)
+        return True
+        #return success
+
 
     def startCamera(self, id):
-        if(self.cameraList.count <= id):
+        if(len(self.cameraList) <= id):
             return False
+
         success = self.cameraList[id].startCameraThread()
         return success
 
     def pauseCamera(self, id):
-        if(self.cameraList.count <= id):
+        if(len(self.cameraList) <= id):
             return False
         return self.cameraList[id].pauseCameraThread()
 
@@ -77,15 +84,5 @@ class IPManager:
         url = self.cameraList[id].getFileNameFromUrl()
 
         path = "DB/cameras/" + url + ".csv"
-        if(os.path.isfile(path)): 
+        if(os.path.isfile(path)):
             os.remove(path)
-
-'''
-ip = IPManager()
-ip.startCamera(0)
-print(ip.cameraList[0].status)
-time.sleep(20)
-
-ip.pauseCamera(0)
-print(ip.cameraList[0].status)
-'''
