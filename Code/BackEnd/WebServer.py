@@ -6,7 +6,6 @@ from IPCamera import CameraStatus as cs
 app = Flask(__name__, static_url_path='', static_folder='..', template_folder='../FrontEnd/templates')
 
 ipm = manager.IPManager()
-print("asdasdasdasd")
 
 @app.route("/")
 def index():
