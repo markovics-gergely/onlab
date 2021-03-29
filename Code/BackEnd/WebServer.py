@@ -20,7 +20,7 @@ def prediction():
 def deleteCamera(id):
     response = ipm.deleteCamera(int(id))
     print("Delete ID: " + id)
-
+    
     if (response):
         return "OK", 200
     else:
@@ -32,6 +32,7 @@ def pauseCamera(id):
     print("Pause ID: " + id)
 
     if (response):
+        ipm.editCameraStatus(id, 0)
         return "OK", 200
     else:
         return "Camera cannot be paused", 502
@@ -42,6 +43,7 @@ def startCamera(id):
     print("Start ID: " + id)
 
     if(response) :
+        ipm.editCameraStatus(id, 1)
         return "OK", 200
     else :
         return "Camera cannot be started", 502
@@ -59,7 +61,7 @@ def addCamera():
 
 @app.route("/clist", methods=['GET'])
 def getCameraList():
-    return jsonify(ipm.gtJsonData())
+    return jsonify(ipm.getJsonData())
 
 if(__name__ == "__main__"):
    app.run(host='127.0.0.1', port=8000, threaded=True, debug=True, use_reloader=False)

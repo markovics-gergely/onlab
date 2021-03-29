@@ -70,21 +70,21 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
 
 $(document).on("click", ".ipDelete", function(e) {
     e.stopPropagation();
-
-    var id = $(".ipDelete").index($(this));
-    $(this).attr("src","FrontEnd/static/image/pending.png");
-    $.ajax({
-        url: window.location.href + "d:" + id,
-        data: {},
-        success: function(xhr, statusText){
+    if (confirm("Are you sure?")) {
+        var id = $(".ipDelete").index($(this));
+        $(this).children(".ipDelete").attr("src","FrontEnd/static/image/pending.png");
+        renderCameras();
+        $.ajax({
+            url: window.location.href + "d:" + id,
+            data: {}
+        }).done( function(xhr, statusText) {
+            console.log(xhr.status);
             cameras.splice(id, 1)
             renderCameras();
-            console.log(xhr.status);
-        },
-        error: function(xhr, statusText, err){
+        }).fail( function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText);
-        }
-    });
+        }).always( function() {});
+    }
 })
 
 $(document).on("click", ".camera-list-item", function() {
@@ -184,6 +184,9 @@ function checkip(input){
 
 $(".addForm").on('submit',function(e){
     e.preventDefault();
+    $('#addSubmit').attr("disabled", "disabled");
+
+
     var name = $('#addname').val();
     var ip = $('#addipaddr').val();
     var selector = document.getElementById("StatusSelect");
@@ -200,9 +203,15 @@ $(".addForm").on('submit',function(e){
 
             renderCameras();
             $("#addIPModal").modal('toggle');
+            $('#addSubmit').removeAttr("disabled");
+
+            $('#addname').val("");
+            $('#addipaddr').val("");
+            $("#StatusSelect").selectedIndex = 0;
         },
         error: function(xhr, statusText, err){
             console.log("Error: " + xhr.status + " " + statusText);
+            $('#addSubmit').removeAttr("disabled");
         }
     });
 });

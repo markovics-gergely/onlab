@@ -10,21 +10,18 @@ class IPManager:
     def addCamera(self, ipaddr, name, status):
         self.persistCamera(ipaddr, name, status)
 
-        ipcamera = ic.IPCamera(ipaddr, name, status)
+        ipcamera = ic.IPCamera(ipaddr, name, ic.CameraStatus(status))
         self.cameraList.append(ipcamera)
 
         return True
 
     def deleteCamera(self, id):
-        #if(len(self.cameraList) <= id):
-        #    return False
-
-        #success = self.pauseCamera(id)
-        #if(success):
+        if(len(self.cameraList) <= id):
+            return False
+        self.pauseCamera(id)
         self.deleteCameraFromDB(id)
         self.cameraList.pop(id)
         return True
-        #return success
 
 
     def startCamera(self, id):
@@ -87,7 +84,14 @@ class IPManager:
         if(os.path.isfile(path)):
             os.remove(path)
 
-    def gtJsonData(self):
+    def editCameraStatus(self, id, status) :
+        path='DB/cameraList.csv'
+
+        df = pd.read_csv(path)
+        df.set_value(id,'status', status)
+        df.to_csv(path, index=False)
+
+    def getJsonData(self):
         json = {
             "clist": []
         }
