@@ -86,3 +86,16 @@ class IPManager:
         path = "DB/cameras/" + url + ".csv"
         if(os.path.isfile(path)):
             os.remove(path)
+
+    def gtJsonData(self):
+        json = {
+            "clist": []
+        }
+        for cam in self.cameraList :
+            camera = {
+                "name": cam.name,
+                "ip": cam.url,
+                "status": cam.status.value
+            }
+            json["clist"].append(camera)
+        return json

@@ -1,8 +1,12 @@
-from flask import Flask, render_template
-import IPManager as ic
+from flask import Flask, render_template, g, jsonify, request
+import IPManager as manager
+import json
+from IPCamera import CameraStatus as cs
 
 app = Flask(__name__, static_url_path='', static_folder='..', template_folder='../FrontEnd/templates')
-ipm = ic.IPManager()
+
+ipm = manager.IPManager()
+print("asdasdasdasd")
 
 @app.route("/")
 def index():
@@ -20,7 +24,7 @@ def deleteCamera(id):
     if (response):
         return "OK", 200
     else:
-        return "Camera not found", 404
+        return "Camera cannot be deleted", 502
 
 @app.route("/p:<id>")
 def pauseCamera(id):
@@ -30,7 +34,7 @@ def pauseCamera(id):
     if (response):
         return "OK", 200
     else:
-        return "Camera not found", 404
+        return "Camera cannot be paused", 502
 
 @app.route("/s:<id>")
 def startCamera(id):
@@ -40,18 +44,22 @@ def startCamera(id):
     if(response) :
         return "OK", 200
     else :
-        return "Camera not found", 404
+        return "Camera cannot be started", 502
 
 
-@app.route("/a:<ip>:<name>:<status>")
-def addCamera(ip, name, status):
-    response = ipm.addCamera(ip, name, status)
-
+@app.route("/a", methods=['POST'])
+def addCamera():
+    data = request.get_json()
+    request.close()
+    response = ipm.addCamera(data['ip'], data['name'], int(data['status']))
     if (response):
         return "OK", 200
     else:
         return "Camera not found", 404
 
+@app.route("/clist", methods=['GET'])
+def getCameraList():
+    return jsonify(ipm.gtJsonData())
 
 if(__name__ == "__main__"):
-   app.run(host='127.0.0.1', port=8000, debug=True)
+   app.run(host='127.0.0.1', port=8000, threaded=True, debug=True, use_reloader=False)

@@ -7,6 +7,8 @@ import pandas as pd
 import os
 import requests
 from enum import Enum
+import json
+from json import JSONEncoder
 
 class CameraStatus(Enum):
     Paused = 0
@@ -94,6 +96,7 @@ class IPCamera:
 
     def loadLastSaved(self):
         if (os.path.isfile(self.path)):
+            print(self.path)
             df = pd.read_csv(self.path)
             return df["time"].tail(1).tolist()[0]
         else:
@@ -152,6 +155,8 @@ class IPCamera:
         interval.to_csv(self.path, mode='a', index=False, header=notExist)
 
     def startCameraThread(self):
+        if(not self.cameraAlive()):
+            return False
         if (self.status == CameraStatus.Paused and not self.cameraThread.isAlive()):
             if (self.intervalHandler.lastInterval == str(self.intervalHandler.getIntervalDateNow())):
                 self.reloadIntervalData()
@@ -159,6 +164,7 @@ class IPCamera:
             self.intervalHandler.refreshIntervalHour()
 
             self.status = CameraStatus.Started
+            self.stopped = False
             self.cameraThread.start()
 
             return True
@@ -166,6 +172,8 @@ class IPCamera:
 
     def pauseCameraThread(self):
         if(not self.cameraAlive()):
+            self.status = CameraStatus.Paused
+            self.stopped = True
             return False
         if (self.status == CameraStatus.Started):
             self.status = CameraStatus.Paused
@@ -174,8 +182,9 @@ class IPCamera:
         return False
 
     def cameraAlive(self):
+        urlshot = "http://" + self.url + "/shot.jpg"
         try:
-            response = requests.get("http://" + self.url + "/shot.jpg")
+            imgResp = urllib.urlopen(urlshot, timeout=2)
             return True
         except:
             return False
@@ -183,12 +192,11 @@ class IPCamera:
     def ipcamFaceDetect(self):
         urlshot = "http://" + self.url + "/shot.jpg"
 
-        while True:
+        while not self.stopped:
             try:
-                response = requests.get(urlshot)
+                imgResp = urllib.urlopen(urlshot, timeout=2)
             except:
                 break
-            imgResp = urllib.urlopen(urlshot)
             imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
             frame = cv2.imdecode(imgNp, -1)
 
@@ -214,8 +222,8 @@ class IPCamera:
             if (self.intervalHandler.isDataSaveable() and not self.writeThread.isAlive()):
                 self.writeThread.start()
 
-            if (self.stopped):
-                break
-
         if (not self.writeThread.isAlive()):
             self.writeThread.start()
+
+        self.status = CameraStatus.Paused
+        self.stopped = True

@@ -1,6 +1,7 @@
 const CameraStatus = {
     Paused: 0,
-    Started: 1
+    Started: 1,
+    Pending: 2
 }
 Object.freeze(CameraStatus)
 function Camera(name, ip, status) {
@@ -17,54 +18,73 @@ parseCameras();
 
 $(document).on("click", ".ipPauseOrStart", function(e) {
     e.stopPropagation();
-
+    
     var id = $(".ipPauseOrStart").index($(this));
-    if(cameras[id].status == CameraStatus.Paused){
+
+    var status = cameras[id].status
+    cameras[id].status = CameraStatus.Pending
+    $(this).attr("disabled", "disabled");
+    renderCameras();
+
+    if(status == CameraStatus.Paused){
         $.ajax({
             url: window.location.href + "s:" + id,
-            data: {},
-            complete: function(xhr, statusText){
-                console.log(xhr.status); 
-                cameras[id].status = CameraStatus.Started;
-            },
-            error: function(xhr, statusText, err){
-                console.log("Error:" + xhr.status); 
-            }
-        });
+            data: {}
+        }).done( function(xhr, statusText) {
+            console.log(xhr.status); 
+            cameras[id].status = CameraStatus.Started;
+            $(this).removeAttr("disabled");
+            renderCameras();
+            console.log(cameras[id].status);
+        }).fail( function(xhr, statusText, err) {
+            console.log("Error: " + xhr.status + " " + statusText); 
+            cameras[id].status = CameraStatus.Paused;
+            $(this).removeAttr("disabled");
+            renderCameras();
+            showSnackBar("Camera cannot start");
+            console.log(cameras[id].status);
+        }).always( function() {});
     }
-    else if(cameras[id].status == CameraStatus.Started){
+    else if(status == CameraStatus.Started){
         $.ajax({
             url: window.location.href + "p:" + id,
-            data: {},
-            complete: function(xhr, statusText){
-                console.log(xhr.status); 
-                cameras[id].status = CameraStatus.Paused;
-            },
-            error: function(xhr, statusText, err){
-                console.log("Error:" + xhr.status); 
-            }
-        });
+            data: {}
+        }).done( function(xhr, statusText) {
+            console.log(xhr.status); 
+            cameras[id].status = CameraStatus.Paused;
+            $(this).removeAttr("disabled");
+            renderCameras();
+            console.log(cameras[id].status);
+        }).fail( function(xhr, statusText, err) {
+            console.log("Error: " + xhr.status + " " + statusText); 
+            cameras[id].status = CameraStatus.Paused;
+            $(this).removeAttr("disabled");
+            renderCameras();
+            showSnackBar("Camera was not alive");
+            console.log(cameras[id].status);
+        }).always( function() {});
     }
-
-    renderCameras();
+    console.log(status);
+    console.log(cameras[id].status);
 })
 
 $(document).on("click", ".ipDelete", function(e) {
     e.stopPropagation();
 
     var id = $(".ipDelete").index($(this));
+    $(this).attr("src","FrontEnd/static/image/pending.png");
     $.ajax({
         url: window.location.href + "d:" + id,
         data: {},
-        complete: function(xhr, statusText){
+        success: function(xhr, statusText){
+            cameras.splice(id, 1)
+            renderCameras();
             console.log(xhr.status);
         },
         error: function(xhr, statusText, err){
-            console.log("Error:" + xhr.status);
+            console.log("Error: " + xhr.status + " " + statusText);
         }
     });
-    cameras.splice(id, 1)
-    renderCameras();
 })
 
 $(document).on("click", ".camera-list-item", function() {
@@ -99,6 +119,7 @@ function renderCameras() {
         startImage.type = "image";
         if(camera.status == CameraStatus.Paused) startImage.src = "FrontEnd/static/image/pause.png";
         else if(camera.status == CameraStatus.Started) startImage.src = "FrontEnd/static/image/start.png";
+        else if(camera.status == CameraStatus.Pending) startImage.src = "FrontEnd/static/image/pending.png";
         startImage.className = "ipPauseOrStart";
 
         var deleteImage = document.createElement('input');
@@ -124,30 +145,17 @@ function renderCameras() {
 function parseCameras() {
      $.ajax({
         type: "GET",
-        url: "DB/cameraList.csv",
-        dataType: "text",
-        success: function(data) {loadCams(data);}
-     });
-}
-
-function loadCams(d){
-    cameras = [];
-    var allTextLines = d.split(/\r\n|\n/);
-    var headers = allTextLines[0].split(',');
-
-    for (var i=1; i<allTextLines.length; i++) {
-        var data = allTextLines[i].split(',');
-        if (data.length == headers.length) {
-            var row = [];
-            for (var j = 0; j < data.length; j++) {
-                row.push(data[j]);
-            }
-            if(row[2] == "0") cameras.push(new Camera(row[1], row[0], CameraStatus.Paused));
-            if(row[2] == "1") cameras.push(new Camera(row[1], row[0], CameraStatus.Started));
+        url: window.location.href + "clist",
+        data: {},
+        dataType: "json",
+        success: function(data) {
+            var d = data.clist;
+            d.forEach(function(c) {
+                cameras.push(new Camera(c.name, c.ip, c.status));
+            });
+            renderCameras();
         }
-    }
-
-    renderCameras();
+     });
 }
 
 function checkname(input){
@@ -180,21 +188,23 @@ $(".addForm").on('submit',function(e){
     var ip = $('#addipaddr').val();
     var selector = document.getElementById("StatusSelect");
 
+    var jsondata = {"name": name, "ip": ip, "status": selector.selectedIndex}
     $.ajax({
-        url: window.location.href + "a:" + ip + ":" + name + ":" + selector.selectedIndex,
-        data: {},
-        complete: function(xhr, statusText){
+        type: "POST",
+        contentType: "application/json",
+        url: window.location.href + "a",
+        data: JSON.stringify(jsondata),
+        success: function(xhr, statusText){
             console.log(xhr.status);
+            cameras.push(new Camera(name, ip, selector.selectedIndex));
+
+            renderCameras();
+            $("#addIPModal").modal('toggle');
         },
         error: function(xhr, statusText, err){
-            console.log("Error:" + xhr.status);
+            console.log("Error: " + xhr.status + " " + statusText);
         }
     });
-
-    cameras.push(new Camera(name, ip, selector.selectedIndex));
-
-    renderCameras();
-    $("#addIPModal").modal('toggle');
 });
 
 function saveCamerasToLocal(){
@@ -204,3 +214,15 @@ function saveCamerasToLocal(){
 $('.pred-link').on('click', function(){
     saveCamerasToLocal();
 })
+
+function showSnackBar(text){
+    var snackbar = document.getElementById("snackbar");
+
+    snackbar.textContent = text;
+
+    // Add the "show" class to DIV
+    snackbar.className = "show";
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+}
