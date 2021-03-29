@@ -34,18 +34,27 @@
 ## Felhasznált cuccok
 - Python 3.6.8
 - Python libek:
-	- numpy
-	- opencv-python (opencv-python==4.4.0.46 -> előfordulhat hogy a legújabb nem jó)
-	- urllib3
-	- pandas
-	- django (web framework)
-## Dokumentáció
-- Függvények:
-	- **ipcamFaceDetect()**: Ez nem ismeri fel ki van rajta, csak az arcot, azonban itt nem framenként veszi, hanem a tényleges videót rakja ki.
+	- pip install numpy
+	- pip install opencv-python (opencv-python==4.4.0.46 -> előfordulhat hogy a legújabb nem jó)
+	- pip install urllib3
+	- pip install pandas
+	- pip install flask
+	- pip install requests
+	- conda install pystan -c conda-forge
+	- conda install -c conda-forge fbprophet
+- Anaconda telepítés: (A prophethez kelleni fog)
+	1. https://www.anaconda.com/products/individual#windows -> alján a 64 bites verziót
+	2. Indítsd el a telepített parancssort rendszergazdaként
+	3. conda create -n v-env python=3.6.8
+	4. Innentől jobb ha a vscode/pycharm konzolából nyomod tovább
+	5. a vscode/pycharmban rakd be interpreterként a C:\Users\<NEVED>\anaconda3\envs\v-env\python.exe
+	6. conda install libpython m2w64-toolchain -c msys2
+	7. Ha nincs \Lib\distutils\distutils.cfg akkor csináld meg ezzel a kóddal:
+[build]
+compiler=mingw32
+	8. conda install numpy cython -c conda-forge
+	9. conda install matplotlib scipy pandas -c conda-forge
+	10. conda install pystan -c conda-forge
+	11. conda install -c conda-forge fbprophet
+	12. Elv így működik, "from fbprophet import Prophet és import pystan" nézd meg dob a hibát
 
-- Django:
-	- A servert a "python WebServer.py runserver" kóddal lehet elindítani
-	- A 127.0.0.1:8000/index/ en lehet elérni
-	- Létre van hozva /prediction és a /results része is, azonban az oldalon lévő html gombbal nem lehet navigálni, csak linbe beírva ezeket
-	- Képekre nem sikerült még megoldani a betöltést, azonban a css és js staticokra igen
-	- A /admin felületen "Marko" és "admin" felhasználó-pw kombóval tudsz belépni
