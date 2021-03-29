@@ -47,7 +47,7 @@
 	2. Indítsd el a telepített parancssort rendszergazdaként
 	3. conda create -n v-env python=3.6.8
 	4. Innentől jobb ha a vscode/pycharm konzolából nyomod tovább
-	5. a vscode/pycharmban rakd be interpreterként a C:\Users\<NEVED>\anaconda3\envs\v-env\python.exe
+	5. a vscode/pycharmban rakd be interpreterként a C:\Users\\<NEVED>\anaconda3\envs\v-env\python.exe
 	6. conda install libpython m2w64-toolchain -c msys2
 	7. Ha nincs \Lib\distutils\distutils.cfg akkor csináld meg ezzel a kóddal:
 [build]
