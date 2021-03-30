@@ -162,9 +162,11 @@ class IPCamera:
                 self.reloadIntervalData()
 
             self.intervalHandler.refreshIntervalHour()
-
+            
             self.status = CameraStatus.Started
             self.stopped = False
+            
+            self.cameraThread = threading.Thread(target=self.ipcamFaceDetect, args=())
             self.cameraThread.start()
 
             return True
@@ -223,6 +225,7 @@ class IPCamera:
                 self.writeThread.start()
 
         if (not self.writeThread.isAlive()):
+            self.writeThread = threading.Thread(target=self.writeCSV, args=())
             self.writeThread.start()
 
         self.status = CameraStatus.Paused

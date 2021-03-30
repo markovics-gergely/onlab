@@ -30,8 +30,11 @@ def pauseCamera(id):
     print("Pause ID: " + id)
 
     if (response):
-        ipm.editCameraStatus(id, 0)
-        return "OK", 200
+        writeable = ipm.editCameraStatus(id, 0)
+        if(writeable) :
+            return "OK", 200
+        else :
+            return "Camera cannot be written", 502
     else:
         return "Camera cannot be paused", 502
 
@@ -72,7 +75,18 @@ def cameraAlive(id):
     if(response) :
         return "OK", 200
     else :
+        ipm.pauseCamera(int(id))
+        ipm.editCameraStatus(id, 0)
         return "Camera cannot be started", 502
+
+@app.route("/atstart")
+def cameraCheck():
+    for id in range(len(ipm.cameraList)) :
+        try :
+            ipm.editCameraStatus(id, ipm.cameraList[id].status.value)
+        except :
+            return "Camera cannot be started", 502
+    return "OK", 200
 
 if(__name__ == "__main__"):
    app.run(host='127.0.0.1', port=8000, threaded=True, debug=True, use_reloader=False)

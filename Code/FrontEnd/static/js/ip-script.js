@@ -165,9 +165,18 @@ function parseCameras() {
         success: function(data) {
             var d = data.clist;
             d.forEach(function(c, id) {
-                cameras.push(new Camera(c.name, c.ip, c.status));
+                if(c.status == CameraStatus.Started){
+                    var camera = new Camera(c.name, c.ip, CameraStatus.Pending);
+                    cameras.push(camera);
+                    cameraStartable(id, camera);
+                }
+                else {
+                    var camera = new Camera(c.name, c.ip, c.status);
+                    cameras.push(camera);
+                }
             });
             renderCameras();
+            cameraCheck();
         }
      });
 }
@@ -213,7 +222,12 @@ $(".addForm").on('submit',function(e){
         data: JSON.stringify(jsondata),
         success: function(xhr, statusText){
             console.log(xhr.status);
-            cameras.push(new Camera(name, ip, selector.selectedIndex));
+            if(selector.selectedIndex == 1){
+                var camera = new Camera(name, ip, 2)
+                cameras.push(camera);
+                cameraStartable(cameras.indexOf(camera), camera);
+            }
+            else cameras.push(new Camera(name, ip, selector.selectedIndex));
 
             renderCameras();
             $("#addIPModal").modal('toggle');
@@ -260,5 +274,31 @@ function cameraAlive(id, container){
     }).fail( function(xhr, statusText, err) {
         console.log(xhr.status);
         container.textContent = "State: Offline"
+    });
+}
+
+function cameraStartable(id, camera){
+    $.ajax({
+        url: window.location.href + "alive:" + id,
+        data: {}
+    }).done( function(xhr, statusText) {
+        console.log(xhr.status);
+        camera.status = CameraStatus.Started
+        renderCameras();
+    }).fail( function(xhr, statusText, err) {
+        console.log(xhr.status);
+        camera.status = CameraStatus.Paused
+        renderCameras();
+    });
+}
+
+function cameraCheck(){
+    $.ajax({
+        url: window.location.href + "atstart",
+        data: {}
+    }).done( function(xhr, statusText) {
+        console.log(xhr.status);
+    }).fail( function(xhr, statusText, err) {
+        console.log(xhr.status);
     });
 }

@@ -27,7 +27,7 @@ class IPManager:
     def startCamera(self, id):
         if(len(self.cameraList) <= id):
             return False
-
+        
         success = self.cameraList[id].startCameraThread()
         return success
 
@@ -86,16 +86,13 @@ class IPManager:
 
     def editCameraStatus(self, id, status) :
         path='DB/cameraList.csv'
-
+        print(str(id) + " " + str(status))
         try :
             df = pd.read_csv(path)
-            print(status)
-            df["status"][id] = status
-            print(df)
+            df.loc[int(id),'status'] = status
             df.to_csv(path, index=False)
             return True
         except :
-            print("dsdsasdsdds")
             return False
 
     def getJsonData(self):
