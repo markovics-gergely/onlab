@@ -1,7 +1,6 @@
 import pandas as pd
 import os.path
 import IPCamera as ic
-import time
 
 class IPManager:
     def __init__(self):

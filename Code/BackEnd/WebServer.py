@@ -1,9 +1,7 @@
 from flask import Flask, render_template, g, jsonify, request
 import IPManager as manager
-import json
 
 app = Flask(__name__, static_url_path='', static_folder='..', template_folder='../FrontEnd/templates')
-
 ipm = manager.IPManager()
 
 @app.route("/")
