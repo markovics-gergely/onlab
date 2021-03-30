@@ -1,7 +1,6 @@
 from flask import Flask, render_template, g, jsonify, request
 import IPManager as manager
 import json
-from IPCamera import CameraStatus as cs
 
 app = Flask(__name__, static_url_path='', static_folder='..', template_folder='../FrontEnd/templates')
 
@@ -42,8 +41,11 @@ def startCamera(id):
     print("Start ID: " + id)
 
     if(response) :
-        ipm.editCameraStatus(id, 1)
-        return "OK", 200
+        writeable = ipm.editCameraStatus(id, 1)
+        if(writeable) :
+            return "OK", 200
+        else :
+            return "Camera cannot be written", 502
     else :
         return "Camera cannot be started", 502
 
@@ -56,11 +58,21 @@ def addCamera():
     if (response):
         return "OK", 200
     else:
-        return "Camera not found", 404
+        return "Camera not found", 502
 
 @app.route("/clist", methods=['GET'])
 def getCameraList():
     return jsonify(ipm.getJsonData())
+
+@app.route("/alive:<id>")
+def cameraAlive(id):
+    response = ipm.cameraList[int(id)].cameraAlive()
+    print("Alive ID: " + id)
+
+    if(response) :
+        return "OK", 200
+    else :
+        return "Camera cannot be started", 502
 
 if(__name__ == "__main__"):
    app.run(host='127.0.0.1', port=8000, threaded=True, debug=True, use_reloader=False)

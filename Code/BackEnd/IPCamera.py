@@ -184,7 +184,7 @@ class IPCamera:
     def cameraAlive(self):
         urlshot = "http://" + self.url + "/shot.jpg"
         try:
-            imgResp = urllib.urlopen(urlshot, timeout=2)
+            imgResp = urllib.urlopen(urlshot, timeout=5)
             return True
         except:
             return False
@@ -194,7 +194,7 @@ class IPCamera:
 
         while not self.stopped:
             try:
-                imgResp = urllib.urlopen(urlshot, timeout=2)
+                imgResp = urllib.urlopen(urlshot, timeout=5)
             except:
                 break
             imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)

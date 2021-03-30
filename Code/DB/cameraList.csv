@@ -2,4 +2,5 @@ ipaddress,name,status
 192.168.0.100:8080,MarkoKamera,0
 192.168.9.176:8080,NagyViktor2,1
 192.168.0.0:8080,Firsta,1
-192.168.0.0:8081,sdsa,1
+192.168.1.100:8080,Marko,0
+1.1.1.1:0,asd,0

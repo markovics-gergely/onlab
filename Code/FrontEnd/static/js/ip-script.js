@@ -37,7 +37,7 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
             renderCameras();
             console.log(cameras[id].status);
         }).fail( function(xhr, statusText, err) {
-            console.log("Error: " + xhr.status + " " + statusText); 
+            console.log("Error: " + xhr.status + " " + statusText + " " + err); 
             cameras[id].status = CameraStatus.Paused;
             $(this).removeAttr("disabled");
             renderCameras();
@@ -56,7 +56,7 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
             renderCameras();
             console.log(cameras[id].status);
         }).fail( function(xhr, statusText, err) {
-            console.log("Error: " + xhr.status + " " + statusText); 
+            console.log("Error: " + xhr.status + " " + statusText + " " + err); 
             cameras[id].status = CameraStatus.Paused;
             $(this).removeAttr("disabled");
             renderCameras();
@@ -85,6 +85,7 @@ $(document).on("click", ".ipDelete", function(e) {
             console.log("Error: " + xhr.status + " " + statusText);
         }).always( function() {});
     }
+    renderCameras();
 })
 
 $(document).on("click", ".camera-list-item", function() {
@@ -99,13 +100,26 @@ $(document).on("click", ".camera-list-item", function() {
     ipFrame.className = "camera-info-item";
 
     var ip = document.createElement('h4');
-    ip.textContent = camera.ip;
+    ip.textContent = "IP: " + camera.ip;
     ip.className = "ip-addr ml-3";
 
     ipFrame.appendChild(ip);
 
     caminfo.innerHTML = "";
     caminfo.appendChild(ipFrame);
+
+    var aliveFrame = document.createElement('div');
+    aliveFrame.className = "camera-info-item";
+
+    var alive = document.createElement('h4');
+    alive.textContent = "State: Pending...";
+    alive.className = "ip-addr ml-3";
+
+    aliveFrame.appendChild(alive);
+
+    caminfo.appendChild(aliveFrame);
+
+    cameraAlive(id, alive)
 })
 
 function renderCameras() {
@@ -150,7 +164,7 @@ function parseCameras() {
         dataType: "json",
         success: function(data) {
             var d = data.clist;
-            d.forEach(function(c) {
+            d.forEach(function(c, id) {
                 cameras.push(new Camera(c.name, c.ip, c.status));
             });
             renderCameras();
@@ -234,4 +248,17 @@ function showSnackBar(text){
 
     // After 3 seconds, remove the show class from DIV
     setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+}
+
+function cameraAlive(id, container){
+    $.ajax({
+        url: window.location.href + "alive:" + id,
+        data: {}
+    }).done( function(xhr, statusText) {
+        console.log(xhr.status);
+        container.textContent = "State: Online"
+    }).fail( function(xhr, statusText, err) {
+        console.log(xhr.status);
+        container.textContent = "State: Offline"
+    });
 }

@@ -87,9 +87,16 @@ class IPManager:
     def editCameraStatus(self, id, status) :
         path='DB/cameraList.csv'
 
-        df = pd.read_csv(path)
-        df.set_value(id,'status', status)
-        df.to_csv(path, index=False)
+        try :
+            df = pd.read_csv(path)
+            print(status)
+            df["status"][id] = status
+            print(df)
+            df.to_csv(path, index=False)
+            return True
+        except :
+            print("dsdsasdsdds")
+            return False
 
     def getJsonData(self):
         json = {
