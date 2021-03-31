@@ -1,10 +1,10 @@
 from flask import Flask, render_template, jsonify, request
 import IPManager as manager
-#import Prediction as prediction
+import Prediction as prediction
 
 app = Flask(__name__, static_url_path='', static_folder='..', template_folder='../FrontEnd/templates')
 ipm = manager.IPManager()
-#pre = prediction.Prediction()
+pre = prediction.Prediction()
 
 @app.route("/")
 def index():
@@ -16,7 +16,9 @@ def prediction():
 
 @app.route("/prediction/p", methods=['POST'])
 def getPrediction():
-    #pre.getPrediction(request.data)
+    data = request.get_json()
+    request.close()
+    pre.getPrediction(request.data)
     return render_template("prediction.html")
 
 

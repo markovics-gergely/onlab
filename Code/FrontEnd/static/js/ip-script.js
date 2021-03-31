@@ -209,7 +209,6 @@ $(".addForm").on('submit',function(e){
     e.preventDefault();
     $('#addSubmit').attr("disabled", "disabled");
 
-
     var name = $('#addname').val();
     var ip = $('#addipaddr').val();
     var selector = document.getElementById("StatusSelect");

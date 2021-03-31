@@ -20,5 +20,9 @@ $(".predictForm").on('submit',function(e){
     $('#result').css("display", "block");
     $("#predictModal").modal('toggle');
 
+    var name = $('#addname').val();
+    var ip = $('#addipaddr').val();
+    var selector = document.getElementById("StatusSelect");
+
     //TODO predikció
 });

@@ -1,5 +1,6 @@
 import pandas as pd
 from fbprophet import Prophet
+import datetime
 
 df = pd.read_csv('DB/dataset.csv')
 
@@ -22,15 +23,17 @@ forecast = m.predict(future)
 forecast.head()
 
 plot1 = m.plot(forecast)
-
-plt2 = m.plot_components(forecast)
+plot1.savefig('output1')
+plot2 = m.plot_components(forecast)
+plot2.savefig('output2')
 
 
 class Prediction:
     def __init__(self):
         self.data = "LOLOLOL"
+        self.predictableTime = "1970-01-01 00:00:00";
 
-    def getPrediction(self, d):
+    def getPrediction(self, time):
         return self.data
 
 
