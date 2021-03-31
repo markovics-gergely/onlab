@@ -56,5 +56,6 @@ compiler=mingw32
 	9. conda install matplotlib scipy pandas -c conda-forge
 	10. conda install pystan -c conda-forge
 	11. conda install -c conda-forge fbprophet
-	12. Elv így működik, "from fbprophet import Prophet és import pystan" nézd meg dob a hibát
+	12. pip install --upgrade plotly (hogy ne dobjon hibát)
+
 
