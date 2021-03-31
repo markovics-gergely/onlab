@@ -131,8 +131,8 @@ function renderCameras() {
 
         var startImage = document.createElement('input');
         startImage.type = "image";
-        if(camera.status == CameraStatus.Paused) startImage.src = "FrontEnd/static/image/pause.png";
-        else if(camera.status == CameraStatus.Started) startImage.src = "FrontEnd/static/image/start.png";
+        if(camera.status == CameraStatus.Paused) startImage.src = "FrontEnd/static/image/start.png";
+        else if(camera.status == CameraStatus.Started) startImage.src = "FrontEnd/static/image/pause.png";
         else if(camera.status == CameraStatus.Pending) startImage.src = "FrontEnd/static/image/pending.png";
         startImage.className = "ipPauseOrStart";
 

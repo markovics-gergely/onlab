@@ -1,8 +1,10 @@
-from flask import Flask, render_template, g, jsonify, request
+from flask import Flask, render_template, jsonify, request
 import IPManager as manager
+#import Prediction as prediction
 
 app = Flask(__name__, static_url_path='', static_folder='..', template_folder='../FrontEnd/templates')
 ipm = manager.IPManager()
+#pre = prediction.Prediction()
 
 @app.route("/")
 def index():
@@ -11,6 +13,12 @@ def index():
 @app.route("/prediction/")
 def prediction():
     return render_template("prediction.html")
+
+@app.route("/prediction/p", methods=['POST'])
+def getPrediction():
+    #pre.getPrediction(request.data)
+    return render_template("prediction.html")
+
 
 @app.route("/d:<id>")
 def deleteCamera(id):
@@ -49,7 +57,6 @@ def startCamera(id):
             return "Camera cannot be written", 502
     else :
         return "Camera cannot be started", 502
-
 
 @app.route("/a", methods=['POST'])
 def addCamera():

@@ -1,17 +1,5 @@
 import pandas as pd
 from fbprophet import Prophet
-import pystan
-
-
-''' #A PYSTAN ELLENŐRZÉSÉHEZ KOMMENTEZD KI
-model_code = 'parameters {real y;} model {y ~ normal(0,1);}'
-model = pystan.StanModel(model_code=model_code)
-y = model.sampling().extract()['y']
-y.mean()  # with luck the result will be near 0
-'''
-
-#Ez egy random kód a netről amihez van tutorial, csak beraktam hozzá a dataset.csv-t mert azt használja
-#Az hogy az elején miért írja ki hogy "Importing plotly failed. Interactive plots will not work." fogalmam sincs
 
 df = pd.read_csv('DB/dataset.csv')
 
@@ -36,3 +24,14 @@ forecast.head()
 plot1 = m.plot(forecast)
 
 plt2 = m.plot_components(forecast)
+
+
+class Prediction:
+    def __init__(self):
+        self.data = "LOLOLOL"
+
+    def getPrediction(self, d):
+        return self.data
+
+
+
