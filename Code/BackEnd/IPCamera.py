@@ -193,15 +193,15 @@ class IPCamera:
 
     def ipcamFaceDetect(self):
         urlshot = "http://" + self.url + "/shot.jpg"
-
+        
         while not self.stopped:
             try:
                 imgResp = urllib.urlopen(urlshot, timeout=5)
+                imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
+                frame = cv2.imdecode(imgNp, -1)
             except:
                 break
-            imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
-            frame = cv2.imdecode(imgNp, -1)
-
+            
             if frame is not None:
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = self.haar_detector.detectMultiScale(gray, 1.2, 5)
