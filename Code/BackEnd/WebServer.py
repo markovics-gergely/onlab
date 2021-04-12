@@ -18,7 +18,7 @@ def prediction():
 def getPrediction():
     data = request.get_json()
     request.close()
-    pre.getPrediction(request.data)
+    info = pre.getPrediction(request.data)
     return render_template("prediction.html")
 
 

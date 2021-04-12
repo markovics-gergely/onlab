@@ -5,19 +5,7 @@ import os
 import logging
 logging.getLogger('fbprophet').setLevel(logging.WARNING)
 
-
-
-'''df['Year'] = df['Time Date'].apply(lambda x: str(x)[-4:])
-df['Month'] = df['Time Date'].apply(lambda x: str(x)[-6:-4])
-df['Day'] = df['Time Date'].apply(lambda x: str(x)[:-6])'''
-
-'''plot1 = m.plot(forecast)
-plot1.savefig('output1')
-plot2 = m.plot_components(forecast)
-plot2.savefig('output2')'''
-
 class suppress_stdout_stderr(object):
-
     def __init__(self):
         # Open a pair of null files
         self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
@@ -37,17 +25,22 @@ class suppress_stdout_stderr(object):
         os.close(self.null_fds[0])
         os.close(self.null_fds[1])
 
-
 class Prediction:
     def __init__(self):
-        self.data = "LOLOLOL"
         self.predictableTime = "1970-01-01 00:00:00"
         self.df = pd.read_csv('DB/cameras/192-168-0-176-8080.csv')
         self.df['ds'] = pd.DatetimeIndex(self.df['time'])
+        self.periodNum = 0
+        self.stringList = ["0-6 éves kor: ", "6-12 éves kor: ", "12-18 éves kor: ", "18-26 éves kor: ", "26-36 éves kor: ",
+                           "36-48 éves kor: ", "48-60 éves kor: ", "60-100 éves kor: ", "Nő: ", "Férfi: "]
 
     def getPrediction(self, time):
-        self.predict()
-        return self.data
+        self.predictableTime = time
+        self.countPeriodNum()
+        return self.predict()
+
+    def countPeriodNum(self):
+        self.periodNum = 10
 
     def getValue(self, x, id):
         x = x.replace('[', '')
@@ -56,6 +49,11 @@ class Prediction:
         return int(x[id])
 
     def predict(self):
+        information = ""
+        dataList = []
+        ageSum = 0
+        genderSum = 0
+
         for i in range(10):
             predictdf = self.df.copy()
             if i < 8:
@@ -67,13 +65,24 @@ class Prediction:
             m = Prophet(interval_width=0.95, daily_seasonality=True, growth='linear')
             with suppress_stdout_stderr():
                 model = m.fit(predictdf)
-            future = m.make_future_dataframe(periods=2, freq='2H', include_history=False)
+            future = m.make_future_dataframe(periods=self.periodNum, freq='2H', include_history=False)
             forecast = m.predict(future)
             forecast.head()
-            print(predictdf.tail())
-            #forecast.to_csv("asd.csv", index=False)
-            print(forecast[['ds', 'yhat']].tail())
+
+            personPred = forecast[['yhat']].values[self.periodNum - 1][0]
+            if i < 8:
+                ageSum += personPred
+            else:
+                genderSum += personPred
+            dataList.append(personPred)
+
+        for i in range(8):
+            information += self.stringList[i] + str(round((dataList[i] / ageSum) * 100, 2)) + "% \n"
+        for i in range(8, 10):
+            information += self.stringList[i] + str(round((dataList[i] / genderSum) * 100, 2)) + "% \n"
+
+        return information
 
 predict = Prediction()
-predict.predict()
+print(predict.getPrediction('2021-05-01 12:00:00'))
 
