@@ -11,7 +11,6 @@ function Camera(name, ip, status) {
     this.status = status;
 }
 var cameras = [];
-
 var managerpanel = document.getElementById("managerpanel");
 var caminfo = document.getElementById("caminfo");
 
@@ -67,7 +66,6 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
     console.log(status);
     console.log(cameras[id].status);
 })
-
 $(document).on("click", ".ipDelete", function(e) {
     e.stopPropagation();
     if (confirm("Are you sure?")) {
@@ -87,7 +85,6 @@ $(document).on("click", ".ipDelete", function(e) {
     }
     renderCameras();
 })
-
 $(document).on("click", ".camera-list-item", function() {
     $(".camera-list-item").css('background-color', 'white');
 
@@ -153,7 +150,6 @@ function renderCameras() {
         managerpanel.appendChild(outerdiv);
     })
 }
-
 function parseCameras() {
     $.ajax({
         type: "GET",
@@ -177,7 +173,6 @@ function parseCameras() {
         }
     });
 }
-
 function checkname(input) {
     var unique = true;
     cameras.forEach(function(c) {
@@ -188,7 +183,6 @@ function checkname(input) {
     if (unique) input.setCustomValidity('');
     else input.setCustomValidity('Camera Name must be unique');
 }
-
 function checkip(input) {
     var ipregex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]{1,5}$/;
     var unique = true;

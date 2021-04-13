@@ -5,10 +5,7 @@ from datetime import datetime
 import threading
 import pandas as pd
 import os
-import requests
 from enum import Enum
-import json
-from json import JSONEncoder
 
 class CameraStatus(Enum):
     Paused = 0
