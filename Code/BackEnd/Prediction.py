@@ -7,21 +7,16 @@ logging.getLogger('fbprophet').setLevel(logging.WARNING)
 
 class suppress_stdout_stderr(object):
     def __init__(self):
-        # Open a pair of null files
         self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
-        # Save the actual stdout (1) and stderr (2) file descriptors.
         self.save_fds = (os.dup(1), os.dup(2))
 
     def __enter__(self):
-        # Assign the null pointers to stdout and stderr.
         os.dup2(self.null_fds[0], 1)
         os.dup2(self.null_fds[1], 2)
 
     def __exit__(self, *_):
-        # Re-assign the real stdout/stderr back to (1) and (2)
         os.dup2(self.save_fds[0], 1)
         os.dup2(self.save_fds[1], 2)
-        # Close the null files
         os.close(self.null_fds[0])
         os.close(self.null_fds[1])
 
@@ -37,10 +32,19 @@ class Prediction:
     def getPrediction(self, time):
         self.predictableTime = time
         self.countPeriodNum()
-        return self.predict()
+        return self.predictableTime + "\n" + self.predict()
 
     def countPeriodNum(self):
-        self.periodNum = 10
+        refDate = str((pd.DatetimeIndex(self.df['time']).values)[len(self.df.index) - 1])
+        refDate = refDate[:19]
+        refDate = refDate[:10] + " " + refDate[-8:]
+
+        refDateObject =  datetime.datetime.strptime(refDate, '%Y-%m-%d %H:%M:%S')
+        predDateObject = datetime.datetime.strptime(self.predictableTime, '%Y-%m-%d %H:%M:%S')
+
+        diff = predDateObject - refDateObject
+        hourDiff = diff.days * 24 + diff.seconds / (3600)
+        self.periodNum = int(hourDiff / 2)
 
     def getValue(self, x, id):
         x = x.replace('[', '')
@@ -78,11 +82,12 @@ class Prediction:
 
         for i in range(8):
             information += self.stringList[i] + str(round((dataList[i] / ageSum) * 100, 2)) + "% \n"
+        information += "\n"
         for i in range(8, 10):
             information += self.stringList[i] + str(round((dataList[i] / genderSum) * 100, 2)) + "% \n"
 
         return information
 
 predict = Prediction()
-print(predict.getPrediction('2021-05-01 12:00:00'))
+print(predict.getPrediction('2021-04-02 08:00:00'))
 
