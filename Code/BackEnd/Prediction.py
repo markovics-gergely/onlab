@@ -2,8 +2,6 @@ import pandas as pd
 from fbprophet import Prophet
 import datetime
 import os
-import logging
-logging.getLogger('fbprophet').setLevel(logging.WARNING)
 
 class suppress_stdout_stderr(object):
     def __init__(self):
@@ -32,7 +30,7 @@ class Prediction:
     def getPrediction(self, time):
         self.predictableTime = time
         self.countPeriodNum()
-        return self.predictableTime + "\n" + self.predict()
+        return self.predictableTime + "\n\n" + self.predict()
 
     def countPeriodNum(self):
         refDate = str((pd.DatetimeIndex(self.df['time']).values)[len(self.df.index) - 1])
@@ -81,10 +79,10 @@ class Prediction:
             dataList.append(personPred)
 
         for i in range(8):
-            information += self.stringList[i] + str(round((dataList[i] / ageSum) * 100, 2)) + "% \n"
+            information += self.stringList[i] + str(round((dataList[i] / ageSum) * 100, 2)) + "% -> " + str(round(dataList[i], 2)) + "\n"
         information += "\n"
         for i in range(8, 10):
-            information += self.stringList[i] + str(round((dataList[i] / genderSum) * 100, 2)) + "% \n"
+            information += self.stringList[i] + str(round((dataList[i] / genderSum) * 100, 2)) + "% -> " + str(round(dataList[i], 2)) + "\n"
 
         return information
 
