@@ -2,6 +2,8 @@ import pandas as pd
 from fbprophet import Prophet
 import datetime
 import os
+import sys
+import time
 
 class suppress_stdout_stderr(object):
     def __init__(self):
@@ -50,6 +52,10 @@ class Prediction:
         x = x.split(', ')
         return int(x[id])
 
+    def progressBar(self, i) :
+        sys.stdout.write("\r{2}% <{0}/{1}>\r".format("="*(i + 1),"-"*(9 - i), (i + 1) * 10))
+        sys.stdout.flush()
+
     def predict(self):
         information = ""
         dataList = []
@@ -77,6 +83,8 @@ class Prediction:
             else:
                 genderSum += personPred
             dataList.append(personPred)
+
+            self.progressBar(i)
 
         for i in range(8):
             information += self.stringList[i] + str(round((dataList[i] / ageSum) * 100, 2)) + "% -> " + str(round(dataList[i], 2)) + "\n"
