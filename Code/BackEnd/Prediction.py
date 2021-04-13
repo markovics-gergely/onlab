@@ -62,6 +62,7 @@ class Prediction:
         ageSum = 0
         genderSum = 0
 
+        self.progressBar(-1)
         for i in range(10):
             predictdf = self.df.copy()
             if i < 8:
@@ -70,7 +71,7 @@ class Prediction:
                 predictdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
 
-            m = Prophet(interval_width=0.95, daily_seasonality=True, growth='linear')
+            m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear')
             with suppress_stdout_stderr():
                 model = m.fit(predictdf)
             future = m.make_future_dataframe(periods=self.periodNum, freq='2H', include_history=False)
