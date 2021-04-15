@@ -6,10 +6,10 @@ class IPManager:
     def __init__(self):
         self.cameraList = self.parseCameras()
 
-    def addCamera(self, ipaddr, name, status):
-        self.persistCamera(ipaddr, name, status)
+    def addCamera(self, ipaddr, name, status, imgType):
+        self.persistCamera(ipaddr, name, status, imgType)
 
-        ipcamera = ic.IPCamera(ipaddr, name, ic.CameraStatus(status))
+        ipcamera = ic.IPCamera(ipaddr, name, ic.CameraStatus(status), imgType)
         self.cameraList.append(ipcamera)
 
         return True
@@ -43,14 +43,15 @@ class IPManager:
         iplist = df["ipaddress"].tolist()
         namelist = df["name"].tolist()
         statuslist = df["status"].tolist()
+        imgTypelist = df["imgType"].tolist()
 
         for i in range(len(iplist)) :
-            ipcamera = ic.IPCamera(iplist[i], namelist[i], ic.CameraStatus(statuslist[i]))
+            ipcamera = ic.IPCamera(iplist[i], namelist[i], ic.CameraStatus(statuslist[i]), imgTypelist[i])
             clist.append(ipcamera)
 
         return clist
 
-    def persistCamera(self, ipaddr, name, status):
+    def persistCamera(self, ipaddr, name, status, imgType):
         path='DB/cameraList.csv'
 
         notExist = True
@@ -62,7 +63,7 @@ class IPManager:
             if(b) :
                 return False
         
-        writer = pd.DataFrame([[ipaddr, name, status]], columns=['ipaddress', 'name', 'status'])
+        writer = pd.DataFrame([[ipaddr, name, status, imgType]], columns=['ipaddress', 'name', 'status', 'imgType'])
         writer.to_csv(path, mode='a', index=False, header=notExist)
 
         return True
@@ -102,7 +103,8 @@ class IPManager:
             camera = {
                 "name": cam.name,
                 "ip": cam.url,
-                "status": cam.status.value
+                "status": cam.status.value,
+                "imgType": cam.imgType
             }
             json["clist"].append(camera)
         return json

@@ -66,10 +66,11 @@ class IntervalHandler:
         self.lastInterval = self.getIntervalDateNow()
 
 class IPCamera:
-    def __init__(self, url, name, status):
+    def __init__(self, url, name, status, imgType):
         self.url = url
         self.filename = self.getFileNameFromUrl()
         self.path = 'DB/cameras/' + self.filename + '.csv'
+        self.imgType = imgType
         self.personBucket = PersonBucket()
         self.intervalHandler = IntervalHandler(self.loadLastSaved())
         self.stopped = False
@@ -181,7 +182,7 @@ class IPCamera:
         return False
 
     def cameraAlive(self):
-        urlshot = "http://" + self.url + "/shot.jpg"
+        urlshot = "http://" + self.url + "/" + self.imgType
         try:
             imgResp = urllib.urlopen(urlshot, timeout=5)
             return True
@@ -189,7 +190,7 @@ class IPCamera:
             return False
 
     def ipcamFaceDetect(self):
-        urlshot = "http://" + self.url + "/shot.jpg"
+        urlshot = "http://" + self.url + "/" + self.imgType
         
         while not self.stopped:
             try:

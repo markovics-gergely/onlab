@@ -64,7 +64,7 @@ def startCamera(id):
 def addCamera():
     data = request.get_json()
     request.close()
-    response = ipm.addCamera(data['ip'], data['name'], int(data['status']))
+    response = ipm.addCamera(data['ip'], data['name'], int(data['status']), data['imgType'])
     if (response):
         return "OK", 200
     else:

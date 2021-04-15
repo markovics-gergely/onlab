@@ -5,10 +5,11 @@ const CameraStatus = {
 }
 Object.freeze(CameraStatus)
 
-function Camera(name, ip, status) {
+function Camera(name, ip, status, imgType) {
     this.name = name;
     this.ip = ip;
     this.status = status;
+    this.imgType = imgType;
 }
 var cameras = [];
 var managerpanel = document.getElementById("managerpanel");
@@ -63,15 +64,11 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
             console.log(cameras[id].status);
         }).always(function() {});
     }
-    console.log(status);
-    console.log(cameras[id].status);
 })
 $(document).on("click", ".ipDelete", function(e) {
     e.stopPropagation();
     if (confirm("Are you sure?")) {
         var id = $(".ipDelete").index($(this));
-        $(this).children(".ipDelete").attr("src", "FrontEnd/static/image/pending.png");
-        renderCameras();
         $.ajax({
             url: window.location.href + "d:" + id,
             data: {}
@@ -116,7 +113,18 @@ $(document).on("click", ".camera-list-item", function() {
 
     caminfo.appendChild(aliveFrame);
 
-    cameraAlive(id, alive)
+    cameraAlive(id, alive);
+
+    var imgTypeFrame = document.createElement('div');
+    imgTypeFrame.className = "camera-info-item";
+
+    var imgType = document.createElement('h4');
+    imgType.textContent = "Image Type: " + camera.imgType;
+    imgType.className = "ip-addr ml-3";
+
+    imgTypeFrame.appendChild(imgType);
+
+    caminfo.appendChild(imgTypeFrame);
 })
 
 function renderCameras() {
@@ -159,12 +167,13 @@ function parseCameras() {
         success: function(data) {
             var d = data.clist;
             d.forEach(function(c, id) {
+                console.log(c);
                 if (c.status == CameraStatus.Started) {
-                    var camera = new Camera(c.name, c.ip, CameraStatus.Pending);
+                    var camera = new Camera(c.name, c.ip, CameraStatus.Pendin, c.imgType);
                     cameras.push(camera);
                     cameraStartable(id, camera);
                 } else {
-                    var camera = new Camera(c.name, c.ip, c.status);
+                    var camera = new Camera(c.name, c.ip, c.status, c.imgType);
                     cameras.push(camera);
                 }
             });
@@ -203,8 +212,9 @@ $(".addForm").on('submit', function(e) {
     var name = $('#addname').val();
     var ip = $('#addipaddr').val();
     var selector = document.getElementById("StatusSelect");
+    var imgType = $('#addimgtype').val();
 
-    var jsondata = { "name": name, "ip": ip, "status": selector.selectedIndex }
+    var jsondata = { "name": name, "ip": ip, "status": selector.selectedIndex, "imgType": imgType }
     $.ajax({
         type: "POST",
         contentType: "application/json",
@@ -293,3 +303,21 @@ function cameraCheck() {
         console.log(xhr.status);
     });
 }
+
+$(document).on("click", "#expand-button", function(e) {
+    $("#expand-button").blur();
+    $("#expand-button").hideFocus = true;
+    if($("#expand-span").text() === "expand_more"){
+        $("#advanced-modal").removeAttr("hidden");
+        $("#expand-span").text("expand_less");
+    }
+    else if($("#expand-span").text() === "expand_less"){
+        $("#advanced-modal").attr("hidden", "hidden");
+        $("#expand-span").text("expand_more");
+    }
+})
+
+$("#addIPModal").on("hidden.bs.modal", function () {
+    $("#advanced-modal").attr("hidden", "hidden");
+    $("#expand-span").text("expand_more");
+});

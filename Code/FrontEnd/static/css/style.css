@@ -240,6 +240,11 @@ div::-webkit-scrollbar-thumb:hover {
 
 .submit-color:hover {
     background-color: #2b5e8b;
+    color: lightgray;
+}
+
+.submit-color:focus {
+    background-color: #2b5e8b;
 }
 
 .btn-predict {
@@ -259,7 +264,6 @@ div::-webkit-scrollbar-thumb:hover {
 #result {
     display: none;
 }
-
 
 /* The snackbar - position it at the bottom and in the middle of the screen */
 
@@ -359,4 +363,21 @@ div::-webkit-scrollbar-thumb:hover {
 }
 .white-icon:hover {
     color: #2b5e8b;
+}
+.btn-expand {
+    border-radius: 50%;
+    position: absolute;
+    text-align: center;
+    align-self: center;
+    bottom: -25px;
+}
+.expand-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#expand-span {
+    vertical-align: middle;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
