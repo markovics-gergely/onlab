@@ -17,7 +17,7 @@ var caminfo = document.getElementById("caminfo");
 var caminfos = [];
 
 parseCameras();
-createCamInfos();
+
 $(document).on("click", ".ipPauseOrStart", function(e) {
     e.stopPropagation();
 
@@ -77,6 +77,7 @@ $(document).on("click", ".ipDelete", function(e) {
             console.log(xhr.status);
             cameras.splice(id, 1)
             renderCameras();
+            createCamInfos();
         }).fail(function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText);
         }).always(function() {});
@@ -133,6 +134,7 @@ $(document).on("click", ".ipDelete", function(e) {
 
 function createCamInfos(){
     caminfos = [];
+    console.log(cameras);
     cameras.forEach(function(camera, id){
         var infotable = document.createElement('div');
         infotable.id = "camera-info";
@@ -153,10 +155,10 @@ function createCamInfos(){
     
         //aliveframe
         var aliveFrame = document.createElement('div');
-        aliveFrame.className = "camera-info-item";
+        aliveFrame.className = "camera-info-item alive";
     
         var alive = document.createElement('h4');
-        alive.textContent = camera.CameraStatus == CameraStatus.Paused ? "State: Offline" :  "State: Online";
+        alive.textContent = camera.CameraStatus == CameraStatus.Started ? "State: Online" :  "State: Offline";
         alive.className = "ip-addr ml-3";
     
         aliveFrame.appendChild(alive);
@@ -164,11 +166,11 @@ function createCamInfos(){
     
         //beforependingframe
         var beforependingFrame = document.createElement('div');
-        beforependingFrame.className = "camera-info-item";
-        $(beforependingFrame).css('visibility', 'false');
+        beforependingFrame.className = "camera-info-item before";
+        $(beforependingFrame).css('display', 'none');
 
         var beforepending = document.createElement('h4');
-        beforepending.textContent = alive.textContent;
+        beforepending.textContent = camera.CameraStatus == CameraStatus.Started ? "Before Pending: Online" :  "Before Pending: Offline";
         beforepending.className = "ip-addr ml-3";
 
         beforependingFrame.appendChild(beforepending);
@@ -191,18 +193,6 @@ function createCamInfos(){
         infotable.appendChild(imgTypeFrame);
 
         caminfos.push(infotable);
-
-        $(listItem).on("click", function(){
-            $(".camera-list-item").css('background-color', 'white');
-    
-            $(listItem).css('background-color', '#f0f0f0');
-            caminfo = infotable;
-
-            if(!$(listItem).attr('disabled')){
-                beforependingFrame.css('visibility', 'true');
-                cameraAlive(id, alive, $(listItem), $(beforependingFrame));
-            }
-        })
     })
 }
 
@@ -235,9 +225,33 @@ function renderCameras() {
         outerdiv.appendChild(innerdiv);
 
         managerpanel.appendChild(outerdiv);
+
+        $(outerdiv).on("click", function(){
+            $(".camera-list-item").css('background-color', 'white');
+            var id = $(".camera-list-item").index(outerdiv);
+
+            $(outerdiv).css('background-color', '#f0f0f0');
+            caminfo.innerHTML = caminfos[id].innerHTML;
+
+            if(!$(outerdiv).attr('disabled')){
+                var beforeFrame = $(caminfo).children(".before");
+                beforeFrame.css('display', 'block');
+                var alive = $(caminfo).children(".alive").children(".ip-addr");
+                alive.text("State: Pending...");
+
+                
+                cameraAlive(id, alive, $(outerdiv), $(beforeFrame));
+            }
+            else{
+                var beforeFrame = $(caminfo).children(".before");
+                beforeFrame.css('display', 'block');
+                var alive = $(caminfo).children(".alive").children(".ip-addr");
+                alive.text("State: Pending...");
+            }
+        })
     })
-    createCamInfos();
 }
+
 function parseCameras() {
     $.ajax({
         type: "GET",
@@ -259,6 +273,7 @@ function parseCameras() {
             });
             renderCameras();
             cameraCheck();
+            createCamInfos();
         }
     });
 }
@@ -306,7 +321,7 @@ $(".addForm").on('submit', function(e) {
                 var camera = new Camera(name, ip, 2)
                 cameras.push(camera);
                 cameraStartable(cameras.indexOf(camera), camera);
-            } else cameras.push(new Camera(name, ip, selector.selectedIndex));
+            } else cameras.push(new Camera(name, ip, selector.selectedIndex, imgType));
 
             renderCameras();
             $("#addIPModal").modal('toggle');
@@ -315,6 +330,7 @@ $(".addForm").on('submit', function(e) {
             $('#addname').val("");
             $('#addipaddr').val("");
             $("#StatusSelect").selectedIndex = 0;
+            createCamInfos();
         },
         error: function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText);
@@ -350,15 +366,16 @@ function cameraAlive(id, container, parent, before) {
         data: {}
     }).done(function(xhr, statusText) {
         console.log(xhr.status);
-        container.textContent = "State: Online";
-        before.children(".ip-addr").textContent = container.textContent;
-        before.css('visibility', 'false');
+        container.text("State: Online");
+
+        before.children(".ip-addr").text("Before Pending: Online");
+        before.css('display', 'none');
         parent.removeAttr("disabled");
     }).fail(function(xhr, statusText, err) {
         console.log(xhr.status);
-        container.textContent = "State: Offline";
-        before.children(".ip-addr").textContent = container.textContent;
-        before.css('visibility', 'false');
+        container.text("State: Offline");
+        before.children(".ip-addr").text("Before Pending: Offline");
+        before.css('display', 'none');
         cameras[id].status = CameraStatus.Paused;
         parent.removeAttr("disabled");
         renderCameras();
@@ -394,6 +411,7 @@ function cameraCheck() {
 $(document).on("click", "#expand-button", function(e) {
     $("#expand-button").blur();
     $("#expand-button").hideFocus = true;
+    $("#addimgtype").val("shot.jpg");
     if($("#expand-span").text() === "expand_more"){
         $("#advanced-modal").removeAttr("hidden");
         $("#expand-span").text("expand_less");
@@ -407,4 +425,5 @@ $(document).on("click", "#expand-button", function(e) {
 $("#addIPModal").on("hidden.bs.modal", function () {
     $("#advanced-modal").attr("hidden", "hidden");
     $("#expand-span").text("expand_more");
+    $("#addimgtype").val("shot.jpg");
 });
