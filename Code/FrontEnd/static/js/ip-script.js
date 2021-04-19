@@ -14,9 +14,10 @@ function Camera(name, ip, status, imgType) {
 var cameras = [];
 var managerpanel = document.getElementById("managerpanel");
 var caminfo = document.getElementById("caminfo");
+var caminfos = [];
 
 parseCameras();
-
+createCamInfos();
 $(document).on("click", ".ipPauseOrStart", function(e) {
     e.stopPropagation();
 
@@ -82,7 +83,7 @@ $(document).on("click", ".ipDelete", function(e) {
     }
     renderCameras();
 })
-$(document).on("click", ".camera-list-item", function() {
+/*$(document).on("click", ".camera-list-item", function() {
     $(".camera-list-item").css('background-color', 'white');
 
     var id = $(".camera-list-item").index($(this));
@@ -113,7 +114,10 @@ $(document).on("click", ".camera-list-item", function() {
 
     caminfo.appendChild(aliveFrame);
 
-    cameraAlive(id, alive);
+    if(!$(this).attr('disabled')){
+        cameraAlive(id, alive, $(this));
+    }
+    else alive.textContent = "State: " + camera.CameraStatus;
 
     var imgTypeFrame = document.createElement('div');
     imgTypeFrame.className = "camera-info-item";
@@ -125,7 +129,82 @@ $(document).on("click", ".camera-list-item", function() {
     imgTypeFrame.appendChild(imgType);
 
     caminfo.appendChild(imgTypeFrame);
-})
+})*/
+
+function createCamInfos(){
+    caminfos = [];
+    cameras.forEach(function(camera, id){
+        var infotable = document.createElement('div');
+        infotable.id = "camera-info";
+        infotable.className = "card-content";
+
+        var listItem = $(".camera-list-item").index(id);
+        $(listItem).css('background-color', 'white');
+    
+        //ipframe
+        var ipFrame = document.createElement('div');
+        ipFrame.className = "camera-info-item";
+    
+        var ip = document.createElement('h4');
+        ip.textContent = "IP: " + camera.ip;
+        ip.className = "ip-addr ml-3";
+    
+        ipFrame.appendChild(ip);
+    
+        //aliveframe
+        var aliveFrame = document.createElement('div');
+        aliveFrame.className = "camera-info-item";
+    
+        var alive = document.createElement('h4');
+        alive.textContent = camera.CameraStatus == CameraStatus.Paused ? "State: Offline" :  "State: Online";
+        alive.className = "ip-addr ml-3";
+    
+        aliveFrame.appendChild(alive);
+        caminfo.appendChild(aliveFrame);
+    
+        //beforependingframe
+        var beforependingFrame = document.createElement('div');
+        beforependingFrame.className = "camera-info-item";
+        $(beforependingFrame).css('visibility', 'false');
+
+        var beforepending = document.createElement('h4');
+        beforepending.textContent = alive.textContent;
+        beforepending.className = "ip-addr ml-3";
+
+        beforependingFrame.appendChild(beforepending);
+        caminfo.appendChild(beforependingFrame);
+
+        //imgtypeframe
+        var imgTypeFrame = document.createElement('div');
+        imgTypeFrame.className = "camera-info-item";
+    
+        var imgType = document.createElement('h4');
+        imgType.textContent = "Image Type: " + camera.imgType;
+        imgType.className = "ip-addr ml-3";
+    
+        imgTypeFrame.appendChild(imgType);
+    
+        //add all
+        infotable.appendChild(ipFrame);
+        infotable.appendChild(aliveFrame);
+        infotable.appendChild(beforependingFrame);
+        infotable.appendChild(imgTypeFrame);
+
+        caminfos.push(infotable);
+
+        $(listItem).on("click", function(){
+            $(".camera-list-item").css('background-color', 'white');
+    
+            $(listItem).css('background-color', '#f0f0f0');
+            caminfo = infotable;
+
+            if(!$(listItem).attr('disabled')){
+                beforependingFrame.css('visibility', 'true');
+                cameraAlive(id, alive, $(listItem), $(beforependingFrame));
+            }
+        })
+    })
+}
 
 function renderCameras() {
     managerpanel.innerHTML = "";
@@ -157,6 +236,7 @@ function renderCameras() {
 
         managerpanel.appendChild(outerdiv);
     })
+    createCamInfos();
 }
 function parseCameras() {
     $.ajax({
@@ -263,17 +343,24 @@ function showSnackBar(text) {
     setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 3000);
 }
 
-function cameraAlive(id, container) {
+function cameraAlive(id, container, parent, before) {
+    parent.attr("disabled", "disabled");
     $.ajax({
         url: window.location.href + "alive:" + id,
         data: {}
     }).done(function(xhr, statusText) {
         console.log(xhr.status);
         container.textContent = "State: Online";
+        before.children(".ip-addr").textContent = container.textContent;
+        before.css('visibility', 'false');
+        parent.removeAttr("disabled");
     }).fail(function(xhr, statusText, err) {
         console.log(xhr.status);
         container.textContent = "State: Offline";
+        before.children(".ip-addr").textContent = container.textContent;
+        before.css('visibility', 'false');
         cameras[id].status = CameraStatus.Paused;
+        parent.removeAttr("disabled");
         renderCameras();
     });
 }
