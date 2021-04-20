@@ -123,6 +123,6 @@ class Prediction:
 
         return information
 
-predict = Prediction()
-print(predict.getPrediction('2021-04-02 08:00:00', '192-168-0-176-8080'))
+#predict = Prediction()
+#print(predict.getPrediction('2021-04-02 08:00:00', '192-168-0-176-8080'))
 

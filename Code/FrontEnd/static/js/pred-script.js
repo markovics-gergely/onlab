@@ -17,25 +17,43 @@ $('#dateInput').on('change', function () {
 
 $(".predictForm").on('submit',function(e){
     e.preventDefault();
+    $('#predictpopup').attr("disabled", "disabled");
     $('#result').css("display", "block");
     $("#predictModal").modal('toggle');
 
-    var name = $('#addname').val();
-    var ip = $('#addipaddr').val();
-    var selector = document.getElementById("StatusSelect");
+    var ipID = $('#CameraNameSelect').prop('selectedIndex');
+    var ip = cameras[ipID].ip;
+    ip = ip.replaceAll(".", "-")
+    ip = ip.replaceAll(":", "-")
 
-    //NEM JÓ, EZT KELL MEGCSINÁLNI
-    var date = document.getElementById("dateSelect");
-    var interval = document.getElementById("intveralSelect");
+    var date = $("#dateInput").val();
+    var intervalID = $("#intervalSelect").prop('selectedIndex');
+    var fullDate = new Date(date);
+    fullDate.setHours(intervalID * 2);
 
-    var normalDate = date + " " + interval.selectedIndex;
-    console.log(normalDate);
+    $('#result').text("Pending...");
 
-    var jsondata = { "camera": ip , "date": normalDate};
+    var jsondata = { "camera": ip, "date": fullDate };
     $.ajax({
         type: "POST",
         contentType: "application/json",
         url: window.location.href + "p",
-        data: JSON.stringify(jsondata)
+        data: JSON.stringify(jsondata),
+        success: function(xhr, statusText, response) {
+            console.log(xhr.status);
+            $('#predictpopup').removeAttr("disabled");
+
+            var resp = response.responseText; //JSON-re response.responseJSON
+            resp = resp.replaceAll('\\n', "</p><p>");
+            resp = resp.replaceAll('"', '<p>');
+            console.log(resp);
+            $('#result').html(resp);
+        },
+        error: function(xhr, statusText, err) {
+            console.log("Error: " + xhr.status + " " + statusText);
+            $('#predictpopup').removeAttr("disabled");
+
+            $('#result').text("Error Predicting");
+        }
     });
 });
