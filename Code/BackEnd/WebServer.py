@@ -1,10 +1,10 @@
 from flask import Flask, render_template, jsonify, request
 import IPManager as manager
-import Prediction as prediction
+#import Prediction as prediction
 
 app = Flask(__name__, static_url_path='', static_folder='..', template_folder='../FrontEnd/templates')
 ipm = manager.IPManager()
-pre = prediction.Prediction()
+#pre = prediction.Prediction()
 
 @app.route("/")
 def index():
@@ -18,7 +18,8 @@ def prediction():
 def getPrediction():
     data = request.get_json()
     request.close()
-    pre.getPrediction('2021-04-02 08:00:00')
+    print(data)
+    #pre.getPrediction(data['date'], data['ip'])
     return render_template("prediction.html")
 
 

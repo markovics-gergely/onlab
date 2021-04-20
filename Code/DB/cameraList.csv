@@ -1,3 +1,4 @@
 ipaddress,name,status,imgType
 192.168.0.176:8080,NagyViktor,0,shot.jpg
 192.168.1.100:8080,Marko,0,shot.jpg
+192.168.0.114:8080,NagyViktor2,0,shot.jpg

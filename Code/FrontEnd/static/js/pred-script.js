@@ -24,5 +24,18 @@ $(".predictForm").on('submit',function(e){
     var ip = $('#addipaddr').val();
     var selector = document.getElementById("StatusSelect");
 
-    //TODO predikció
+    //NEM JÓ, EZT KELL MEGCSINÁLNI
+    var date = document.getElementById("dateSelect");
+    var interval = document.getElementById("intveralSelect");
+
+    var normalDate = date + " " + interval.selectedIndex;
+    console.log(normalDate);
+
+    var jsondata = { "camera": ip , "date": normalDate};
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: window.location.href + "p",
+        data: JSON.stringify(jsondata)
+    });
 });
