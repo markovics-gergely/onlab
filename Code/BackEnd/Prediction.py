@@ -3,7 +3,10 @@ from fbprophet import Prophet
 import datetime
 import os
 import sys
+import random
 import holidays as holidays
+from matplotlib import pyplot as plt
+from fbprophet.plot import plot_forecast_component, plot_yearly
 
 class suppress_stdout_stderr(object):
     def __init__(self):
@@ -33,12 +36,8 @@ class Prediction:
         self.df['ds'] = pd.DatetimeIndex(self.df['time'])
 
     def loadHolidays(self):
-        h = holidays.HU(years=2021)
-        for date in h:
-            print(date, h[date])
-        #df = pd.DataFrame(columns=['ds','holiday'])
-        #print(df.tail(10))
-        #self.holidays = df
+        df = pd.read_csv('DB/holidays.csv')
+        self.holidays = df
 
 
     def getPrediction(self, time, ip):
@@ -69,7 +68,7 @@ class Prediction:
         return int(x[id])
 
     def progressBar(self, i) :
-        sys.stdout.write("\r{2}% <{0}/{1}>\r".format("="*(i + 1),"-"*(9 - i), (i + 1) * 10))
+        sys.stdout.write("\r{2}% <{0}|{1}>\r".format("="*(i + 1),"-"*(9 - i), (i + 1) * 10))
         sys.stdout.flush()
 
     def schoolStart(self, ds):
@@ -83,6 +82,14 @@ class Prediction:
         genderSum = 0
 
         self.progressBar(-1)
+
+        figure = plt.figure(figsize=(30, 30))
+        axises = []
+        for i in range(10) :
+            axis = figure.add_subplot(2, 2, i % 4 + 1)
+            axis.set_title('Model' + str(i))
+            axises.append(axis)
+
         for i in range(10):
             predictdf = self.df.copy()
             if i < 8:
@@ -92,7 +99,7 @@ class Prediction:
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
             #predictdf['floor'] = 0
 
-            m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear')
+            m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear', holidays=self.holidays)
             m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
             #m.add_country_holidays(country_name='HU')
             #print(m.train_holiday_names)
@@ -104,8 +111,14 @@ class Prediction:
             forecast = m.predict(future)
             forecast.head()
 
-            m.plot(forecast).savefig('DB/predPhotos/out' + str(i) + '.png')
-            m.plot_components(forecast).savefig('DB/predPhotos/out2' + str(i) + '.png')
+            #axis1 = figure.add_subplot(2, 2, 1)
+            #axis1.set_title('Model1')
+
+            plot_forecast_component(m=m, name='trend', ax=axises[i], fcst=forecast)
+            axises[i].get_lines()[0].set_color('C' + str(i))
+            #axis1.get_lines()[i].set_color("black")
+
+            #m.plot_components(forecast).savefig('DB/predPhotos/out2' + str(i) + '.png')
 
 
             personPred = forecast[['yhat']].values[self.periodNum - 1][0]
@@ -123,6 +136,7 @@ class Prediction:
         for i in range(8, 10):
             information += self.stringList[i] + str(round((dataList[i] / genderSum) * 100, 2)) + "% -> " + str(round(dataList[i], 2)) + "\n"
 
+        figure.savefig('DB/predPhotos/out.png')
         return information
 
 predict = Prediction()
