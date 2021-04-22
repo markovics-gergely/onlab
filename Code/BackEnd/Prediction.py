@@ -3,7 +3,7 @@ from fbprophet import Prophet
 import datetime
 import os
 import sys
-import time
+import holidays as holidays
 
 class suppress_stdout_stderr(object):
     def __init__(self):
@@ -33,19 +33,12 @@ class Prediction:
         self.df['ds'] = pd.DatetimeIndex(self.df['time'])
 
     def loadHolidays(self):
-        nationalHoliday = pd.DataFrame({
-            'holiday': 'nationalHoliday',
-            'ds': pd.to_datetime(['2000-03-15', '2000-05-01', '2000-08-20', '2000-10-23']),
-            'lower_window': 0,
-            'upper_window': 1,
-        })
-        otherHoliday = pd.DataFrame({
-            'holiday': 'otherHoliday',
-            'ds': pd.to_datetime(['2000-12-24', '2000-12-25', '2000-12-26']),
-            'lower_window': 0,
-            'upper_window': 1,
-        })
-        self.holidays = pd.concat((nationalHoliday, otherHoliday))
+        h = holidays.HU(years=2021)
+        for date in h:
+            print(date, h[date])
+        #df = pd.DataFrame(columns=['ds','holiday'])
+        #print(df.tail(10))
+        #self.holidays = df
 
 
     def getPrediction(self, time, ip):
@@ -79,6 +72,10 @@ class Prediction:
         sys.stdout.write("\r{2}% <{0}/{1}>\r".format("="*(i + 1),"-"*(9 - i), (i + 1) * 10))
         sys.stdout.flush()
 
+    def schoolStart(self, ds):
+        date = pd.to_datetime(ds)
+        return date.month == 8 and date.day > 25
+
     def predict(self):
         information = ""
         dataList = []
@@ -93,18 +90,23 @@ class Prediction:
             else:
                 predictdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
+            #predictdf['floor'] = 0
 
-            m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear', holidays=self.holidays)
-            m.add_country_holidays(country_name='HU')
+            m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear')
+            m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
+            #m.add_country_holidays(country_name='HU')
+            #print(m.train_holiday_names)
 
             with suppress_stdout_stderr():
                 m.fit(predictdf)
             future = m.make_future_dataframe(periods=self.periodNum, freq='2H', include_history=False)
+            #future['floor'] = 0
             forecast = m.predict(future)
             forecast.head()
 
-            #m.plot(forecast)
-            #m.plot_components(forecast)
+            m.plot(forecast).savefig('DB/predPhotos/out' + str(i) + '.png')
+            m.plot_components(forecast).savefig('DB/predPhotos/out2' + str(i) + '.png')
+
 
             personPred = forecast[['yhat']].values[self.periodNum - 1][0]
             if i < 8:
@@ -123,6 +125,6 @@ class Prediction:
 
         return information
 
-#predict = Prediction()
-#print(predict.getPrediction('2021-04-02 08:00:00', '192-168-0-176-8080'))
+predict = Prediction()
+print(predict.getPrediction('2021-04-02 14:00:00', '192-168-0-176-8080'))
 

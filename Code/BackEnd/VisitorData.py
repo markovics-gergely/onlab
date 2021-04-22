@@ -33,7 +33,6 @@ def weekDayRandID() :
             return i
     return -1
 
-
 agePercentage = [2, 6, 12, 25, 49, 67, 85, 100]
 
 def ageRandID() :
