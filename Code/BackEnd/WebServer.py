@@ -24,6 +24,10 @@ def getPrediction():
     predicted = pre.getPrediction(date.strftime("%Y-%m-%d %H:%M:%S"), data['camera'])
     return jsonify(predicted)
 
+@app.route("/prediction/prog", methods=['POST'])
+def getProgression():
+    return render_template("prediction.html")
+
 
 @app.route("/d:<id>")
 def deleteCamera(id):

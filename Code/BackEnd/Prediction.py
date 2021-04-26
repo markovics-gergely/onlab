@@ -28,8 +28,8 @@ class Prediction:
         self.predictableTime = "1970-01-01 00:00:00"
         self.ip = "0-0-0-0-0"
         self.periodNum = 0
-        self.stringList = ["0-6 éves kor: ", "6-12 éves kor: ", "12-18 éves kor: ", "18-26 éves kor: ", "26-36 éves kor: ",
-                           "36-48 éves kor: ", "48-60 éves kor: ", "60-100 éves kor: ", "Nő: ", "Férfi: "]
+        self.stringList = ["0-6 years old: ", "6-12 years old: ", "12-18 years old: ", "18-26 years old: ", "26-36 years old: ",
+                           "36-48 years old: ", "48-60 years old: ", "60-100 years old: ", "Woman: ", "Man: "]
 
     def loadCamera(self):
         self.df = pd.read_csv('DB/cameras/' + self.ip + '.csv')
@@ -38,7 +38,6 @@ class Prediction:
     def loadHolidays(self):
         df = pd.read_csv('DB/holidays.csv')
         self.holidays = df
-
 
     def getPrediction(self, time, ip):
         self.ip = ip
@@ -83,12 +82,12 @@ class Prediction:
 
         self.progressBar(-1)
 
-        figure = plt.figure(figsize=(30, 30))
+        '''figure = plt.figure(figsize=(30, 30))
         axises = []
         for i in range(10) :
             axis = figure.add_subplot(2, 2, i % 4 + 1)
             axis.set_title('Model' + str(i))
-            axises.append(axis)
+            axises.append(axis)'''
 
         for i in range(10):
             predictdf = self.df.copy()
@@ -97,29 +96,21 @@ class Prediction:
             else:
                 predictdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
-            #predictdf['floor'] = 0
 
             m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear', holidays=self.holidays)
             m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
-            #m.add_country_holidays(country_name='HU')
-            #print(m.train_holiday_names)
 
             with suppress_stdout_stderr():
                 m.fit(predictdf)
             future = m.make_future_dataframe(periods=self.periodNum, freq='2H', include_history=False)
-            #future['floor'] = 0
+            future['floor'] = 0
             forecast = m.predict(future)
             forecast.head()
 
-            #axis1 = figure.add_subplot(2, 2, 1)
-            #axis1.set_title('Model1')
-
-            plot_forecast_component(m=m, name='trend', ax=axises[i], fcst=forecast)
-            axises[i].get_lines()[0].set_color('C' + str(i))
-            #axis1.get_lines()[i].set_color("black")
+            #plot_forecast_component(m=m, name='trend', ax=axises[i], fcst=forecast)
+            #axises[i].get_lines()[0].set_color('C' + str(i))
 
             #m.plot_components(forecast).savefig('DB/predPhotos/out2' + str(i) + '.png')
-
 
             personPred = forecast[['yhat']].values[self.periodNum - 1][0]
             if i < 8:
@@ -136,9 +127,9 @@ class Prediction:
         for i in range(8, 10):
             information += self.stringList[i] + str(round((dataList[i] / genderSum) * 100, 2)) + "% -> " + str(round(dataList[i], 2)) + "\n"
 
-        figure.savefig('DB/predPhotos/out.png')
+        #figure.savefig('DB/predPhotos/out.png')
         return information
 
-predict = Prediction()
-print(predict.getPrediction('2021-04-02 14:00:00', '192-168-0-176-8080'))
+#predict = Prediction()
+#print(predict.getPrediction('2021-04-02 14:00:00', '192-168-0-176-8080'))
 

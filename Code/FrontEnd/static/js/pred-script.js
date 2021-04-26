@@ -47,7 +47,11 @@ $(".predictForm").on('submit',function(e){
             resp = resp.replaceAll('\\n', "</p><p>");
             resp = resp.replaceAll('"', '<p>');
             console.log(resp);
+            resp = unescape(encodeURIComponent(resp))
             $('#result').html(resp);
+            var img = document.createElement('img');
+            img.src = '../../DB/predPhotos/out.png';
+            document.getElementById('result').appendChild(img);
         },
         error: function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText);
