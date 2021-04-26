@@ -23,14 +23,14 @@ $(".predictForm").on('submit',function(e){
 
     var ipID = $('#CameraNameSelect').prop('selectedIndex');
     var ip = cameras[ipID].ip;
-    ip = ip.replaceAll(".", "-")
-    ip = ip.replaceAll(":", "-")
+    ip = ip.replaceAll(".", "-");
+    ip = ip.replaceAll(":", "-");
 
     var date = $("#dateInput").val();
     var intervalID = $("#intervalSelect").prop('selectedIndex');
     var fullDate = new Date(date);
-    fullDate.setHours(intervalID * 2);
 
+    fullDate.setHours(intervalID * 2);
     $('#result').text("Pending...");
 
     var jsondata = { "camera": ip, "date": fullDate };
@@ -46,12 +46,11 @@ $(".predictForm").on('submit',function(e){
             var resp = response.responseText; //JSON-re response.responseJSON
             resp = resp.replaceAll('\\n', "</p><p>");
             resp = resp.replaceAll('"', '<p>');
-            console.log(resp);
-            resp = unescape(encodeURIComponent(resp))
-            $('#result').html(resp);
-            var img = document.createElement('img');
-            img.src = '../../DB/predPhotos/out.png';
-            document.getElementById('result').appendChild(img);
+            
+            $('#result').html(resp + '<img src="../DB/predPhotos/out.png" width="500" height="500">');
+            /*var img = document.createElement('img');
+            img.src = '';
+            document.getElementById('result').appendChild(img);*/
         },
         error: function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText);

@@ -98,7 +98,7 @@ class Prediction:
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
 
             m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear', holidays=self.holidays)
-            m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
+            #m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
 
             with suppress_stdout_stderr():
                 m.fit(predictdf)
