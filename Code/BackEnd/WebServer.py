@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-from datetime import datetime
+from datetime import datetime, timedelta
 import IPManager as manager
 import Prediction as prediction
 
@@ -21,12 +21,18 @@ def getPrediction():
     request.close()
 
     date = datetime.strptime(data['date'], "%Y-%m-%dT%H:%M:%S.%fZ")
+    date = date + timedelta(hours=2)
     predicted = pre.getPrediction(date.strftime("%Y-%m-%d %H:%M:%S"), data['camera'])
     return jsonify(predicted)
 
-@app.route("/prediction/prog", methods=['POST'])
+@app.route("/prediction/img")
 def getProgression():
-    return render_template("prediction.html")
+    response = pre.processPlot()
+    
+    if (response):
+        return "OK", 200
+    else:
+        return "Camera cannot be deleted", 502
 
 
 @app.route("/d:<id>")

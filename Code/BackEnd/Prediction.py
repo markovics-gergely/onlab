@@ -6,7 +6,9 @@ import sys
 import random
 import holidays as holidays
 from matplotlib import pyplot as plt
-from fbprophet.plot import plot_forecast_component, plot_yearly
+from fbprophet.plot import plot_forecast_component, plot_yearly, plot_weekly
+import time
+import threading
 
 class suppress_stdout_stderr(object):
     def __init__(self):
@@ -24,12 +26,19 @@ class suppress_stdout_stderr(object):
         os.close(self.null_fds[1])
 
 class Prediction:
+    
     def __init__(self):
         self.predictableTime = "1970-01-01 00:00:00"
         self.ip = "0-0-0-0-0"
         self.periodNum = 0
         self.stringList = ["0-6 years old: ", "6-12 years old: ", "12-18 years old: ", "18-26 years old: ", "26-36 years old: ",
-                           "36-48 years old: ", "48-60 years old: ", "60-100 years old: ", "Woman: ", "Man: "]
+                           "36-48 years old: ", "48-60 years old: ", "60-100 years old: ", "Women: ", "Men: "]
+
+        self.figures = []
+        self.axises = []
+        
+        self.models = []
+        self.forecasts = []
 
     def loadCamera(self):
         self.df = pd.read_csv('DB/cameras/' + self.ip + '.csv')
@@ -70,24 +79,22 @@ class Prediction:
         sys.stdout.write("\r{2}% <{0}|{1}>\r".format("="*(i + 1),"-"*(9 - i), (i + 1) * 10))
         sys.stdout.flush()
 
-    def schoolStart(self, ds):
-        date = pd.to_datetime(ds)
-        return date.month == 8 and date.day > 25
-
     def predict(self):
         information = ""
         dataList = []
         ageSum = 0
         genderSum = 0
 
+        self.models = []
+        self.forecasts = []
         self.progressBar(-1)
 
-        '''figure = plt.figure(figsize=(30, 30))
-        axises = []
-        for i in range(10) :
-            axis = figure.add_subplot(2, 2, i % 4 + 1)
-            axis.set_title('Model' + str(i))
-            axises.append(axis)'''
+        self.figures = [plt.figure(),plt.figure(),
+                        plt.figure(),plt.figure(),
+                        plt.figure(),plt.figure()]
+        for i in range(6) :
+            self.axises.append(self.figures[i].add_subplot(1,1,1))
+
 
         for i in range(10):
             predictdf = self.df.copy()
@@ -97,7 +104,7 @@ class Prediction:
                 predictdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
 
-            m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear', holidays=self.holidays)
+            m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=True, yearly_seasonality=True, growth='linear', holidays=self.holidays)
             m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
 
             with suppress_stdout_stderr():
@@ -107,10 +114,8 @@ class Prediction:
             forecast = m.predict(future)
             forecast.head()
 
-            #plot_forecast_component(m=m, name='trend', ax=axises[i], fcst=forecast)
-            #axises[i].get_lines()[0].set_color('C' + str(i))
-
-            #m.plot_components(forecast).savefig('DB/predPhotos/out2' + str(i) + '.png')
+            self.models.append(m)
+            self.forecasts.append(forecast)
 
             personPred = forecast[['yhat']].values[self.periodNum - 1][0]
             if i < 8:
@@ -127,9 +132,40 @@ class Prediction:
         for i in range(8, 10):
             information += self.stringList[i] + str(round((dataList[i] / genderSum) * 100, 2)) + "% -> " + str(round(dataList[i], 2)) + "\n"
 
-        #figure.savefig('DB/predPhotos/out.png')
         return information
+
+    def processPlot(self) :
+        i = 0
+        try:
+            while(i != 10) :
+                if i < 8 :
+                    plot_forecast_component(m=self.models[i], name='trend', ax=self.axises[0], fcst=self.forecasts[i])
+                    plot_yearly(m=self.models[i], ax=self.axises[1])
+                    plot_weekly(m=self.models[i], ax=self.axises[2])
+                    self.axises[0].get_lines()[i].set_color('C' + str(i))
+                    self.axises[1].get_lines()[i].set_color('C' + str(i))
+                    self.axises[2].get_lines()[i].set_color('C' + str(i))
+                else :
+                    plot_forecast_component(m=self.models[i], name='trend', ax=self.axises[3], fcst=self.forecasts[i])
+                    plot_yearly(m=self.models[i], ax=self.axises[4])
+                    plot_weekly(m=self.models[i], ax=self.axises[5])
+                    self.axises[3].get_lines()[i - 8].set_color('C' + str(i))
+                    self.axises[4].get_lines()[i - 8].set_color('C' + str(i))
+                    self.axises[5].get_lines()[i - 8].set_color('C' + str(i))
+                i += 1
+                self.progressBar(i)
+            for j in range(6) :
+                self.createImages(j)
+        except :
+            return True
+        return True
+   
+    def createImages(self, id) :
+        if id >= 0 and id < 6 :
+            self.figures[id].savefig('DB/predPhotos/predImage' + str(id) +'.png')
+            plt.close(self.figures[id])
+            self.progressBar(int(id * 10 / 6))
 
 #predict = Prediction()
 #print(predict.getPrediction('2021-04-02 14:00:00', '192-168-0-176-8080'))
-
+#predict.processPlot()

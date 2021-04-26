@@ -23,8 +23,8 @@ $(".predictForm").on('submit',function(e){
 
     var ipID = $('#CameraNameSelect').prop('selectedIndex');
     var ip = cameras[ipID].ip;
-    ip = ip.replaceAll(".", "-")
-    ip = ip.replaceAll(":", "-")
+    ip = ip.replaceAll(".", "-");
+    ip = ip.replaceAll(":", "-");
 
     var date = $("#dateInput").val();
     var intervalID = $("#intervalSelect").prop('selectedIndex');
@@ -49,9 +49,10 @@ $(".predictForm").on('submit',function(e){
             console.log(resp);
             resp = unescape(encodeURIComponent(resp))
             $('#result').html(resp);
-            var img = document.createElement('img');
+            loadImages();
+            /*var img = document.createElement('img');
             img.src = '../../DB/predPhotos/out.png';
-            document.getElementById('result').appendChild(img);
+            document.getElementById('result').appendChild(img);*/
         },
         error: function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText);
@@ -61,3 +62,20 @@ $(".predictForm").on('submit',function(e){
         }
     });
 });
+
+function loadImages(){
+    $.ajax({
+        url: window.location.href + "img",
+        data: {}
+    }).done(function(xhr, statusText) {
+        console.log(xhr.status);
+        $("#outputImage0").attr("src", "../../DB/predPhotos/predImage0.png")
+        $("#outputImage1").attr("src", "../../DB/predPhotos/predImage1.png")
+        $("#outputImage2").attr("src", "../../DB/predPhotos/predImage2.png")
+        $("#outputImage3").attr("src", "../../DB/predPhotos/predImage3.png")
+        $("#outputImage4").attr("src", "../../DB/predPhotos/predImage4.png")
+        $("#outputImage5").attr("src", "../../DB/predPhotos/predImage5.png")
+    }).fail(function(xhr, statusText, err) {
+        console.log("Error: " + xhr.status + " " + statusText);
+    }).always(function() {});
+}
