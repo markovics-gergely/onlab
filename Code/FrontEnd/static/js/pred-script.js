@@ -29,8 +29,8 @@ $(".predictForm").on('submit',function(e){
     var date = $("#dateInput").val();
     var intervalID = $("#intervalSelect").prop('selectedIndex');
     var fullDate = new Date(date);
-    fullDate.setHours(intervalID * 2);
 
+    fullDate.setHours(intervalID * 2);
     $('#result').text("Pending...");
 
     var jsondata = { "camera": ip, "date": fullDate };
