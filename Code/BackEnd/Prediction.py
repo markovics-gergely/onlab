@@ -104,20 +104,20 @@ class Prediction:
                 predictdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
 
-            m = Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear', holidays=self.holidays)
+            self.models.append(Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=False, yearly_seasonality=False, growth='linear', holidays=self.holidays))
             #m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
 
             with suppress_stdout_stderr():
-                m.fit(predictdf)
-            future = m.make_future_dataframe(periods=self.periodNum, freq='2H', include_history=False)
+                self.models[i].fit(predictdf)
+            future = self.models[i].make_future_dataframe(periods=self.periodNum, freq='2H', include_history=False)
             future['floor'] = 0
-            forecast = m.predict(future)
-            forecast.head()
+            self.forecasts.append(self.models[i].predict(future))
+            self.forecasts[i].head()
 
-            self.models.append(m)
-            self.forecasts.append(forecast)
+            #self.models.append(m)
+            #self.forecasts.append(forecast)
 
-            personPred = forecast[['yhat']].values[self.periodNum - 1][0]
+            personPred = self.forecasts[i][['yhat']].values[self.periodNum - 1][0]
             if i < 8:
                 ageSum += personPred
             else:
