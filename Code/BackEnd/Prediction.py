@@ -31,8 +31,8 @@ class Prediction:
         self.predictableTime = "1970-01-01 00:00:00"
         self.ip = "0-0-0-0-0"
         self.periodNum = 0
-        self.stringList = ["0-6 years old: ", "6-12 years old: ", "12-18 years old: ", "18-26 years old: ", "26-36 years old: ",
-                           "36-48 years old: ", "48-60 years old: ", "60-100 years old: ", "Women: ", "Men: "]
+        self.stringList = ["0-6 years old:    ", "6-12 years old:   ", "12-18 years old:  ", "18-26 years old:  ", "26-36 years old:  ",
+                           "36-48 years old:  ", "48-60 years old:  ", "60-100 years old: ", "Women: ", "Men:   "]
 
         self.figures = []
         self.axises = []
