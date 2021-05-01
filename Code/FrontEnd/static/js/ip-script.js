@@ -84,53 +84,6 @@ $(document).on("click", ".ipDelete", function(e) {
     }
     renderCameras();
 })
-/*$(document).on("click", ".camera-list-item", function() {
-    $(".camera-list-item").css('background-color', 'white');
-
-    var id = $(".camera-list-item").index($(this));
-    var camera = cameras[id];
-
-    $(this).css('background-color', '#f0f0f0');
-
-    var ipFrame = document.createElement('div');
-    ipFrame.className = "camera-info-item";
-
-    var ip = document.createElement('h4');
-    ip.textContent = "IP: " + camera.ip;
-    ip.className = "ip-addr ml-3";
-
-    ipFrame.appendChild(ip);
-
-    caminfo.innerHTML = "";
-    caminfo.appendChild(ipFrame);
-
-    var aliveFrame = document.createElement('div');
-    aliveFrame.className = "camera-info-item";
-
-    var alive = document.createElement('h4');
-    alive.textContent = "State: Pending...";
-    alive.className = "ip-addr ml-3";
-
-    aliveFrame.appendChild(alive);
-
-    caminfo.appendChild(aliveFrame);
-
-    if(!$(this).attr('disabled')){
-        cameraAlive(id, alive, $(this));
-    }
-    else alive.textContent = "State: " + camera.CameraStatus;
-
-    var imgTypeFrame = document.createElement('div');
-    imgTypeFrame.className = "camera-info-item";
-
-    var imgType = document.createElement('h4');
-    imgType.textContent = "Image Type: " + camera.imgType;
-    imgType.className = "ip-addr ml-3";
-
-    imgTypeFrame.appendChild(imgType);
-
-    caminfo.appendChild(imgTypeFrame);
-})*/
 
 function createCamInfos(){
     caminfos = [];
@@ -213,12 +166,19 @@ function renderCameras() {
         deletespan.className = "btn material-icons-outlined blue-icon ipDelete px-1";
         deletespan.textContent = "delete";
 
+        var showimagespan = document.createElement('span');
+        showimagespan.className = "btn material-icons-outlined blue-icon ipShowImage px-1";
+        showimagespan.setAttribute("data-toggle", "modal");
+        showimagespan.setAttribute("data-target", "#showImageModal");
+        showimagespan.textContent = "visibility";
+
         var outerdiv = document.createElement('form');
         outerdiv.className = "camera-list-item";
 
         var innerdiv = document.createElement('div');
         innerdiv.className = "icons ml-auto mr-3";
 
+        innerdiv.appendChild(showimagespan);
         innerdiv.appendChild(startspan);
         innerdiv.appendChild(deletespan);
         outerdiv.appendChild(name);
@@ -426,4 +386,15 @@ $("#addIPModal").on("hidden.bs.modal", function () {
     $("#advanced-modal").attr("hidden", "hidden");
     $("#expand-span").text("expand_more");
     $("#addimgtype").val("shot.jpg");
+});
+
+$("#showImageModal").on("shown.bs.modal", function () {
+    //TODO Itt megcsinálni hogy az adott képre vonatkozzon amelyikre kattintasz.
+    //setInterval(function(){
+        //refresh();
+    //}, 1000);
+    
+    //function refresh(){
+    $("#showImageBody").html('<img src="DB/cameraPhotos/192-168-0-114-8080.jpg" width=100%>');
+    //}
 });

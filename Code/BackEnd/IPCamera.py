@@ -219,6 +219,8 @@ class IPCamera:
                     gendernum = np.argmax(gender_pred)
                     self.personBucket.increaseGenderBucket(gendernum)
 
+            cv2.imwrite("DB/cameraPhotos/" + self.filename + ".jpg", frame)
+
             if (self.intervalHandler.isDataSaveable() and not self.writeThread.isAlive()):
                 self.writeThread.start()
 
@@ -228,3 +230,7 @@ class IPCamera:
 
         self.status = CameraStatus.Paused
         self.stopped = True
+
+
+'''camera = IPCamera("192.168.0.114:8080", "NagyViktor", CameraStatus.Paused, "shot.jpg")
+camera.startCameraThread()'''
