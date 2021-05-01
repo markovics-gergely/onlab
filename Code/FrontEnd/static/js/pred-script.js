@@ -159,8 +159,7 @@ function createImage(id){
             
             let dot = document.createElement("div");
             dot.className = "colorDot";
-            dot.style.backgroundColor = colorBuffer[ageID];
-
+            $(dot).css("backgroundColor", colorBuffer[ageID]);
             let value = document.createElement("h4");
             value.className = "pred-value";
             value.textContent = ageInterval[ageID];
@@ -179,7 +178,8 @@ function createImage(id){
             
             let dot = document.createElement("div");
             dot.className = "colorDot";
-            dot.style.backgroundColor = colorBuffer[8 + genderID];
+
+            $(dot).css("backgroundColor", colorBuffer[8 + genderID]);
 
             let value = document.createElement("h4");
             value.className = "pred-value";
