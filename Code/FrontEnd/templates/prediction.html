@@ -1,139 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>IP Camera Recognition</title>
 
-		<link rel="icon" type="image/png" href="../FrontEnd/static/image/camera_icon.png">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>IP Camera Recognition</title>
 
-		<!-- Bootstrap linkelése CDN-ről -->
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-		<!-- Font awesome 5 CDN-ről (solid, regular és brand is) -->
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" crossorigin="anonymous">
-		<!-- Google font (Muli) letöltése -->
-		<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
-		<!-- Saját CSS -->
-		<link rel="stylesheet" href="../FrontEnd/static/css/style.css">
-	</head>
+	<link rel="icon" type="image/png" href="../FrontEnd/static/image/camera_icon.png">
 
-	<body>
-		<header>
-			<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-				<a class="navbar-brand" href="/">
-					<img src="../FrontEnd/static/image/logo-bme-aut.png" alt="BME AUT">
-				</a>
-				<p class="headertext my-auto mr-auto py-3 pl-3">Önálló Laboratórium</p>
+	<!-- Bootstrap linkelése CDN-ről -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+	<!-- Font awesome 5 CDN-ről (solid, regular és brand is) -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" crossorigin="anonymous">
+	<!-- Google font (Muli) letöltése -->
+	<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+	<!-- Saját CSS -->
+	<link rel="stylesheet" href="../FrontEnd/static/css/style.css">
+</head>
 
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-toggler" aria-controls="navbar-toggler" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="/">
+				<img src="../FrontEnd/static/image/logo-bme-aut.png" alt="BME AUT">
+			</a>
+			<p class="headertext my-auto mr-auto py-3 pl-3">Önálló Laboratórium</p>
 
-				<div class="collapse navbar-collapse" id="navbar-toggler">
-					<ul class="navbar-nav ml-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="/">Camera Manager</a>
-						</li>
-						<li class="nav-item active">
-							<a class="nav-link" href="/prediction">Prediction <span class="sr-only">(current)</span></a>
-						</li>
-					</ul>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-toggler"
+				aria-controls="navbar-toggler" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbar-toggler">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/">Camera Manager</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link" href="/prediction">Prediction <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+	<section id="main">
+		<div class="container predictcont">
+			<div class="banner">
+				<h2>Class Prediction</h2>
+				<h4>Possibility of a Future Interval</h4>
+			</div>
+			<button id="predictpopup" type="button" class="btn btn-predict mr-auto" data-toggle="modal"
+				data-target="#predictModal">Predict</button>
+			<hr>
+			<div id="result" display="none"></div>
+
+			<div class="stats stat-table" display="none">
+				<div class="statHeader">
+					<p class="vertical">Age Statistics</p>
 				</div>
-			</nav>
-		</header>
-
-		<section id="main">
-            <div class="container">
-				<div class="banner">
-					<h2>Class Prediction</h2>
-					<h4>Possibility of a Future Interval</h4>
-				</div>
-				<button id="predictpopup" type="button" class="btn btn-predict mr-auto" data-toggle="modal" data-target="#predictModal">Predict</button>
-				<hr>
-				<div>
-					<h4>Latest result:</h4>
-				</div>
-				<div id="result" display="none">
-				</div>
-				<div id="images">
-					<img id="outputImage0">
-					<img id="outputImage1">
-					<img id="outputImage2">
-					<img id="outputImage3">
-					<img id="outputImage4">
-					<img id="outputImage5">
-				</div>
-				<hr>
-				<div>
-					<h4>Previous results:</h4>
-				</div>
-            </div>
-
-        </section>
-
-		<footer class="pt-auto">
-            <div class="footer d-flex justify-content-between align-items-center">
-                <p class="my-auto mr-auto py-3 pl-5">Alkalmazott Mesterséges Intelligencia<br>Java, Node JS vagy egyéb platformon</p>
-                <p class="my-auto ml-auto py-3 pr-5">Nagy Viktor<br>Markovics Gergely</p>
-            </div>
-        </footer>
-
-		<div id="predictModal" class="modal fade" role="dialog">
-			<div class="modal-dialog modal-dialog-centered">
-		  
-				<div class="modal-content">
-					<div class="modal-header primary text-center">
-					<h4 class="modal-title w-100 font-weight-bold py-2">Predict Interval</h4>
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true" class="white-text">&times;</span>
-						</button>
-					</div>
-					<form class="predictForm">
-						<div class="modal-body">
-							<div class="form-group">
-								<label for="CameraNameSelect">Select Camera</label>
-								<select class="form-control" id="CameraNameSelect" aria-describedby="CameraNameSelect">
-								</select>
-							</div>
-							<div class="form-group">
-								<label for="dateSelect">Select Date</label>
-								<div id="dateSelect" class="input-group date" aria-describedby="dateSelect">
-									<input id="dateInput" type="date" class="form-control" required>
+				<div class="container">
+					<div class="row">
+						<div class="cardbox col-sm-12 col-md-6 col-lg-6">
+							<div class="card">
+								<div class="card-header text-center">
+									Age Percentage
+								</div>
+								<div id="ageperinfo" class="card-content statTable">
+									<div id="ageper-con" class="container">
+										<!-- Age Percent -->
+									</div>
 								</div>
 							</div>
-							<div class="form-group">
-								<label for="intervalSelect">Select Interval</label>
-								<select class="form-control" id="intervalSelect" aria-describedby="intervalSelect">
-									<option>00:00 ~ 02:00</option>
-									<option>02:00 ~ 04:00</option>
-									<option>04:00 ~ 06:00</option>
-									<option>06:00 ~ 08:00</option>
-									<option>08:00 ~ 10:00</option>
-									<option>10:00 ~ 12:00</option>
-									<option>12:00 ~ 14:00</option>
-									<option>14:00 ~ 16:00</option>
-									<option>16:00 ~ 18:00</option>
-									<option>18:00 ~ 20:00</option>
-									<option>20:00 ~ 22:00</option>
-									<option>22:00 ~ 24:00</option>
-								</select>
+						</div>
+						<div class="cardbox col-sm-12 col-md-6 col-lg-6">
+							<div class="card">
+								<div class="card-header text-center">
+									Age Numbers
+								</div>
+								<div id="agenuminfo" class="card-content statTable">
+									<div id="age-con" class="container">
+										<!-- Age numbers -->
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="modal-footer">
-							<button type="submit" class="btn btn-primary submit-color">Submit</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+					</div>
+				</div>
+			</div>
+			<div class="stats graph-table" display="none">
+				<div class="statHeader">
+					<p class="vertical">Age Graph</p>
+					<p class="vertical">Age Graph</p>
+					<p class="vertical">Age Graph</p>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="cardbox col-sm-12 col-md-8 col-lg-8">
+							<div class="card">
+								<div class="card-header text-center">
+									Age Trend
+								</div>
+								<img id="plotImage0" src="../../DB/predPhotos/predImage0.png">
+							</div>
 						</div>
-					</form>
+						<div id="colorPalette0" class="cardbox col-sm-12 col-md-4 col-lg-4 colorData">
+							<!-- Color Palette for Graph -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="cardbox col-sm-12 col-md-8 col-lg-8">
+							<div class="card">
+								<div class="card-header text-center">
+									Age Yearly Plot
+								</div>
+								<img id="plotImage1" src="../../DB/predPhotos/predImage1.png">
+							</div>
+						</div>
+						<div id="colorPalette1" class="cardbox col-sm-12 col-md-4 col-lg-4 colorData">
+							<!-- Color Palette for Graph -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="cardbox col-sm-12 col-md-8 col-lg-8">
+							<div class="card">
+								<div class="card-header text-center">
+									Age Weekly Plot
+								</div>
+								<img id="plotImage2" src="../../DB/predPhotos/predImage2.png">
+							</div>
+						</div>
+						<div id="colorPalette2" class="cardbox col-sm-12 col-md-4 col-lg-4 colorData">
+							<!-- Color Palette for Graph -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="stats stat-table" display="none">
+				<div class="statHeader">
+					<p class="vertical">Gender Statistics</p>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="cardbox col-sm-12 col-md-6 col-lg-6">
+							<div class="card">
+								<div class="card-header text-center">
+									Gender Percentage
+								</div>
+								<div id="genderperinfo" class="card-content statTable">
+									<div id="genderper-con" class="container">
+										<!-- Gender Percent -->
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cardbox col-sm-12 col-md-6 col-lg-6">
+							<div class="card">
+								<div class="card-header text-center">
+									Gender Numbers
+								</div>
+								<div id="gendernuminfo" class="card-content statTable">
+									<div id="gender-con" class="container">
+										<!-- Gender numbers -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="stats graph-table" display="none">
+				<div class="statHeader">
+					<p class="vertical">Gender Graph</p>
+					<p class="vertical">Gender Graph</p>
+					<p class="vertical">Gender Graph</p>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="cardbox col-sm-12 col-md-8 col-lg-8">
+							<div class="card">
+								<div class="card-header text-center">
+									Gender Trend
+								</div>
+								<img id="plotImage3" src="../../DB/predPhotos/predImage3.png">
+							</div>
+						</div>
+						<div id="colorPalette3" class="cardbox col-sm-12 col-md-4 col-lg-4 colorData">
+							<!-- Color Palette for Graph -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="cardbox col-sm-12 col-md-8 col-lg-8">
+							<div class="card">
+								<div class="card-header text-center">
+									Gender Yearly Plot
+								</div>
+								<img id="plotImage4" src="../../DB/predPhotos/predImage4.png">
+							</div>
+						</div>
+						<div id="colorPalette4" class="cardbox col-sm-12 col-md-4 col-lg-4 colorData">
+							<!-- Color Palette for Graph -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="cardbox col-sm-12 col-md-8 col-lg-8">
+							<div class="card">
+								<div class="card-header text-center">
+									Gender Weekly Plot
+								</div>
+								<img id="plotImage5" src="../../DB/predPhotos/predImage5.png">
+							</div>
+						</div>
+						<div id="colorPalette5" class="cardbox col-sm-12 col-md-4 col-lg-4 colorData">
+							<!-- Color Palette for Graph -->
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+	</section>
 
-		<!-- jQuery, hogy a Bootstrap-es hamburger menü működjön -->
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <!-- Saját js -->
-		<script src="../FrontEnd/static/js/pred-script.js"></script>
-		<!-- Bootstrap js -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-	</body>
+	<footer class="pt-auto">
+		<div class="footer d-flex justify-content-between align-items-center">
+			<p class="my-auto mr-auto py-3 pl-5">Alkalmazott Mesterséges Intelligencia<br>Java, Node JS vagy egyéb
+				platformon</p>
+			<p class="my-auto ml-auto py-3 pr-5">Nagy Viktor<br>Markovics Gergely</p>
+		</div>
+	</footer>
+
+	<div id="predictModal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-dialog-centered">
+
+			<div class="modal-content">
+				<div class="modal-header primary text-center">
+					<h4 class="modal-title w-100 font-weight-bold py-2">Predict Interval</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<form class="predictForm">
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="CameraNameSelect">Select Camera</label>
+							<select class="form-control" id="CameraNameSelect" aria-describedby="CameraNameSelect">
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="dateSelect">Select Date</label>
+							<div id="dateSelect" class="input-group date" aria-describedby="dateSelect">
+								<input id="dateInput" type="date" class="form-control" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="intervalSelect">Select Interval</label>
+							<select class="form-control" id="intervalSelect" aria-describedby="intervalSelect">
+								<option>00:00 ~ 02:00</option>
+								<option>02:00 ~ 04:00</option>
+								<option>04:00 ~ 06:00</option>
+								<option>06:00 ~ 08:00</option>
+								<option>08:00 ~ 10:00</option>
+								<option>10:00 ~ 12:00</option>
+								<option>12:00 ~ 14:00</option>
+								<option>14:00 ~ 16:00</option>
+								<option>16:00 ~ 18:00</option>
+								<option>18:00 ~ 20:00</option>
+								<option>20:00 ~ 22:00</option>
+								<option>22:00 ~ 24:00</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary submit-color">Submit</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- jQuery, hogy a Bootstrap-es hamburger menü működjön -->
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<!-- Saját js -->
+	<script src="../FrontEnd/static/js/pred-script.js"></script>
+	<!-- Bootstrap js -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+		crossorigin="anonymous"></script>
+</body>
 
 </html>

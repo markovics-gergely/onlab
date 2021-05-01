@@ -66,7 +66,7 @@ def createData(path, visitorPerWeek, numberOfWeeks, startDate) :
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
-        noise = random.randrange(int(visitorPerWeek * 0.01)) - int(visitorPerWeek * 0.005)
+        noise = random.randrange(int(visitorPerWeek * 0.1)) - int(visitorPerWeek * 0.05)
         for vis in range(visitorPerWeek + noise) :
             dayID = weekDayRandID()
             intervalID = weekIntervalRandID(dayID < 5)

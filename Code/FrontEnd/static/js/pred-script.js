@@ -1,4 +1,10 @@
 var cameras = JSON.parse(localStorage.getItem('cameras'));
+var colorBuffer = [];
+var genderInterval = [];
+var ageInterval = [];
+
+$(".stat-table").css("display", "none");
+$(".graph-table").css("display", "none");
 
 function appendCameras(){
     $('#CameraNameSelect').empty();
@@ -42,17 +48,12 @@ $(".predictForm").on('submit',function(e){
         success: function(xhr, statusText, response) {
             console.log(xhr.status);
             $('#predictpopup').removeAttr("disabled");
+            $('#result').css("display", "none");
 
-            var resp = response.responseText; //JSON-re response.responseJSON
-            resp = resp.replaceAll('\\n', "</p><p>");
-            resp = resp.replaceAll('"', '<p>');
-            console.log(resp);
-            resp = unescape(encodeURIComponent(resp))
-            $('#result').html(resp);
+            var resp = JSON.parse(response.responseText);
+            loadData(resp);
+            $(".stat-table").css("display", "flex");
             loadImages();
-            /*var img = document.createElement('img');
-            img.src = '../../DB/predPhotos/out.png';
-            document.getElementById('result').appendChild(img);*/
         },
         error: function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText);
@@ -69,13 +70,125 @@ function loadImages(){
         data: {}
     }).done(function(xhr, statusText) {
         console.log(xhr.status);
-        $("#outputImage0").attr("src", "../../DB/predPhotos/predImage0.png")
-        $("#outputImage1").attr("src", "../../DB/predPhotos/predImage1.png")
-        $("#outputImage2").attr("src", "../../DB/predPhotos/predImage2.png")
-        $("#outputImage3").attr("src", "../../DB/predPhotos/predImage3.png")
-        $("#outputImage4").attr("src", "../../DB/predPhotos/predImage4.png")
-        $("#outputImage5").attr("src", "../../DB/predPhotos/predImage5.png")
+        let i;
+        for(i = 0; i < 6; i++){
+            createImage(i);
+        }
+        $(".graph-table").css("display", "flex");
     }).fail(function(xhr, statusText, err) {
         console.log("Error: " + xhr.status + " " + statusText);
     }).always(function() {});
+}
+
+function loadData(json){
+    let ageBuffer = json["ageBuffer"];
+    let genderBuffer = json["genderBuffer"];
+    let agePercentBuffer = json["agePercentBuffer"];
+    let genderPercentBuffer = json["genderPercentBuffer"];
+
+    ageInterval = json["ageIntervalInfo"];
+    genderInterval = json["genderIntervalInfo"];
+
+    colorBuffer = json["colorBuffer"];
+    createList(ageBuffer, agePercentBuffer, ageInterval, "age-con", "ageper-con");
+    createList(genderBuffer, genderPercentBuffer, genderInterval, "gender-con", "genderper-con");
+}
+
+function createList(buffer, percentBuffer, interval, numid, perid){
+    var root = document.getElementById(numid);
+    var rootpercent = document.getElementById(perid);
+
+    buffer.forEach((num, id) => {
+        let row = document.createElement("div");
+        row.className = "row";
+        
+        let cardboxname = document.createElement("div");
+        cardboxname.className = "cardbox pred-info-info col-sm-12 col-md-12 col-lg-3";
+
+        let name = document.createElement("h4");
+        name.className = "pred-id-name";
+        name.textContent = interval[id];
+
+        cardboxname.appendChild(name);
+        row.appendChild(cardboxname);
+
+        let cardboxvalue = document.createElement("div");
+        cardboxvalue.className = "cardbox pred-info-item col-sm-12 col-md-12 col-lg-8";
+
+        let value = document.createElement("h4");
+        value.className = "pred-value";
+        value.textContent = num + " calc.";
+
+        cardboxvalue.appendChild(value);
+        row.appendChild(cardboxvalue);
+
+        root.appendChild(row);
+
+        let rowpercent = document.createElement("div");
+        rowpercent.className = "row";
+
+        let cardboxpercentname = document.createElement("div");
+        cardboxpercentname.className = "cardbox pred-info-info col-sm-12 col-md-12 col-lg-3";
+        cardboxpercentname.innerHTML = cardboxname.innerHTML;
+
+        let cardboxpercentvalue = document.createElement("div");
+        cardboxpercentvalue.className = "cardbox pred-info-item col-sm-12 col-md-12 col-lg-8";
+
+        let percentvalue = document.createElement("h4");
+        percentvalue.className = "pred-value";
+        percentvalue.textContent = percentBuffer[id] + "%";
+        cardboxpercentvalue.appendChild(percentvalue);
+
+        rowpercent.appendChild(cardboxpercentname);
+        rowpercent.appendChild(cardboxpercentvalue);
+
+        rootpercent.appendChild(rowpercent);
+    });
+}
+
+function createImage(id){
+    let image = document.getElementById("plotImage" + id);
+    let palette = document.getElementById("colorPalette" + id);
+
+    image.src = "../../DB/predPhotos/predImage" + id +".png";
+    if(id < 3){
+        let ageID;
+        for(ageID = 0; ageID < 8; ageID++){
+            let frame = document.createElement("div");
+            frame.className = "colorFrame";
+            
+            let dot = document.createElement("div");
+            dot.className = "colorDot";
+            dot.style.backgroundColor = colorBuffer[ageID];
+
+            let value = document.createElement("h4");
+            value.className = "pred-value";
+            value.textContent = ageInterval[ageID];
+
+            frame.appendChild(dot);
+            frame.appendChild(value);
+
+            palette.appendChild(frame);
+        }
+    }
+    else {
+        let genderID;
+        for(genderID = 0; genderID < 2; genderID++){
+            let frame = document.createElement("div");
+            frame.className = "colorFrame";
+            
+            let dot = document.createElement("div");
+            dot.className = "colorDot";
+            dot.style.backgroundColor = colorBuffer[8 + genderID];
+
+            let value = document.createElement("h4");
+            value.className = "pred-value";
+            value.textContent = genderInterval[genderID];
+
+            frame.appendChild(dot);
+            frame.appendChild(value);
+
+            palette.appendChild(frame);
+        }
+    }
 }

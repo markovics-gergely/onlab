@@ -381,3 +381,128 @@ div::-webkit-scrollbar-thumb:hover {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+.predictcont {
+    padding-bottom: 20px;
+}
+
+.pred-list-item {
+    border-radius: 30px;
+    background-color: white;
+    border: 1px solid gray;
+    vertical-align: middle;
+    margin: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.pred-info-info {
+    border-radius: 30px 0 0 30px;
+    background-color: white;
+    border: 1px solid gray;
+    vertical-align: middle;
+    margin: 0px;
+    margin-right: 0;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: right;
+}
+
+.pred-info-item {
+    border-radius: 0 30px 30px 0;
+    background-color: white;
+    border: 1px solid gray;
+    vertical-align: middle;
+    margin: 0px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: right;
+}
+
+.pred-id-name, .pred-value {
+    margin: 5px;
+}
+
+.pred-container {
+    background-color: lightgrey;
+    border-color: #343a40;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+.vertical {
+    writing-mode: vertical-lr;
+}
+
+.statHeader {
+    background-color: #2b5e8b;
+    border-radius: 30px 0 0 30px;
+    padding: 5px;
+    text-align: center;
+    color: #F0F0F0;
+    display: flex;
+    width: 60px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 30px;
+    background-color: lightgrey;
+    margin-bottom: 10px;
+}
+
+.stats > .container {
+    background-color: lightgrey;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.statTable .container {
+    background-color: #F0F0F0;
+}
+
+.statTable .pred-info-item {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#main {
+    margin-bottom: 40px;
+}
+
+.colorDot {
+    margin-left: 10px;
+    border-radius: 50%;
+    background-color: #337ab7;
+    width: 10px;
+    height: 10px;
+    vertical-align: middle;
+    display: inline;
+}
+
+.colorFrame {
+    border-radius: 30px;
+    background-color: white;
+    border: 1px solid gray;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.colorData{
+    overflow: auto;
+}

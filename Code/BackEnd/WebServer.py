@@ -23,6 +23,7 @@ def getPrediction():
     date = datetime.strptime(data['date'], "%Y-%m-%dT%H:%M:%S.%fZ")
     date = date + timedelta(hours=2)
     predicted = pre.getPrediction(date.strftime("%Y-%m-%d %H:%M:%S"), data['camera'])
+    print(predicted)
     return jsonify(predicted)
 
 @app.route("/prediction/img")
