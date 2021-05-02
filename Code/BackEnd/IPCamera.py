@@ -6,6 +6,7 @@ import threading
 import pandas as pd
 import os
 from enum import Enum
+import time
 
 class CameraStatus(Enum):
     Paused = 0
@@ -78,7 +79,7 @@ class IPCamera:
         self.status = status
         self.cameraThread = threading.Thread(target=self.ipcamFaceDetect, args=())
         self.writeThread = threading.Thread(target=self.writeCSV, args=())
-
+        self.frame = 0
         self.age_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/age.prototxt", "BackEnd/Models/age.caffemodel")
         self.gender_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/gender.prototxt",
                                                      "BackEnd/Models/gender.caffemodel")
@@ -191,7 +192,8 @@ class IPCamera:
 
     def ipcamFaceDetect(self):
         urlshot = "http://" + self.url + "/" + self.imgType
-        
+        x = threading.Thread(target=self.saveImage, args=())
+        x.start()
         while not self.stopped:
             try:
                 imgResp = urllib.urlopen(urlshot, timeout=5)
@@ -201,6 +203,7 @@ class IPCamera:
                 break
             
             if frame is not None:
+                self.frame = frame
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = self.haar_detector.detectMultiScale(gray, 1.2, 5)
 
@@ -219,8 +222,6 @@ class IPCamera:
                     gendernum = np.argmax(gender_pred)
                     self.personBucket.increaseGenderBucket(gendernum)
 
-            cv2.imwrite("DB/cameraPhotos/" + self.filename + ".jpg", frame)
-
             if (self.intervalHandler.isDataSaveable() and not self.writeThread.isAlive()):
                 self.writeThread.start()
 
@@ -230,6 +231,12 @@ class IPCamera:
 
         self.status = CameraStatus.Paused
         self.stopped = True
+
+    def saveImage(self):
+        while not self.stopped:
+            if self.frame is not None:
+                time.sleep(1)
+                cv2.imwrite("DB/cameraPhotos/" + self.filename + ".png", self.frame)
 
 
 '''camera = IPCamera("192.168.0.114:8080", "NagyViktor", CameraStatus.Paused, "shot.jpg")

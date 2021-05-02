@@ -1,5 +1,6 @@
 import threading
 import queue
+import os
 
 def drive(speed_queue):
     speed = 1
@@ -21,4 +22,5 @@ def main():
         if speed == 0:
             break
 
-main()
+#print(os.getcwd() + "\\..\\DB\\cameraPhotos\\" + "192-168-0-176-8080" + ".jpg")
+os.remove(os.getcwd() + "\\..\\DB\\cameraPhotos\\" + "192-168-0-176-8080" + ".jpg")

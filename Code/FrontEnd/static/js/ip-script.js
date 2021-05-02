@@ -15,6 +15,7 @@ var cameras = [];
 var managerpanel = document.getElementById("managerpanel");
 var caminfo = document.getElementById("caminfo");
 var caminfos = [];
+var showImageInterval;
 
 parseCameras();
 
@@ -37,6 +38,10 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
             cameras[id].status = CameraStatus.Started;
             $(this).removeAttr("disabled");
             renderCameras();
+
+            //Ha elindítható a kamera akkor fix online, tehát lehet nézni a képet
+            makeCameraVisible($($(".ipPauseOrStart")[id]).parent());
+
             console.log(cameras[id].status);
         }).fail(function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText + " " + err);
@@ -149,6 +154,12 @@ function createCamInfos(){
     })
 }
 
+function makeCameraVisible(parent){
+    var element = parent.children(".ipShowImage");
+    $(element).css("pointer-events", "auto");
+    $(element).text("visibility");
+}
+
 function renderCameras() {
     managerpanel.innerHTML = "";
     cameras.forEach(function(camera, id) {
@@ -170,7 +181,7 @@ function renderCameras() {
         showimagespan.className = "btn material-icons-outlined blue-icon ipShowImage px-1";
         showimagespan.setAttribute("data-toggle", "modal");
         showimagespan.setAttribute("data-target", "#showImageModal");
-        showimagespan.textContent = "visibility";
+        showimagespan.textContent = "visibility_off";
 
         var outerdiv = document.createElement('form');
         outerdiv.className = "camera-list-item";
@@ -186,6 +197,8 @@ function renderCameras() {
 
         managerpanel.appendChild(outerdiv);
 
+        $(".ipShowImage").css("pointer-events", "none");
+
         $(outerdiv).on("click", function(){
             $(".camera-list-item").css('background-color', 'white');
             var id = $(".camera-list-item").index(outerdiv);
@@ -193,25 +206,32 @@ function renderCameras() {
             $(outerdiv).css('background-color', '#f0f0f0');
             caminfo.innerHTML = caminfos[id].innerHTML;
 
+            $(".ipShowImage").css("pointer-events", "none");
+            var elements = document.querySelectorAll('.ipShowImage');
+            Array.from(elements).forEach((element, index) => {
+                if(index != id)
+                    element.textContent = "visibility_off";
+            });
+
             if(!$(outerdiv).attr('disabled')){
+                $(outerdiv).css("pointer-events", "none");
+
                 var beforeFrame = $(caminfo).children(".before");
                 beforeFrame.css('display', 'block');
                 var alive = $(caminfo).children(".alive").children(".ip-addr");
                 alive.text("State: Pending...");
 
-                
                 cameraAlive(id, alive, $(outerdiv), $(beforeFrame));
             }
-            else{
+            /*else{
                 var beforeFrame = $(caminfo).children(".before");
                 beforeFrame.css('display', 'block');
                 var alive = $(caminfo).children(".alive").children(".ip-addr");
                 alive.text("State: Pending...");
-            }
+            }*/
         })
     })
 }
-
 function parseCameras() {
     $.ajax({
         type: "GET",
@@ -321,6 +341,7 @@ function showSnackBar(text) {
 
 function cameraAlive(id, container, parent, before) {
     parent.attr("disabled", "disabled");
+
     $.ajax({
         url: window.location.href + "alive:" + id,
         data: {}
@@ -331,6 +352,10 @@ function cameraAlive(id, container, parent, before) {
         before.children(".ip-addr").text("Before Pending: Online");
         before.css('display', 'none');
         parent.removeAttr("disabled");
+
+        makeCameraVisible(parent.children(".icons"));
+        parent.css("pointer-events", "auto");
+
     }).fail(function(xhr, statusText, err) {
         console.log(xhr.status);
         container.text("State: Offline");
@@ -338,7 +363,9 @@ function cameraAlive(id, container, parent, before) {
         before.css('display', 'none');
         cameras[id].status = CameraStatus.Paused;
         parent.removeAttr("disabled");
-        renderCameras();
+        //renderCameras();
+
+        parent.css("pointer-events", "auto");
     });
 }
 
@@ -390,11 +417,16 @@ $("#addIPModal").on("hidden.bs.modal", function () {
 
 $("#showImageModal").on("shown.bs.modal", function () {
     //TODO Itt megcsinálni hogy az adott képre vonatkozzon amelyikre kattintasz.
-    //setInterval(function(){
-        //refresh();
-    //}, 1000);
-    
-    //function refresh(){
-    $("#showImageBody").html('<img src="DB/cameraPhotos/192-168-0-114-8080.jpg" width=100%>');
-    //}
+    var id = $(".ipShowImage").index($(this));
+    showImageInterval = setInterval(refreshImage.bind(id), 1000);
 });
+
+$("#showImageModal").on("hidden.bs.modal", function () {
+    clearInterval(showImageInterval);
+});
+
+function refreshImage(id){
+    
+    var element = document.getElementById("shownImage");
+    element.src = "DB/cameraPhotos/192-168-0-114-8080.png?" + Date.now();
+}
