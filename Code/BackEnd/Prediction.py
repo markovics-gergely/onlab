@@ -116,13 +116,16 @@ class Prediction:
             else:
                 predictdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
+            predictdf['cap'] = 100
+            predictdf['floor'] = 0
 
-            self.models.append(Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=True, yearly_seasonality=True, growth='linear', holidays=self.holidays))
+            self.models.append(Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=True, yearly_seasonality=True, growth='logistic', holidays=self.holidays))
             #m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
 
             with suppress_stdout_stderr():
                 self.models[i].fit(predictdf)
             future = self.models[i].make_future_dataframe(periods=self.periodNum, freq='2H', include_history=False)
+            future['cap'] = 100
             future['floor'] = 0
             self.forecasts.append(self.models[i].predict(future))
             self.forecasts[i].head()
@@ -243,7 +246,7 @@ class Prediction:
         print(monthpercent)
         print(weekpercent)
 
-#predict = Prediction()
-#print(predict.getPrediction('2021-04-02 14:00:00', '192-168-0-0-8080'))
-#predict.processPlot()
-#predict.createStats()
+'''predict = Prediction()
+print(predict.getPrediction('2021-05-02 04:00:00', '192-168-0-176-8080'))
+predict.processPlot()
+predict.createStats()'''
