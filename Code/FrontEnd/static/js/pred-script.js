@@ -117,7 +117,7 @@ function createList(buffer, percentBuffer, interval, numid, perid){
 
         let value = document.createElement("h4");
         value.className = "pred-value";
-        value.textContent = num + " calc.";
+        value.textContent = num + " predicted";
 
         cardboxvalue.appendChild(value);
         row.appendChild(cardboxvalue);

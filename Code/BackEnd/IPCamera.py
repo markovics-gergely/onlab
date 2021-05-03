@@ -236,10 +236,13 @@ class IPCamera:
         self.stopped = True
 
     def saveImage(self):
-        while not self.stopped:
-            if self.frame is not None:
-                for face in self.faces:
-                    x, y, w, h = face
-                    cv2.rectangle(self.frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
-                cv2.imwrite("DB/cameraPhotos/" + self.filename + ".png", self.frame)
-            time.sleep(1)
+        try :
+            while not self.stopped:
+                if self.frame is not None:
+                    for face in self.faces:
+                        x, y, w, h = face
+                        cv2.rectangle(self.frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
+                    cv2.imwrite("DB/cameraPhotos/" + self.filename + ".png", self.frame)
+                time.sleep(1)
+        except :
+            pass

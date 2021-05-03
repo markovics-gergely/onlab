@@ -155,9 +155,10 @@ class Prediction:
 
     def processPlot(self) :
         plt.close('all')
-        self.figures = [plt.figure(),plt.figure(),
-                        plt.figure(),plt.figure(),
-                        plt.figure(),plt.figure()]
+        self.figures = [plt.figure(figsize=(15, 8), dpi=160),plt.figure(figsize=(25, 8), dpi=160),
+                        plt.figure(figsize=(15, 12), dpi=160),plt.figure(figsize=(15, 8), dpi=160),
+                        plt.figure(figsize=(15, 8), dpi=160),plt.figure(figsize=(12, 12), dpi=160)]
+        self.axises = []
         for i in range(6) :
             self.axises.append(self.figures[i].add_subplot(1,1,1))
 
