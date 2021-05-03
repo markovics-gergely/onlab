@@ -3,6 +3,8 @@ from fbprophet import Prophet
 import datetime
 import os
 import sys
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt, colors
 from fbprophet.plot import plot_forecast_component, plot_yearly, plot_weekly
 

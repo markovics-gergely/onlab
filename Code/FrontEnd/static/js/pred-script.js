@@ -27,6 +27,9 @@ $(".predictForm").on('submit',function(e){
     $('#result').css("display", "block");
     $("#predictModal").modal('toggle');
 
+    $(".graph-table").css("display", "none");
+    $(".stat-table").css("display", "none");
+
     var ipID = $('#CameraNameSelect').prop('selectedIndex');
     var ip = cameras[ipID].ip;
     ip = ip.replaceAll(".", "-");
@@ -98,6 +101,8 @@ function createList(buffer, percentBuffer, interval, numid, perid){
     var root = document.getElementById(numid);
     var rootpercent = document.getElementById(perid);
 
+    root.innerHTML = "";
+    rootpercent.innerHTML = "";
     buffer.forEach((num, id) => {
         let row = document.createElement("div");
         row.className = "row";
@@ -149,6 +154,9 @@ function createList(buffer, percentBuffer, interval, numid, perid){
 function createImage(id){
     let image = document.getElementById("plotImage" + id);
     let palette = document.getElementById("colorPalette" + id);
+
+    image.innerHTML = "";
+    palette.innerHTML = "";
 
     image.src = "../../DB/predPhotos/predImage" + id +".png";
     if(id < 3){
