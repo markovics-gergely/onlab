@@ -80,6 +80,7 @@ class IPCamera:
         self.cameraThread = threading.Thread(target=self.ipcamFaceDetect, args=())
         self.writeThread = threading.Thread(target=self.writeCSV, args=())
         self.frame = 0
+        self.faces = [[0, 0, 0, 0]]
         self.age_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/age.prototxt", "BackEnd/Models/age.caffemodel")
         self.gender_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/gender.prototxt",
                                                      "BackEnd/Models/gender.caffemodel")
@@ -203,7 +204,6 @@ class IPCamera:
                 break
             
             if frame is not None:
-                self.frame = frame
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = self.haar_detector.detectMultiScale(gray, 1.2, 5)
 
@@ -222,6 +222,9 @@ class IPCamera:
                     gendernum = np.argmax(gender_pred)
                     self.personBucket.increaseGenderBucket(gendernum)
 
+                self.faces = faces
+                self.frame = frame
+
             if (self.intervalHandler.isDataSaveable() and not self.writeThread.isAlive()):
                 self.writeThread.start()
 
@@ -235,9 +238,8 @@ class IPCamera:
     def saveImage(self):
         while not self.stopped:
             if self.frame is not None:
-                time.sleep(1)
+                for face in self.faces:
+                    x, y, w, h = face
+                    cv2.rectangle(self.frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
                 cv2.imwrite("DB/cameraPhotos/" + self.filename + ".png", self.frame)
-
-
-'''camera = IPCamera("192.168.0.114:8080", "NagyViktor", CameraStatus.Paused, "shot.jpg")
-camera.startCameraThread()'''
+            time.sleep(1)

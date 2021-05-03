@@ -3,13 +3,8 @@ from fbprophet import Prophet
 import datetime
 import os
 import sys
-import random
-import holidays as holidays
 from matplotlib import pyplot as plt, colors
 from fbprophet.plot import plot_forecast_component, plot_yearly, plot_weekly
-import time
-import threading
-import json
 
 class PredictionInfo :
     def __init__(self):
@@ -67,7 +62,6 @@ class Prediction:
         self.predictableTime = time
         self.countPeriodNum()
         return self.predict()
-        #return self.predictableTime + "\n\n" + self.predict()
 
     def countPeriodNum(self):
         refDate = str((pd.DatetimeIndex(self.df['time']).values)[len(self.df.index) - 1])
@@ -116,22 +110,19 @@ class Prediction:
             else:
                 predictdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
-            predictdf['cap'] = 100
+            predictdf['cap'] = predictdf['y'].max()
             predictdf['floor'] = 0
 
-            self.models.append(Prophet(interval_width=0.95, daily_seasonality=True, weekly_seasonality=True, yearly_seasonality=True, growth='logistic', holidays=self.holidays))
-            #m.add_seasonality(name="monthly", period=30.5*12, fourier_order=8)
+            self.models.append(Prophet(interval_width=0.95, daily_seasonality=False, weekly_seasonality=True, yearly_seasonality=True, growth='logistic', holidays=self.holidays))
 
             with suppress_stdout_stderr():
                 self.models[i].fit(predictdf)
             future = self.models[i].make_future_dataframe(periods=self.periodNum, freq='2H', include_history=False)
-            future['cap'] = 100
+            future['cap'] = predictdf['y'].max()
             future['floor'] = 0
             self.forecasts.append(self.models[i].predict(future))
             self.forecasts[i].head()
 
-            #self.models.append(m)
-            #self.forecasts.append(forecast)
 
             personPred = self.forecasts[i][['yhat']].values[self.periodNum - 1][0]
             if i < 8:
@@ -140,17 +131,16 @@ class Prediction:
                 genderSum += personPred
             dataList.append(personPred)
 
+            self.colorBuffer.append(colors.to_hex('C' + str(i)))
             self.progressBar(i)
 
         for i in range(8):
             predInfo.ageBuffer.append(round(dataList[i], 2))
             predInfo.agePercentBuffer.append(round((dataList[i] / ageSum) * 100, 2))
-            #information += self.stringList[i] + str(round((dataList[i] / ageSum) * 100, 2)) + "% -> " + str(round(dataList[i], 2)) + "\n"
-        #information += "\n"
+
         for i in range(8, 10):
             predInfo.genderBuffer.append(round(dataList[i], 2))
             predInfo.genderPercentBuffer.append(round((dataList[i] / genderSum) * 100, 2))
-            #information += self.stringList[i] + str(round((dataList[i] / genderSum) * 100, 2)) + "% -> " + str(round(dataList[i], 2)) + "\n"
 
         json = {
                 "ageBuffer": predInfo.ageBuffer,
@@ -189,7 +179,6 @@ class Prediction:
                     self.axises[4].get_lines()[i - 8].set_color('C' + str(i))
                     self.axises[5].get_lines()[i - 8].set_color('C' + str(i))
                 i += 1
-                self.colorBuffer.append(colors.to_hex('C' + str(i)))
                 self.progressBar(i)
             for j in range(6) :
                 self.createImages(j)
@@ -246,7 +235,3 @@ class Prediction:
         print(monthpercent)
         print(weekpercent)
 
-'''predict = Prediction()
-print(predict.getPrediction('2021-05-02 04:00:00', '192-168-0-176-8080'))
-predict.processPlot()
-predict.createStats()'''

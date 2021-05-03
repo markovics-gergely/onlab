@@ -227,9 +227,6 @@ function renderCameras() {
             $(outerdiv).css('background-color', '#f0f0f0');
             createCamInfo(camera, id);
 
-            //$(showimagespan).text("visibility_off");
-            //$(".camera-list-item").css("pointer-events", "none");
-
             var beforeFrame = $(caminfo).children(".before");
             beforeFrame.css('display', 'block');
             var alive = $(caminfo).children(".alive").children(".ip-addr");
@@ -356,8 +353,6 @@ function cameraAlive(id, container, parent, before) {
         before.children(".ip-addr").text("Before Pending: Online");
         before.css('display', 'none');
 
-        //makeCameraVisible(parent.children(".icons"));
-        //$(".camera-list-item").css("pointer-events", "auto");
         cameras[id].beforestatus = CameraStatus.Started;
     }).fail(function(xhr, statusText, err) {
         console.log(xhr.status);
@@ -368,7 +363,6 @@ function cameraAlive(id, container, parent, before) {
         cameras[id].status = CameraStatus.Paused;
         cameras[id].beforestatus = CameraStatus.Paused;
         renderCameras();
-        //$(".camera-list-item").css("pointer-events", "auto");
     });
 }
 
@@ -418,12 +412,6 @@ $("#addIPModal").on("hidden.bs.modal", function () {
     $("#advanced-modal").attr("hidden", "hidden");
     $("#expand-span").text("expand_more");
     $("#addimgtype").val("shot.jpg");
-});
-
-$("#showImageModal").on("shown.bs.modal", function () {
-    //TODO Itt megcsinálni hogy az adott képre vonatkozzon amelyikre kattintasz.
-    //var id = $(".ipShowImage").index($(this));
-    //showImageInterval = setInterval(refreshImage.bind(id), 1000);
 });
 
 $("#showImageModal").on("hidden.bs.modal", function () {
