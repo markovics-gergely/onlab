@@ -109,5 +109,13 @@ def cameraCheck():
             return "Camera cannot be started", 502
     return "OK", 200
 
+@app.route("/data:<id>", methods=['GET'])
+def cameraData(id):
+    try :
+        json = jsonify(ipm.getDataframe(id))
+        return json
+    except :
+        return "Data cannot read", 502
+
 if(__name__ == "__main__"):
    app.run(host='127.0.0.1', port=8000, threaded=True, debug=True, use_reloader=False)

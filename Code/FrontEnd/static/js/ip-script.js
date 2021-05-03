@@ -10,11 +10,13 @@ function Camera(name, ip, status, imgType) {
     this.ip = ip;
     this.status = status;
     this.imgType = imgType;
+    this.beforestatus = CameraStatus.Paused;
+    this.canShow = false;
 }
 var cameras = [];
 var managerpanel = document.getElementById("managerpanel");
 var caminfo = document.getElementById("caminfo");
-var caminfos = [];
+var showDataBody = document.getElementById("showDataBody");
 var showImageInterval;
 
 parseCameras();
@@ -37,15 +39,17 @@ $(document).on("click", ".ipPauseOrStart", function(e) {
             console.log(xhr.status);
             cameras[id].status = CameraStatus.Started;
             $(this).removeAttr("disabled");
-            renderCameras();
+            
 
             //Ha elindítható a kamera akkor fix online, tehát lehet nézni a képet
-            makeCameraVisible($($(".ipPauseOrStart")[id]).parent());
-
+            cameras[id].canShow = true
+            //makeCameraVisible($($(".ipPauseOrStart")[id]).parent());
+            renderCameras();
             console.log(cameras[id].status);
         }).fail(function(xhr, statusText, err) {
             console.log("Error: " + xhr.status + " " + statusText + " " + err);
             cameras[id].status = CameraStatus.Paused;
+            cameras[id].canShow = false;
             $(this).removeAttr("disabled");
             renderCameras();
             showSnackBar("Camera cannot start");
@@ -89,69 +93,84 @@ $(document).on("click", ".ipDelete", function(e) {
     }
     renderCameras();
 })
+$(document).on("click", ".ipShowImage", function(e) {
+    e.stopPropagation();
+    var id = $(".ipShowImage").index($(this));
+    var ip = cameras[id].ip;
+    ip = ip.replace(/[.:]/gi, "-");
+    showImageInterval = setInterval(function(){ refreshImage(ip); }, 1000);
+})
 
-function createCamInfos(){
-    caminfos = [];
-    console.log(cameras);
-    cameras.forEach(function(camera, id){
-        var infotable = document.createElement('div');
-        infotable.id = "camera-info";
-        infotable.className = "card-content";
+function createCamInfo(camera, id){
+    var listItem = $(".camera-list-item").index(id);
+    $(listItem).css('background-color', 'white');
+    
+    //ipframe
+    var ipFrame = document.createElement('div');
+    ipFrame.className = "camera-info-item";
+    
+    var ip = document.createElement('h4');
+    ip.textContent = "IP: " + camera.ip;
+    ip.className = "ip-addr ml-3";
+    
+    ipFrame.appendChild(ip);
+    
+    //aliveframe
+    var aliveFrame = document.createElement('div');
+    aliveFrame.className = "camera-info-item alive";
+    
+    var alive = document.createElement('h4');
+    alive.textContent = camera.CameraStatus == CameraStatus.Started ? "State: Online" :  "State: Offline";
+    alive.className = "ip-addr ml-3";
+    
+    aliveFrame.appendChild(alive);
+    caminfo.appendChild(aliveFrame);
+    
+    //beforependingframe
+    var beforependingFrame = document.createElement('div');
+    beforependingFrame.className = "camera-info-item before";
+    $(beforependingFrame).css('display', 'none');
 
-        var listItem = $(".camera-list-item").index(id);
-        $(listItem).css('background-color', 'white');
-    
-        //ipframe
-        var ipFrame = document.createElement('div');
-        ipFrame.className = "camera-info-item";
-    
-        var ip = document.createElement('h4');
-        ip.textContent = "IP: " + camera.ip;
-        ip.className = "ip-addr ml-3";
-    
-        ipFrame.appendChild(ip);
-    
-        //aliveframe
-        var aliveFrame = document.createElement('div');
-        aliveFrame.className = "camera-info-item alive";
-    
-        var alive = document.createElement('h4');
-        alive.textContent = camera.CameraStatus == CameraStatus.Started ? "State: Online" :  "State: Offline";
-        alive.className = "ip-addr ml-3";
-    
-        aliveFrame.appendChild(alive);
-        caminfo.appendChild(aliveFrame);
-    
-        //beforependingframe
-        var beforependingFrame = document.createElement('div');
-        beforependingFrame.className = "camera-info-item before";
-        $(beforependingFrame).css('display', 'none');
+    var beforepending = document.createElement('h4');
+    beforepending.textContent = camera.beforestatus == CameraStatus.Started ? "Before Pending: Online" :  "Before Pending: Offline";
+    beforepending.className = "ip-addr ml-3";
 
-        var beforepending = document.createElement('h4');
-        beforepending.textContent = camera.CameraStatus == CameraStatus.Started ? "Before Pending: Online" :  "Before Pending: Offline";
-        beforepending.className = "ip-addr ml-3";
+    beforependingFrame.appendChild(beforepending);
+    caminfo.appendChild(beforependingFrame);
 
-        beforependingFrame.appendChild(beforepending);
-        caminfo.appendChild(beforependingFrame);
+    //imgtypeframe
+    var imgTypeFrame = document.createElement('div');
+    imgTypeFrame.className = "camera-info-item";
+    
+    var imgType = document.createElement('h4');
+    imgType.textContent = "Image Type: " + camera.imgType;
+    imgType.className = "ip-addr ml-3";
+    
+    imgTypeFrame.appendChild(imgType);
+    
+    //dataframe
+    var dataFrame = document.createElement('div');
+    dataFrame.className = "camera-info-item";
+    dataFrame.setAttribute("data-toggle", "modal");
+    dataFrame.setAttribute("data-target", "#showDataModal");
 
-        //imgtypeframe
-        var imgTypeFrame = document.createElement('div');
-        imgTypeFrame.className = "camera-info-item";
-    
-        var imgType = document.createElement('h4');
-        imgType.textContent = "Image Type: " + camera.imgType;
-        imgType.className = "ip-addr ml-3";
-    
-        imgTypeFrame.appendChild(imgType);
-    
-        //add all
-        infotable.appendChild(ipFrame);
-        infotable.appendChild(aliveFrame);
-        infotable.appendChild(beforependingFrame);
-        infotable.appendChild(imgTypeFrame);
+    var data = document.createElement('h4');
+    data.textContent = "Show Data Table";
+    data.className = "ip-addr ml-3 dataButton";
 
-        caminfos.push(infotable);
+    dataFrame.appendChild(data);
+
+    $(dataFrame).on("click", function(e) {
+        getJSONdata(id);
     })
+
+    //add all
+    caminfo.innerHTML = "";
+    caminfo.appendChild(ipFrame);
+    caminfo.appendChild(aliveFrame);
+    caminfo.appendChild(beforependingFrame);
+    caminfo.appendChild(imgTypeFrame);
+    caminfo.appendChild(dataFrame);
 }
 
 function makeCameraVisible(parent){
@@ -162,7 +181,7 @@ function makeCameraVisible(parent){
 
 function renderCameras() {
     managerpanel.innerHTML = "";
-    cameras.forEach(function(camera, id) {
+    cameras.forEach(function(camera) {
         var name = document.createElement('h4');
         name.textContent = camera.name;
         name.className = "ip-addr ml-3";
@@ -182,6 +201,7 @@ function renderCameras() {
         showimagespan.setAttribute("data-toggle", "modal");
         showimagespan.setAttribute("data-target", "#showImageModal");
         showimagespan.textContent = "visibility_off";
+        
 
         var outerdiv = document.createElement('form');
         outerdiv.className = "camera-list-item";
@@ -197,38 +217,25 @@ function renderCameras() {
 
         managerpanel.appendChild(outerdiv);
 
-        $(".ipShowImage").css("pointer-events", "none");
+        if(camera.canShow) makeCameraVisible($(innerdiv));
+        else $(showimagespan).css("pointer-events", "none");
 
         $(outerdiv).on("click", function(){
             $(".camera-list-item").css('background-color', 'white');
             var id = $(".camera-list-item").index(outerdiv);
 
             $(outerdiv).css('background-color', '#f0f0f0');
-            caminfo.innerHTML = caminfos[id].innerHTML;
+            createCamInfo(camera, id);
 
-            $(".ipShowImage").css("pointer-events", "none");
-            var elements = document.querySelectorAll('.ipShowImage');
-            Array.from(elements).forEach((element, index) => {
-                if(index != id)
-                    element.textContent = "visibility_off";
-            });
+            //$(showimagespan).text("visibility_off");
+            //$(".camera-list-item").css("pointer-events", "none");
 
-            if(!$(outerdiv).attr('disabled')){
-                $(outerdiv).css("pointer-events", "none");
+            var beforeFrame = $(caminfo).children(".before");
+            beforeFrame.css('display', 'block');
+            var alive = $(caminfo).children(".alive").children(".ip-addr");
+            alive.text("State: Pending...");
 
-                var beforeFrame = $(caminfo).children(".before");
-                beforeFrame.css('display', 'block');
-                var alive = $(caminfo).children(".alive").children(".ip-addr");
-                alive.text("State: Pending...");
-
-                cameraAlive(id, alive, $(outerdiv), $(beforeFrame));
-            }
-            /*else{
-                var beforeFrame = $(caminfo).children(".before");
-                beforeFrame.css('display', 'block');
-                var alive = $(caminfo).children(".alive").children(".ip-addr");
-                alive.text("State: Pending...");
-            }*/
+            cameraAlive(id, alive, $(outerdiv), $(beforeFrame));
         })
     })
 }
@@ -243,7 +250,7 @@ function parseCameras() {
             d.forEach(function(c, id) {
                 console.log(c);
                 if (c.status == CameraStatus.Started) {
-                    var camera = new Camera(c.name, c.ip, CameraStatus.Pendin, c.imgType);
+                    var camera = new Camera(c.name, c.ip, CameraStatus.Pending, c.imgType);
                     cameras.push(camera);
                     cameraStartable(id, camera);
                 } else {
@@ -253,7 +260,6 @@ function parseCameras() {
             });
             renderCameras();
             cameraCheck();
-            createCamInfos();
         }
     });
 }
@@ -340,8 +346,6 @@ function showSnackBar(text) {
 }
 
 function cameraAlive(id, container, parent, before) {
-    parent.attr("disabled", "disabled");
-
     $.ajax({
         url: window.location.href + "alive:" + id,
         data: {}
@@ -351,21 +355,20 @@ function cameraAlive(id, container, parent, before) {
 
         before.children(".ip-addr").text("Before Pending: Online");
         before.css('display', 'none');
-        parent.removeAttr("disabled");
 
-        makeCameraVisible(parent.children(".icons"));
-        parent.css("pointer-events", "auto");
-
+        //makeCameraVisible(parent.children(".icons"));
+        //$(".camera-list-item").css("pointer-events", "auto");
+        cameras[id].beforestatus = CameraStatus.Started;
     }).fail(function(xhr, statusText, err) {
         console.log(xhr.status);
         container.text("State: Offline");
         before.children(".ip-addr").text("Before Pending: Offline");
         before.css('display', 'none');
+        cameras[id].canShow = false;
         cameras[id].status = CameraStatus.Paused;
-        parent.removeAttr("disabled");
-        //renderCameras();
-
-        parent.css("pointer-events", "auto");
+        cameras[id].beforestatus = CameraStatus.Paused;
+        renderCameras();
+        //$(".camera-list-item").css("pointer-events", "auto");
     });
 }
 
@@ -376,10 +379,12 @@ function cameraStartable(id, camera) {
     }).done(function(xhr, statusText) {
         console.log(xhr.status);
         camera.status = CameraStatus.Started
+        camera.canShow = true;
         renderCameras();
     }).fail(function(xhr, statusText, err) {
         console.log(xhr.status);
         camera.status = CameraStatus.Paused;
+        camera.canShow = false;
         renderCameras();
     });
 }
@@ -417,16 +422,181 @@ $("#addIPModal").on("hidden.bs.modal", function () {
 
 $("#showImageModal").on("shown.bs.modal", function () {
     //TODO Itt megcsinálni hogy az adott képre vonatkozzon amelyikre kattintasz.
-    var id = $(".ipShowImage").index($(this));
-    showImageInterval = setInterval(refreshImage.bind(id), 1000);
+    //var id = $(".ipShowImage").index($(this));
+    //showImageInterval = setInterval(refreshImage.bind(id), 1000);
 });
 
 $("#showImageModal").on("hidden.bs.modal", function () {
     clearInterval(showImageInterval);
 });
 
-function refreshImage(id){
-    
+function refreshImage(ip){
     var element = document.getElementById("shownImage");
-    element.src = "DB/cameraPhotos/192-168-0-114-8080.png?" + Date.now();
+    element.src = "DB/cameraPhotos/" + ip + ".png?" + Date.now();
+}
+
+function getJSONdata(id) {
+    $.ajax({
+        type: "GET",
+        url: window.location.href + "data:" + id,
+        data: {},
+        dataType: "json",
+        success: function(data) {
+            var rows = JSON.parse(data);
+            rows.forEach(function(d, id){
+                d.age = d.age.replace(/[\"\[\]]/gi, "");
+                d.age = d.age.split(", ");
+                d.age = d.age.map(Number);
+                d.gender = d.gender.replace(/[\"\[\]]/gi, "");
+                d.gender = d.gender.split(", ");
+                d.gender = d.gender.map(Number);
+                
+            });
+            createDataTable(rows);
+            console.log(rows);
+        }
+    });
+}
+
+function createDataTable(data){
+    showDataBody.innerHTML = "";
+
+    let row = document.createElement("div");
+    row.className = "row";
+        
+    let cardboxname = document.createElement("div");
+    cardboxname.className = "cardbox pred-info-info col-sm-12 col-md-12 col-lg-2";
+
+    let name = document.createElement("h4");
+    name.className = "pred-id-name";
+    name.textContent = "Time";
+
+    cardboxname.appendChild(name);
+    row.appendChild(cardboxname);
+
+    let middle = document.createElement("div");
+    middle.className = "cardbox show-table-middle col-sm-12 col-md-12 col-lg-7";
+    let middlevalue = document.createElement("h4");
+    middlevalue.className = "pred-value";
+    middlevalue.textContent = "Age Data";
+    
+    middle.appendChild(middlevalue);
+        
+    row.appendChild(middle);
+
+    let cardboxvalue = document.createElement("div");
+    cardboxvalue.className = "cardbox pred-info-item col-sm-12 col-md-12 col-lg-2";
+    let value = document.createElement("h4");
+    value.className = "pred-value";
+    value.textContent = "Gender Data";
+    cardboxvalue.appendChild(value);
+    row.appendChild(cardboxvalue);
+
+    showDataBody.append(row);
+
+    data.slice().reverse().forEach(function(rowdata){
+        let row = document.createElement("div");
+        row.className = "row my-1";
+        
+        let cardboxname = document.createElement("div");
+        cardboxname.className = "cardbox pred-info-info col-sm-12 col-md-12 col-lg-2";
+
+        let name = document.createElement("div");
+        name.className = "pred-id-name";
+        name.textContent = rowdata.time;
+
+        cardboxname.appendChild(name);
+        row.appendChild(cardboxname);
+
+        let middle = document.createElement("div");
+        middle.className = "cardbox show-table-middle col-sm-12 col-md-12 col-lg-7 py-1";
+        rowdata.age.forEach(function(agedata){
+            let middlevalue = document.createElement("div");
+            middlevalue.className = "data-value mx-auto";
+            middlevalue.textContent = agedata;
+    
+            let middlegrid = document.createElement("div");
+            middlegrid.className = "datagrid mx-1";
+
+            middlegrid.appendChild(middlevalue)
+
+            middle.appendChild(middlegrid);
+        })
+        
+        row.appendChild(middle);
+
+        let cardboxvalue = document.createElement("div");
+        cardboxvalue.className = "cardbox pred-info-item col-sm-12 col-md-12 col-lg-2 py-1";
+        rowdata.gender.forEach(function(genderdata){
+            let value = document.createElement("div");
+            value.className = "data-value mx-auto";
+            value.textContent = genderdata;
+    
+            let lastgrid = document.createElement("div");
+            lastgrid.className = "datagrid mx-1";
+
+            lastgrid.appendChild(value)
+
+            cardboxvalue.appendChild(lastgrid);
+        });
+        row.appendChild(cardboxvalue);
+
+        
+
+        showDataBody.append(row);
+    });
+
+    var footerage = ["0-6", "6-12", "12-18", "18-26", "26-36", "36-48", "48-60", "60-100"];
+    var footergender = ["Women", "Men"];
+
+    var footer = document.getElementById("showModalDataFooter");
+    footer.innerHTML = "";
+
+    let footerrow = document.createElement("div");
+    footerrow.className = "row my-2";
+        
+    let footercardboxname = document.createElement("div");
+    footercardboxname.className = "cardbox pred-info-info col-sm-12 col-md-12 col-lg-2";
+
+    let footername = document.createElement("div");
+    footername.className = "pred-id-name";
+    footername.textContent = "Data Headers:";
+
+    footercardboxname.appendChild(footername);
+    footerrow.appendChild(footercardboxname);
+
+    let footermiddle = document.createElement("div");
+    footermiddle.className = "cardbox show-table-middle col-sm-12 col-md-12 col-lg-7 py-1";
+    footerage.forEach(function(agedata){
+        let middlevalue = document.createElement("div");
+        middlevalue.className = "data-value mx-auto";
+        middlevalue.textContent = agedata;
+    
+        let middlegrid = document.createElement("div");
+        middlegrid.className = "datagrid mx-1";
+
+        middlegrid.appendChild(middlevalue)
+
+        footermiddle.appendChild(middlegrid);
+    })
+        
+    footerrow.appendChild(footermiddle);
+
+    let footercardboxvalue = document.createElement("div");
+    footercardboxvalue.className = "cardbox pred-info-item col-sm-12 col-md-12 col-lg-2 py-1";
+    footergender.forEach(function(genderdata){
+        let value = document.createElement("div");
+        value.className = "data-value mx-auto";
+        value.textContent = genderdata;
+    
+        let lastgrid = document.createElement("div");
+        lastgrid.className = "datagrid mx-1";
+
+        lastgrid.appendChild(value)
+
+        footercardboxvalue.appendChild(lastgrid);
+    });
+    footerrow.appendChild(footercardboxvalue);
+
+    footer.append(footerrow);
 }

@@ -1,6 +1,7 @@
 import pandas as pd
 import os.path
 import IPCamera as ic
+import json
 
 class IPManager:
     def __init__(self):
@@ -108,3 +109,11 @@ class IPManager:
             }
             json["clist"].append(camera)
         return json
+
+    def getDataframe(self, id) :
+        path = 'DB/cameras/' + self.cameraList[int(id)].filename + '.csv'
+        df = pd.read_csv(path)
+        result = df.tail(50).to_json(orient="records")
+        parsed = json.loads(result)
+        jsondata = json.dumps(parsed, indent=4) 
+        return jsondata

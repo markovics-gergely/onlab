@@ -506,3 +506,46 @@ div::-webkit-scrollbar-thumb:hover {
 .colorData{
     overflow: auto;
 }
+
+.showdata{
+    background-color: lightgray;
+    overflow: auto;
+    height: 60vh;
+    color: gray;
+}
+
+.show-table-middle {
+    background-color: white;
+    border: 1px solid gray;
+    vertical-align: middle;
+    margin: 0px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+}
+
+.datagrid {
+    border-radius: 10px;
+    background-color: white;
+    border: 1px solid gray;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-grow: 1
+}
+
+.data-value{
+    margin: 5px;
+}
+
+#showModalDataFooter{
+    background-color: #337ab7;
+    padding: 5px;
+    font-size: small;
+    color: gray;
+}
