@@ -1,0 +1,21 @@
+Tecnhológia 2 részre osztható: (Ezt leírni egy ilyen összefoglaló részre)
+-Arcfelismerés (OpenCV)
+	-Itt lehet beszélni az xml ről és a caffemodellekről a kor és nem kapcsolatában.
+-Predikció (Facebook Prophet)
+	-Itt lehet beszélni a saját csv-nk kiolvasásáról
+
+Fájlok és osztályok (Class diagram szerűt készíteni)
+-IPCamera.py
+	-CameraStatus (Enum)
+	-PersonBucket (Class)
+	-IntervalHandler (Class)
+	-IPCamera (Class)
+-IPManager.py
+	-IPManager (Class)
+-Prediction.py
+	-PredictionInfo (Class)
+	-Prediction (Class)
+-WebServer.py
+
+Mindegyikről rövid leírás
+Majd részletesen végigmenni rajtuk
