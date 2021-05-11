@@ -23,7 +23,6 @@ class IPManager:
         self.cameraList.pop(id)
         return True
 
-
     def startCamera(self, id):
         if(len(self.cameraList) <= id):
             return False

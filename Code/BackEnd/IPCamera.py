@@ -79,12 +79,13 @@ class IPCamera:
         self.status = status
         self.cameraThread = threading.Thread(target=self.ipcamFaceDetect, args=())
         self.writeThread = threading.Thread(target=self.writeCSV, args=())
-        self.frame = 0
-        self.faces = [[0, 0, 0, 0]]
         self.age_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/age.prototxt", "BackEnd/Models/age.caffemodel")
         self.gender_model = cv2.dnn.readNetFromCaffe("BackEnd/Models/gender.prototxt",
                                                      "BackEnd/Models/gender.caffemodel")
         self.haar_detector = cv2.CascadeClassifier("BackEnd/Models/haarcascade_frontalface_default.xml")
+
+        self.frame = 0
+        self.faces = [[0, 0, 0, 0]]
 
         if (status == CameraStatus.Started):
             self.status = CameraStatus.Paused

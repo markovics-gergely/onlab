@@ -34,7 +34,6 @@ class suppress_stdout_stderr(object):
         os.close(self.null_fds[1])
 
 class Prediction:
-    
     def __init__(self):
         self.predictableTime = "1970-01-01 00:00:00"
         self.ip = "0-0-0-0-0"
@@ -97,13 +96,6 @@ class Prediction:
         self.models = []
         self.forecasts = []
         self.progressBar(-1)
-        '''plt.close('all')
-        self.figures = [plt.figure(),plt.figure(),
-                        plt.figure(),plt.figure(),
-                        plt.figure(),plt.figure()]
-        for i in range(6) :
-            self.axises.append(self.figures[i].add_subplot(1,1,1))'''
-
 
         for i in range(10):
             predictdf = self.df.copy()
@@ -112,10 +104,11 @@ class Prediction:
             else:
                 predictdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
             predictdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
-            predictdf['cap'] = predictdf['y'].max()
+            predictdf['cap'] = predictdf['y'].max() * 1.1
             predictdf['floor'] = 0
 
-            self.models.append(Prophet(interval_width=0.95, daily_seasonality=False, weekly_seasonality=True, yearly_seasonality=True, growth='logistic', holidays=self.holidays))
+            self.models.append(Prophet(interval_width=0.95, daily_seasonality=False, weekly_seasonality=True,
+                                       yearly_seasonality=True, growth='logistic', holidays=self.holidays))
 
             with suppress_stdout_stderr():
                 self.models[i].fit(predictdf)
