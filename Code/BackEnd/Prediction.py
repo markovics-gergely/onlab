@@ -2,7 +2,6 @@ import pandas as pd
 from fbprophet import Prophet
 import datetime
 import os
-import sys
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt, colors
@@ -38,8 +37,6 @@ class Prediction:
         self.predictableTime = "1970-01-01 00:00:00"
         self.ip = "0-0-0-0-0"
         self.periodNum = 0
-        self.stringList = ["0-6 years old:    ", "6-12 years old:   ", "12-18 years old:  ", "18-26 years old:  ", "26-36 years old:  ",
-                           "36-48 years old:  ", "48-60 years old:  ", "60-100 years old: ", "Women: ", "Men:   "]
 
         self.figures = []
         self.axises = []
@@ -82,12 +79,7 @@ class Prediction:
         x = x.split(', ')
         return int(x[id])
 
-    def progressBar(self, i) :
-        sys.stdout.write("\r{2}% <{0}|{1}>\r".format("="*(i + 1),"-"*(9 - i), (i + 1) * 10))
-        sys.stdout.flush()
-
     def predict(self):
-        information = ""
         dataList = []
         ageSum = 0
         genderSum = 0
@@ -95,7 +87,6 @@ class Prediction:
 
         self.models = []
         self.forecasts = []
-        self.progressBar(-1)
 
         for i in range(10):
             predictdf = self.df.copy()
@@ -127,7 +118,6 @@ class Prediction:
             dataList.append(personPred)
 
             self.colorBuffer.append(colors.to_hex('C' + str(i)))
-            self.progressBar(i)
 
         for i in range(8):
             predInfo.ageBuffer.append(round(dataList[i], 2))
@@ -175,7 +165,6 @@ class Prediction:
                     self.axises[4].get_lines()[i - 8].set_color('C' + str(i))
                     self.axises[5].get_lines()[i - 8].set_color('C' + str(i))
                 i += 1
-                self.progressBar(i)
             for j in range(6) :
                 self.createImages(j)
         except :
@@ -189,45 +178,5 @@ class Prediction:
         if id >= 0 and id < 6 :
             self.figures[id].savefig('DB/predPhotos/predImage' + str(id) +'.png')
             plt.close(self.figures[id])
-            self.progressBar(int(id * 10 / 6))
 
-    def createStats(self) : 
-        yeardata = []
-        monthdata = []
-        weekdata = []
-        yearpercent = []
-        monthpercent = []
-        weekpercent = []
-
-        for i in range(10):
-            statdf = self.df.copy()
-            if i < 8:
-                statdf['y'] = self.df['age'].apply(lambda x: self.getValue(x, i))
-            else:
-                statdf['y'] = self.df['gender'].apply(lambda x: self.getValue(x, i - 8))
-            statdf.drop(['time', 'gender', 'age'], axis=1, inplace=True)
-
-            yeardf = statdf.resample('Y', on='ds').sum()
-            monthdf = statdf.resample('M', on='ds').sum()
-            weekdf = statdf.resample('W', on='ds').sum()
-            print(weekdf)
-            yeardata.append(int(yeardf['y'].mean()))
-            monthdata.append(int(monthdf['y'].mean()))
-            weekdata.append(int(weekdf['y'].mean()))
-
-        ysum = sum(yeardata)
-        msum = sum(monthdata)
-        wsum = sum(weekdata)
-        print(yeardata)
-        print(monthdata)
-        print(weekdata)
-        for i in range(len(yeardata)) :
-            yearpercent.append(round(yeardata[i] / ysum * 100, 2))
-        for j in range(len(monthdata)) :
-            monthpercent.append(round(monthdata[j] / msum * 100, 2))
-        for k in range(len(weekdata)) :
-            weekpercent.append(round(weekdata[k] / wsum * 100, 2))
-        print(yearpercent)
-        print(monthpercent)
-        print(weekpercent)
 
