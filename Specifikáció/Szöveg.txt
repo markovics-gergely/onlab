@@ -1,0 +1,82 @@
+1.   dia    -> 0.5 perc
+2-3. dia    -> 1   perc
+4. dia      -> 1   perc
+5. dia      -> 2   perc
+6-7. dia    -> 1.5 perc
+8-9. dia    -> 1.5 perc
+10	    -> 1 perc
+11. dia     -> 0.5 perc
+12. dia     -> 1   perc
+
+1.dia: Feladat leírása -> 0.5p
+-mit tud az alkalmazás
+	a programunk egy kameramegfigyelő alkalmazás amely képes rögzíteni az előtte elhaladó személyek életkorát és 	nemét. majd a predikció során egy jővőbeli időpontra képes egy előrejlzést adni ezekre az adatokra építve. Aktualitása aprogramnak hogy fontossá válhatott az adott szolgáltatások látogatottságának megfigyelése, ugyanis így jobban meghatározhatják a célközönségüket és ezalapján változtathatják a kínálatot.
+	-mi az amiről adatot gyűjtünk (kor, nem)
+	-mit kezdünk az adatokkal (predikció a jővőre)
+	-milyen formában mutatja a predikciót (százalékosan visszaadja az adott korosztály és nem megjelenését)
+-aktualitás
+	-szolgáltatások látogatottságának mérése fontos lehet akár a reklámok szempontjából, vagy az árult termék célközönsége szemponjtából
+
+2-3.dia: Félév ütemezés + technológiák -> 1.5p
+-vázlatosan elmondani mi van a dián (2.dia)
+-megmutatni a flehasznált technológiákat (3.dia)
+
+4. dia: Rendszer felépítése -> 2.5p
+-a képről beszélni
+	-mi milyen kapcsolatban van
+	-nagyvonalakban melyik python fájl mit tud
+
+5. dia: IPCamera -> 4.5p
+-elmondani az alapvetően szükséges adatokat egy kamera létrehozásához
+-ai működése
+	-a kamerakép feldolgozáshoz szükséges az url (megadtunk a konstruktorban)
+	-5 mp-s timeouttal megpróbálja elérni az adott urlt
+	-majd ebből kialakítja a kameraképet (frame)
+	-a frameből kikeresi a rajta található arcokat
+	-az arcokon meghatározza a korosztályt és a nemet a caffemodelek segítségével
+	-PersonBucketban a megtalált kort és nemet reprezentáló értéket növeli 1 el
+-szálkezelés
+	-például ahogy a képen látszik a kamera indításokor leellenőrzi
+		-hogy be van e kapcsolva a kamera
+		-majd hogy a kamera státusza helyen pausedre van állítva
+		-madj, hogy nem fut e a kamerát működtető thread
+-adatlementés
+	-a lementendő intervallumok kezelését az intervalhandler valósítja meg
+	-a függvény minden képfeldolgozásnál meghívódik
+	-akkor menthető a kép ha az aktuális intervallumba még nem történt mentés
+		-amit mért intervallum az már elmúlt-e 
+		-az adatbázisban utoljára egy 2 óra intervallum adat volt beírva
+			-saveable hogyha átléptünk a 4 órás intervallumra
+			-nem saveable ha még 3:55 van
+	-ha ki/be kapcsoljuk a kamerát ugyanabban az intervallumban, akkor az adatbázisból kiveszi azt az intervallumot és folytatja
+	-az egész külön threadben történik
+
+6-7. dia: IPManager -> 6p
+	-a kamerák listáját tárolja
+	-interfészt ad a külvilágnak, és könnyen kezelhetővé teszi a kamerák alap funkcióit
+		-felsorolni az alapvető funkciókat
+	-ez végzi a fájlba mentését és fájból olvasását a kamerák listájának
+	-megmutatni a kövi dián a képeket
+
+8-9. dia: Predikció -> 7.5p
+	-a predikcióhoz szükséges adatok
+		-ip -> kiolvassa a fájlból az eddig összegyüjtött adatokat
+		-időpont -> amire jósolni szeretnénk
+	-van 8 korosztály és 2 nem így összesen végez 10 predikciót, mert minden részre 1-1 et
+	-a program felküldi a weboldalnak a szöveges adatokat
+		-majd ha feldolgozta, akkor kéri le a képeket, így pár mp múlva azok is megjelennek
+	-9. dia képről
+		-szükséges egy ip és egy jővőbeli időpont (validációs hibát dob ha korábbi) 
+		-az adott csoportok diagramjai színkóddal vannak ellátva
+
+10. dia: Webserver -> 8.5p
+	-Flask webservert csináltunk és azon lehet post/get függvényeket meghívni
+	-tárolja a két osztályt (prediction, ipmanager) és azoknak továbbítja a kéréseket
+	-képről valamit mondani
+
+11. dia Honlap -> 9p
+	-a honlap logikáját javascriptben írtuk meg és ajaxxal kommunikál a webserverrel
+	-a képeken fontosabb műveletek látszódnak
+		-a kamerák hozzáadásánál végez egy validációt az ipre és a névre, hogy ne legyen név és ip ismétlődés, és helyes formátuma legyen az ip-nek
+
+12. dia

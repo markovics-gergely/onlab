@@ -72,14 +72,12 @@ function loadImages(){
         url: window.location.href + "img",
         data: {}
     }).done(function(xhr, statusText) {
-        console.log(xhr.status);
         let i;
         for(i = 0; i < 6; i++){
             createImage(i);
         }
         $(".graph-table").css("display", "flex");
     }).fail(function(xhr, statusText, err) {
-        console.log("Error: " + xhr.status + " " + statusText);
     }).always(function() {});
 }
 

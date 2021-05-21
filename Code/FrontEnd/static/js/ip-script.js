@@ -347,7 +347,6 @@ function cameraAlive(id, container, parent, before) {
         url: window.location.href + "alive:" + id,
         data: {}
     }).done(function(xhr, statusText) {
-        console.log(xhr.status);
         container.text("State: Online");
 
         before.children(".ip-addr").text("Before Pending: Online");
@@ -355,7 +354,6 @@ function cameraAlive(id, container, parent, before) {
 
         cameras[id].beforestatus = CameraStatus.Started;
     }).fail(function(xhr, statusText, err) {
-        console.log(xhr.status);
         container.text("State: Offline");
         before.children(".ip-addr").text("Before Pending: Offline");
         before.css('display', 'none');
