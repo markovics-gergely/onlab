@@ -8,24 +8,19 @@
 - Web: Szerver/Kliens kommunikáció a vázzal
 - Web: Felhasználói felület kialakítása
 ## Specifikáció
-> Pláza kamerafigyelő alkalmazás => emberek életkora(kbra)/neme felismerés
-- Idő intervallumokra osztása (pl 2-3 órákra)
-- Intervallumokat felismert emberek alapján csoportokba rendezése (ez az alapja a reklámoknak):
-	- Családok: Kb ugyanannyi felnőtt és gyerek
-	- Férfi: nagyrészt férfiak
-	- Női: nagyrészt nők
-	- Párok: kb ugyanannyi férfi és nő
-	- Fiatalok: nagyrészt fiatalok
-	- Idősek: nagyrészt idősek
-	- Még jó lenne pár megkülönböztethető csoport
-- Tulajdonképpen reklámfigyelő helyett kamerában megjelenő emberek csoportokba osztása
-- Eddigi adatok alapján az intervallum kezdése előtt megtippeli a következőt (Idősávok alapján is nézi)
+> Kamera Figyelő Alkalmazás
+Koncepció:
+- Az alkalmazás megfigyeli a kamera előtt elhaladó embereket
+- Elhaladó emberek életkora és neme alapján csoportokba osztja őket
+- A csoportokat adott intervallumok szerint határozza meg
+- Az intervallumok előre meg vannak határozva, egy napot kisebb egységekre bontva (pl. a napot 1-2 órás darabokra szedjük)
+- Képes megtippelni, hogy a felhasználó által megadott jövőbeli időponthoz tartozó intervallum milyen csoportba esik
+- Lehetséges csoportok
 ## Linkek:
 - [Face api](https://github.com/justadudewhohacks/face-api.js)
 - [OpenCV](https://www.youtube.com/watch?v=oXlwWbU8l2o)
 - [Prophet](https://facebook.github.io/prophet/)
 - [Python threading tutorial](https://realpython.com/intro-to-python-threading/)
-
 ## Felhasználói felület
 - Felhasználó bead ip-címet/címeket amiket figyel
 - Le lehessen állítani a kamerák figyelését
