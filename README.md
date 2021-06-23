@@ -7,6 +7,7 @@
 - Web: Kezdetleges váz elkészítése
 - Web: Szerver/Kliens kommunikáció a vázzal
 - Web: Felhasználói felület kialakítása
+
 ## Specifikáció
 > Kamera Figyelő Alkalmazás
 Koncepció:
@@ -14,19 +15,29 @@ Koncepció:
 - Elhaladó emberek életkora és neme alapján csoportokba osztja őket
 - A csoportokat adott intervallumok szerint határozza meg
 - Az intervallumok előre meg vannak határozva, egy napot kisebb egységekre bontva (pl. a napot 1-2 órás darabokra szedjük)
-- Képes megtippelni, hogy a felhasználó által megadott jövőbeli időponthoz tartozó intervallum milyen csoportba esik
-- Lehetséges csoportok
+- Képes megtippelni, hogy a felhasználó által megadott jövőbeli időponthoz tartozó intervallumban milyen csoportból mennyi van
+
 ## Linkek:
 - [Face api](https://github.com/justadudewhohacks/face-api.js)
 - [OpenCV](https://www.youtube.com/watch?v=oXlwWbU8l2o)
 - [Prophet](https://facebook.github.io/prophet/)
-- [Python threading tutorial](https://realpython.com/intro-to-python-threading/)
+
 ## Felhasználói felület
 - Felhasználó bead ip-címet/címeket amiket figyel
 - Le lehessen állítani a kamerák figyelését
-- Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoport lesz jelen az idősávban amibe esik
+- Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoportból mennyi lesz jelen az idősávban amibe esik
+### Képek
+> Kamera Kezelő Felület
+![Camera Manager felület](https://https://github.com/markovics-gergely/onlab/tree/main/Dokument%C3%A1ci%C3%B3/pics/cam1.png)
+![Camera hozzáadása](https://https://github.com/markovics-gergely/onlab/tree/main/Dokument%C3%A1ci%C3%B3/pics/camadd.png)
+![Camera lementett értékei](https://https://github.com/markovics-gergely/onlab/tree/main/Dokument%C3%A1ci%C3%B3/pics/camtable.png)
+> Predikció lekérdezés felülete
+![Predikció indítása](https://https://github.com/markovics-gergely/onlab/tree/main/Dokument%C3%A1ci%C3%B3/pics/predstart.png)
+![Predikció életkor érték](https://https://github.com/markovics-gergely/onlab/tree/main/Dokument%C3%A1ci%C3%B3/pics/pred1.png)
+![Predikció nem érték](https://https://github.com/markovics-gergely/onlab/tree/main/Dokument%C3%A1ci%C3%B3/pics/pred2.png)
+![Predikció nem grafikon](https://https://github.com/markovics-gergely/onlab/tree/main/Dokument%C3%A1ci%C3%B3/pics/pred3.png)
 
-## Felhasznált cuccok
+## Felhasznált könyvtárak és útmutató
 - Python 3.6.8
 - Python libek:
 	- pip install numpy
@@ -52,5 +63,3 @@ compiler=mingw32
 	10. conda install pystan -c conda-forge
 	11. conda install -c conda-forge fbprophet
 	12. pip install --upgrade plotly (hogy ne dobjon hibát)
-
-
