@@ -28,14 +28,14 @@ Koncepció:
 - Felhasználó választhasson egy jövőbeli időpontot, és megtippeli milyen csoportból mennyi lesz jelen az idősávban amibe esik
 ### Képek
 > Kamera Kezelő Felület
-![Camera Manager felület](https://github.com/markovics-gergely/onlab/tree/main/Dokumentáció/pics/cam1.png)
-![Camera hozzáadása](https://github.com/markovics-gergely/onlab/tree/main/Dokumentáció/pics/camadd.png)
-![Camera lementett értékei](https://github.com/markovics-gergely/onlab/tree/main/Dokumentáció/pics/camtable.png)
+![Camera Manager felület](https://github.com/markovics-gergely/onlab/blob/main/Dokumentáció/pics/cam1.png)
+![Camera hozzáadása](https://github.com/markovics-gergely/onlab/blob/main/Dokumentáció/pics/camadd.png)
+![Camera lementett értékei](https://github.com/markovics-gergely/onlab/blob/main/Dokumentáció/pics/camtable.png)
 > Predikció lekérdezés felülete
-![Predikció indítása](https://github.com/markovics-gergely/onlab/tree/main/Dokumentáció/pics/predstart.png)
-![Predikció életkor érték](https://github.com/markovics-gergely/onlab/tree/main/Dokumentáció/pics/pred1.png)
-![Predikció nem érték](https://github.com/markovics-gergely/onlab/tree/main/Dokumentáció/pics/pred2.png)
-![Predikció nem grafikon](https://github.com/markovics-gergely/onlab/tree/main/Dokumentáció/pics/pred3.png)
+![Predikció indítása](https://github.com/markovics-gergely/onlab/blob/main/Dokumentáció/pics/predstart.png)
+![Predikció életkor érték](https://github.com/markovics-gergely/onlab/blob/main/Dokumentáció/pics/pred1.png)
+![Predikció nem érték](https://github.com/markovics-gergely/onlab/blob/main/Dokumentáció/pics/pred2.png)
+![Predikció nem grafikon](https://github.com/markovics-gergely/onlab/blob/main/Dokumentáció/pics/pred3.png)
 
 ## Felhasznált könyvtárak és útmutató
 - Python 3.6.8
